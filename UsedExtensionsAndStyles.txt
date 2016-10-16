@@ -1,0 +1,6 @@
+Using ReSharper
+ with Extensions: Clean Code, Cyclomatic Complexity, StyleCop, ReSpeller Free
+
+All in default settings.
+Except:
+    Clean Code - Options-> Complexity -> Maximum expression inside a condition = 2
