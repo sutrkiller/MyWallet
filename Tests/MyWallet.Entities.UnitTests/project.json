@@ -1,0 +1,24 @@
+﻿{
+  "version": "1.0.0-*",
+  "testRunner": "xunit",
+
+  "dependencies": {
+    "NSubstitute": "2.0.0-rc",
+    "dotnet-test-xunit": "2.2.0-preview2-build1029",
+    "EntityFramework": "6.1.3",
+    "Microsoft.Extensions.Options": "1.0.0",
+    "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
+    "AutoMapper": "5.1.1",
+    "xunit": "2.2.0-beta3-build3402"
+  },
+
+  "frameworks": {
+    "net462": {
+      "dependencies": {
+        "MyWallet.Entities": {
+          "target": "project"
+        }
+      }
+    }
+  }
+}

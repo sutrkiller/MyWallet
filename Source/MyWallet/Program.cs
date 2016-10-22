@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Program.cs" company="FI Muni">
+// <copyright file="Program.cs" company="FI MUNI">
 //   Tobias Kamenicky, Marek Halas, Robert Havlicek, Miroslav Gasparovic
 // </copyright>
 // <summary>
-//   Defines the Program type.
+//   Launcher class
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -11,21 +11,20 @@ namespace MyWallet
 {
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
-
     using Microsoft.AspNetCore.Hosting;
 
     /// <summary>
     /// The program.
     /// </summary>
-    public class Program
+    public static class Program
     {
         /// <summary>
-        /// The main method.
+        /// The main method
         /// </summary>
         /// <param name="args">
-        /// The args.
+        /// Parameters for the program
         /// </param>
-        [SuppressMessage("ReSharper", "TooManyChainedReferences", Justification = "Chaining is convention here.")]
+        [SuppressMessage("ReSharper", "TooManyChainedReferences", Justification = "This is a convention builder")]
         public static void Main(string[] args)
         {
             var host = new WebHostBuilder()
