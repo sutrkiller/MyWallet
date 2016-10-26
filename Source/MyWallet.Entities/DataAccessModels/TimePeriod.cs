@@ -10,7 +10,6 @@
 namespace MyWallet.Entities.DataAccessModels
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
@@ -31,8 +30,8 @@ namespace MyWallet.Entities.DataAccessModels
         public DateTime EndDate { get; set; }
 
         /// <summary>
-        /// Gets or sets the budgets.
+        /// Gets or sets the budgets. Navigable property.
         /// </summary>
-        public virtual ICollection<Budget> Budgets { get; set; } = new HashSet<Budget>();
+        public virtual Budget Budget { get; set; }
     }
 }

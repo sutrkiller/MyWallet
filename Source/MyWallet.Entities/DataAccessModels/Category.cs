@@ -30,14 +30,14 @@ namespace MyWallet.Entities.DataAccessModels
         public string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets the budgets.
+        /// Gets or sets the budgets. Navigable property.
         /// </summary>
         public virtual ICollection<Budget> Budgets { get; set; } = new HashSet<Budget>();
 
         /// <summary>
-        /// Gets or sets the expenses.
+        /// Gets or sets the expenses. Navigable property.
         /// </summary>
-        public virtual ICollection<Entry> Expenses { get; set; } = new HashSet<Entry>();
+        public virtual ICollection<Entry> Entries { get; set; } = new HashSet<Entry>();
 
     }
 }

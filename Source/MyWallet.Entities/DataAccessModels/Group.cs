@@ -3,7 +3,7 @@
 //  Tobias Kamenicky, Marek Halas, Robert Havlicek, Miroslav Gasparovic   
 // </copyright>
 // <summary>
-//   The family.
+//   Group that contains member users and might have own budgets.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -24,12 +24,12 @@ namespace MyWallet.Entities.DataAccessModels
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the users.
+        /// Gets or sets the users. Navigable property.
         /// </summary>
         public virtual ICollection<User> Users { get; set; } = new HashSet<User>();
 
         /// <summary>
-        /// Gets or sets the budgets.
+        /// Gets or sets the budgets. Navigable property.
         /// </summary>
         public virtual ICollection<Budget> Budgets { get; set; } = new HashSet<Budget>();
     }

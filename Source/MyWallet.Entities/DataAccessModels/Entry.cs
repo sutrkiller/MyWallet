@@ -10,6 +10,7 @@
 namespace MyWallet.Entities.DataAccessModels
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -22,7 +23,7 @@ namespace MyWallet.Entities.DataAccessModels
         /// Gets or sets the value.
         /// </summary>
         [Required, DataType(DataType.Currency)]
-        public decimal Value { get; set; }
+        public decimal Amount { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
@@ -37,21 +38,26 @@ namespace MyWallet.Entities.DataAccessModels
         public DateTime EntryDateTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the currency.
-        /// </summary>
-        [Required]
-        public virtual Currency Currency { get; set; }
-
-        /// <summary>
-        /// Gets or sets the user.
+        /// Gets or sets the user. Navigable property.
         /// </summary>
         [Required]
         public virtual User User { get; set; }
 
         /// <summary>
-        /// Gets or sets the category.
+        /// Gets or sets the category. Navigable property.
         /// </summary>
         [Required]
         public virtual Category Category { get; set; }
+
+        /// <summary>
+        /// Gets or sets the budgets. Navigable property.
+        /// </summary>
+        public virtual ICollection<Budget> Budgets { get; set; } = new HashSet<Budget>();
+
+        /// <summary>
+        /// Gets or sets the ration. Navigable property.
+        /// </summary>
+        [Required]
+        public virtual ConversionRatio ConversionRatio { get; set; }
     }
 }

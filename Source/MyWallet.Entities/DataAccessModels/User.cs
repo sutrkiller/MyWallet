@@ -10,7 +10,6 @@
 namespace MyWallet.Entities.DataAccessModels
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
@@ -31,8 +30,18 @@ namespace MyWallet.Entities.DataAccessModels
         public string Email { get; set; }
 
         /// <summary>
-        /// Gets or sets the groups.
+        /// Gets or sets the groups. Navigable property.
         /// </summary>
         public virtual ICollection<Group> Groups { get; set; } = new HashSet<Group>();
+
+        /// <summary>
+        /// Gets or sets the entries. Navigable property.
+        /// </summary>
+        public virtual ICollection<Entry> Entries { get; set; } = new HashSet<Entry>();
+
+        /// <summary>
+        /// Gets or sets the budgets. Navigable property.
+        /// </summary>
+        public virtual ICollection<Budget> Budgets { get; set; } = new HashSet<Budget>();
     }
 }
