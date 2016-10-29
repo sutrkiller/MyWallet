@@ -59,6 +59,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ConnectionOptions.cs" />
+    <Compile Include="Contexts\MyWalletContext.cs" />
     <Compile Include="DataAccessModels\Budget.cs" />
     <Compile Include="DataAccessModels\Category.cs" />
     <Compile Include="DataAccessModels\ConversionRatio.cs" />
@@ -75,8 +77,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Configuration\" />
-    <Folder Include="Contexts\" />
     <Folder Include="Repositories\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

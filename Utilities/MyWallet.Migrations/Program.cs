@@ -9,11 +9,22 @@
 
 namespace MyWallet.Migrations
 {
+    using System;
+    using System.Data.Entity;
+
+    using MyWallet.Entities.Contexts;
+    using MyWallet.Migrations.MyWalletMigrations;
+
     /// <summary>
     /// The program.
     /// </summary>
     public static class Program
     {
+        /// <summary>
+        /// The connectio n_ strin g_ name.
+        /// </summary>
+        private const string CONNECTION_STRING_NAME = "MyWalletConnection";
+        
         /// <summary>
         /// The main.
         /// </summary>
@@ -22,6 +33,18 @@ namespace MyWallet.Migrations
         /// </param>
         public static void Main(string[] args)
         {
+            Console.WriteLine("Setting migration initializer...");
+
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<MyWalletContext, MyWalletContextConfiguration>(useSuppliedContext:true));
+
+            using (var db = new MyWalletContext(CONNECTION_STRING_NAME))
+            {
+                Console.WriteLine($"Initializing {typeof(MyWalletContext).FullName}...");
+                db.Database.Initialize(force:true);
+            }
+
+            Console.WriteLine("Initialization successful...");
+            Console.ReadKey();
         }
     }
 }

@@ -29,23 +29,41 @@ namespace MyWallet.Entities.DataAccessModels
         [MaxLength(254)]
         public string Description { get; set; }
 
-        /// <summary>
-        /// Gets or sets the currency.
-        /// </summary>
-        public virtual Currency Currency { get; set; }
+        ///// <summary>
+        ///// Gets or sets the currency.
+        ///// </summary>
+        //public virtual Currency Currency { get; set; }
 
         /// <summary>
-        /// Gets or sets the categories.
+        /// Gets or sets the categories. Navigable property.
         /// </summary>
         public virtual ICollection<Category> Categories { get; set; } = new HashSet<Category>();
 
         /// <summary>
-        /// Gets or sets the user.
+        /// Gets or sets the entries. Navigable property.
+        /// </summary>
+        public virtual ICollection<Entry> Entries { get; set; } = new HashSet<Entry>();
+
+        /// <summary>
+        /// Gets or sets the time periods. Navigable property.
+        /// </summary>
+        public virtual ICollection<TimePeriod> TimePeriods { get; set; } = new HashSet<TimePeriod>();
+
+
+
+        /// <summary>
+        /// Gets or sets the conversion ratio. Navigable property.
+        /// </summary>
+        [Required]
+        public virtual ConversionRatio ConversionRatio { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user. Navigable property.
         /// </summary>
         public virtual User User { get; set; }
 
         /// <summary>
-        /// Gets or sets the family.
+        /// Gets or sets the family. Navigable property.
         /// </summary>
         public virtual Group Group { get; set; }
     }
