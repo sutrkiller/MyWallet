@@ -40,8 +40,11 @@ namespace MyWallet.Entities.DataAccessModels
         /// <summary>
         /// Gets or sets the user. Navigable property.
         /// </summary>
+        //[Required]
+        //public virtual User User { get; set; }
+
         [Required]
-        public virtual User User { get; set; }
+        public virtual Group Group { get; set; }
 
         /// <summary>
         /// Gets or sets the category. Navigable property.
