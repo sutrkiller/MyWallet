@@ -89,8 +89,9 @@ namespace MyWallet.Entities.Contexts
             modelBuilder.Entity<Group>().HasMany(g => g.Users).WithMany(u => u.Groups).Map(m => m.ToTable("GroupUsers"));
             modelBuilder.Entity<Group>().HasMany(g => g.Budgets).WithOptional(b => b.Group).WillCascadeOnDelete();
 
-            modelBuilder.Entity<User>().HasMany(u => u.Entries).WithRequired(e => e.User).WillCascadeOnDelete();
-            modelBuilder.Entity<User>().HasMany(u => u.Budgets).WithOptional(b => b.User).WillCascadeOnDelete();
+            modelBuilder.Entity<Group>().HasMany(u => u.Entries).WithRequired(e => e.Group).WillCascadeOnDelete();
+            //modelBuilder.Entity<User>().HasMany(u => u.Entries).WithRequired(e => e.User).WillCascadeOnDelete();
+            //modelBuilder.Entity<User>().HasMany(u => u.Budgets).WithOptional(b => b.User).WillCascadeOnDelete();
 
             modelBuilder.Entity<Budget>().HasMany(b => b.TimePeriods).WithRequired(t => t.Budget).WillCascadeOnDelete();
             modelBuilder.Entity<Budget>()

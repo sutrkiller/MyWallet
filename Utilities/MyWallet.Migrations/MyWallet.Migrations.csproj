@@ -53,11 +53,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyWalletMigrations\Migrations\201610261011592_Initial.cs" />
-    <Compile Include="MyWalletMigrations\Migrations\201610261011592_Initial.Designer.cs">
-      <DependentUpon>201610261011592_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\MyWalletContextConfiguration.cs" />
+    <Compile Include="MyWalletMigrations\Migrations\201610301014069_Initial.cs" />
+    <Compile Include="MyWalletMigrations\Migrations\201610301014069_Initial.Designer.cs">
+      <DependentUpon>201610301014069_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="MyWalletMigrations\MyWalletContextConfiguration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -71,10 +71,9 @@
       <Name>MyWallet.Entities</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="MyWalletMigrations\Migrations\201610261011592_Initial.resx">
-      <DependentUpon>201610261011592_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="MyWalletMigrations\Migrations\201610301014069_Initial.resx">
+      <DependentUpon>201610301014069_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

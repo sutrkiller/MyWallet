@@ -60,7 +60,7 @@ namespace MyWallet.Entities.DataAccessModels
         /// <summary>
         /// Gets or sets the user. Navigable property.
         /// </summary>
-        public virtual User User { get; set; }
+        //public virtual User User { get; set; }
 
         /// <summary>
         /// Gets or sets the family. Navigable property.

@@ -7,13 +7,15 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using MyWallet.Migrations.Migrations;
+
 namespace MyWallet.Migrations
 {
     using System;
     using System.Data.Entity;
 
     using MyWallet.Entities.Contexts;
-    using MyWallet.Migrations.MyWalletMigrations;
+    
 
     /// <summary>
     /// The program.
