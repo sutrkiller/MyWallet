@@ -1,4 +1,4 @@
-namespace MyWallet.Migrations.MyWalletMigrations
+namespace MyWallet.Migrations.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -14,15 +14,12 @@ namespace MyWallet.Migrations.MyWalletMigrations
                         Id = c.Guid(nullable: false, identity: true),
                         Amount = c.Decimal(nullable: false, precision: 18, scale: 2),
                         Description = c.String(maxLength: 254),
-                        User_Id = c.Guid(),
                         Group_Id = c.Guid(),
                         ConversionRatio_Id = c.Guid(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Users", t => t.User_Id, cascadeDelete: true)
                 .ForeignKey("dbo.Groups", t => t.Group_Id, cascadeDelete: true)
                 .ForeignKey("dbo.ConversionRatios", t => t.ConversionRatio_Id)
-                .Index(t => t.User_Id)
                 .Index(t => t.Group_Id)
                 .Index(t => t.ConversionRatio_Id);
             
@@ -45,16 +42,16 @@ namespace MyWallet.Migrations.MyWalletMigrations
                         Description = c.String(maxLength: 254),
                         EntryDateTime = c.DateTime(nullable: false),
                         ConversionRatio_Id = c.Guid(nullable: false),
-                        User_Id = c.Guid(nullable: false),
+                        Group_Id = c.Guid(nullable: false),
                         Category_Id = c.Guid(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.ConversionRatios", t => t.ConversionRatio_Id)
-                .ForeignKey("dbo.Users", t => t.User_Id, cascadeDelete: true)
+                .ForeignKey("dbo.Groups", t => t.Group_Id, cascadeDelete: true)
                 .ForeignKey("dbo.Categories", t => t.Category_Id, cascadeDelete: true)
                 .Index(t => t.EntryDateTime)
                 .Index(t => t.ConversionRatio_Id)
-                .Index(t => t.User_Id)
+                .Index(t => t.Group_Id)
                 .Index(t => t.Category_Id);
             
             CreateTable(
@@ -84,21 +81,21 @@ namespace MyWallet.Migrations.MyWalletMigrations
                 .Index(t => t.Code, unique: true);
             
             CreateTable(
+                "dbo.Groups",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false, identity: true),
+                        Name = c.String(nullable: false, maxLength: 254),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
                 "dbo.Users",
                 c => new
                     {
                         Id = c.Guid(nullable: false, identity: true),
                         Name = c.String(maxLength: 256),
                         Email = c.String(nullable: false, maxLength: 254),
-                    })
-                .PrimaryKey(t => t.Id);
-            
-            CreateTable(
-                "dbo.Groups",
-                c => new
-                    {
-                        Id = c.Guid(nullable: false, identity: true),
-                        Name = c.String(nullable: false, maxLength: 254),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -167,9 +164,8 @@ namespace MyWallet.Migrations.MyWalletMigrations
             DropForeignKey("dbo.Entries", "Category_Id", "dbo.Categories");
             DropForeignKey("dbo.GroupUsers", "User_Id", "dbo.Users");
             DropForeignKey("dbo.GroupUsers", "Group_Id", "dbo.Groups");
+            DropForeignKey("dbo.Entries", "Group_Id", "dbo.Groups");
             DropForeignKey("dbo.Budgets", "Group_Id", "dbo.Groups");
-            DropForeignKey("dbo.Entries", "User_Id", "dbo.Users");
-            DropForeignKey("dbo.Budgets", "User_Id", "dbo.Users");
             DropForeignKey("dbo.Entries", "ConversionRatio_Id", "dbo.ConversionRatios");
             DropForeignKey("dbo.ConversionRatios", "CurrencyTo_Id", "dbo.Currencies");
             DropForeignKey("dbo.ConversionRatios", "CurrencyFrom_Id", "dbo.Currencies");
@@ -184,18 +180,17 @@ namespace MyWallet.Migrations.MyWalletMigrations
             DropIndex("dbo.ConversionRatios", new[] { "CurrencyTo_Id" });
             DropIndex("dbo.ConversionRatios", new[] { "CurrencyFrom_Id" });
             DropIndex("dbo.Entries", new[] { "Category_Id" });
-            DropIndex("dbo.Entries", new[] { "User_Id" });
+            DropIndex("dbo.Entries", new[] { "Group_Id" });
             DropIndex("dbo.Entries", new[] { "ConversionRatio_Id" });
             DropIndex("dbo.Entries", new[] { "EntryDateTime" });
             DropIndex("dbo.Budgets", new[] { "ConversionRatio_Id" });
             DropIndex("dbo.Budgets", new[] { "Group_Id" });
-            DropIndex("dbo.Budgets", new[] { "User_Id" });
             DropTable("dbo.BudgetEntries");
             DropTable("dbo.BudgetCategories");
             DropTable("dbo.GroupUsers");
             DropTable("dbo.TimePeriods");
-            DropTable("dbo.Groups");
             DropTable("dbo.Users");
+            DropTable("dbo.Groups");
             DropTable("dbo.Currencies");
             DropTable("dbo.ConversionRatios");
             DropTable("dbo.Entries");
