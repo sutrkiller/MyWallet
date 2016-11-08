@@ -58,6 +58,10 @@
     <Compile Include="MyWalletMigrations\Migrations\201610301014069_Initial.Designer.cs">
       <DependentUpon>201610301014069_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="MyWalletMigrations\Migrations\201611081738245_BudgetAddNameProperty.cs" />
+    <Compile Include="MyWalletMigrations\Migrations\201611081738245_BudgetAddNameProperty.Designer.cs">
+      <DependentUpon>201611081738245_BudgetAddNameProperty.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -74,6 +78,9 @@
   <ItemGroup>
     <EmbeddedResource Include="MyWalletMigrations\Migrations\201610301014069_Initial.resx">
       <DependentUpon>201610301014069_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MyWalletMigrations\Migrations\201611081738245_BudgetAddNameProperty.resx">
+      <DependentUpon>201611081738245_BudgetAddNameProperty.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

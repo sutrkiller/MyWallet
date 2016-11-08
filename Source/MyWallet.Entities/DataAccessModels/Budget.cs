@@ -29,10 +29,16 @@ namespace MyWallet.Entities.DataAccessModels
         [MaxLength(254)]
         public string Description { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        [MaxLength(254)]
+        public string Name { get; set; }
+
         ///// <summary>
         ///// Gets or sets the currency.
         ///// </summary>
-        //public virtual Currency Currency { get; set; }
+        public virtual Currency Currency { get; set; }
 
         /// <summary>
         /// Gets or sets the categories. Navigable property.
