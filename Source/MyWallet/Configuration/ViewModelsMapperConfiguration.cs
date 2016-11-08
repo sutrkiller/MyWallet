@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using MyWallet.Services.DataTransferModels.Mapping;
+using MyWallet.Models.Mappings;
+
 
 namespace MyWallet.Configuration
 {
@@ -11,7 +12,7 @@ namespace MyWallet.Configuration
     {
         public static void InitialializeMappings(IMapperConfigurationExpression cfg)
         {
-            cfg.AddProfile<BudgetMappingProfile>();
+            cfg.AddProfile<BudgetsMappingProfile>();
         }
     }
 }

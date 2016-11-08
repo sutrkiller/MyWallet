@@ -61,8 +61,7 @@ namespace MyWallet.Controllers
         {
             if (ModelState.IsValid)
             {
-                var x = _mapper.Map<Budget>(budget);
-                await _budgetService.AddBudget(x);
+                await _budgetService.AddBudget(_mapper.Map<Budget>(budget));
                 return RedirectToAction("Index");
             }
 

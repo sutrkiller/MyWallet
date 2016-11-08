@@ -6,10 +6,11 @@ using AutoMapper;
 
 namespace MyWallet.Services.DataTransferModels.Mapping
 {
-    public class BudgetMappingProfile : Profile
+    public class BudgetsMappingProfile : Profile
     {
-        public BudgetMappingProfile()
+        public BudgetsMappingProfile()
         {
+
             CreateMap<Entities.DataAccessModels.Budget, Budget>()
                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dst => dst.Description, opt => opt.MapFrom(src => src.Description))
@@ -26,5 +27,6 @@ namespace MyWallet.Services.DataTransferModels.Mapping
                 .ForMember(dst => dst.Group, opt => opt.Ignore())
                 .ForMember(dst => dst.Id, opt => opt.Ignore());
         }
+    
     }
 }

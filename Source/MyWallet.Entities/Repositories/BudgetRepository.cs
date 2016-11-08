@@ -36,7 +36,7 @@ namespace MyWallet.Entities.Repositories
             if (budget == null)
             {
                 throw new ArgumentNullException(nameof(budget));
-            }
+            }           
             var addedBudget = _context.Budgets.Add(budget);
             await _context.SaveChangesAsync();
 
