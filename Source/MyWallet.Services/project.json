@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0-*",
 
   "dependencies": {
@@ -12,9 +12,6 @@
   "frameworks": {
     "net462": {
       "dependencies": {
-        "MyWallet.Entities": {
-          "target": "project"
-        }
       }
     }
   }
