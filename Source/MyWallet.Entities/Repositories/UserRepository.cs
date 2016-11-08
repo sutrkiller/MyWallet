@@ -13,12 +13,23 @@ namespace MyWallet.Entities.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private MyWalletContext _context;
+        private readonly MyWalletContext _context;
+
+        internal UserRepository(MyWalletContext context)
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+            _context = context;
+        }
 
         public UserRepository(IOptions<ConnectionOptions> connectionOptions)
+             : this(new MyWalletContext(connectionOptions.Value.ConnectionString))
         {
-            _context = new MyWalletContext(connectionOptions.Value.ConnectionString);
+
         }
+
         public async Task<User> AddUser(User user)
         {
             if (user == null)

@@ -1,50 +1,46 @@
-﻿using Microsoft.Extensions.Options;
-using MyWallet.Entities.Configuration;
-using MyWallet.Entities.DataAccessModels;
-using MyWallet.Entities.Repositories;
-using NSubstitute;
+﻿using MyWallet.Entities.DataAccessModels;
 using System;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace MyWallet.Entities.UnitTests.Repositories
 {
-    public class BudgetRepositoryTests
+
+    public class BudgetRepositoryTests : BaseRepositoryTest
     {
+
         [Fact]
         public async Task SaveBudget()
         {
-            var connectionsOptionMock = Substitute.For<IOptions<ConnectionOptions>>();
-            connectionsOptionMock.Value.Returns(new ConnectionOptions
-            {
-                ConnectionString = "" //insert connection string
-            });
-
             var testBudget = new Budget
             {
                 Amount = 100m,
                 Description = "Lunch"
             };
 
-            var budgetRepository = new BudgetRepository(connectionsOptionMock);
-            var addedBudget = await budgetRepository.AddBudget(testBudget);
+            var addedBudget = await BudgetRepository.AddBudget(testBudget);
 
             Assert.NotEqual(Guid.Empty, addedBudget.Id);
             Assert.Equal(testBudget.Amount, addedBudget.Amount);
             Assert.Equal(testBudget.Description, addedBudget.Description, StringComparer.CurrentCultureIgnoreCase);
 
-            var retrivedBudget = await budgetRepository.GetSingleBudget(addedBudget.Id);
+            var retrievedBudget = await BudgetRepository.GetSingleBudget(addedBudget.Id);
 
-            Assert.Equal(addedBudget.Id, retrivedBudget.Id);
-            Assert.Equal(testBudget.Amount, retrivedBudget.Amount);
-            Assert.Equal(testBudget.Description, retrivedBudget.Description);
+            Assert.Equal(addedBudget.Id, retrievedBudget.Id);
+            Assert.Equal(testBudget.Amount, retrievedBudget.Amount);
+            Assert.Equal(testBudget.Description, retrievedBudget.Description);
+        }
 
-            var budgets = await budgetRepository.GetAllBudgets();
-            Assert.NotEmpty(budgets);
-            foreach (var budget in budgets)
+        [Fact]
+        public async Task GetAllBudgetsTest()
+        {
+            var allBudgets = await BudgetRepository.GetAllBudgets();
+            Assert.NotNull(allBudgets);
+            Assert.NotEmpty(allBudgets);
+            Assert.Equal(2, allBudgets.Length);
+            foreach (var budget in allBudgets)
             {
-                Assert.NotEqual(Guid.Empty, budget.Id);
-                Assert.NotEqual(0m, budget.Amount);
+                Assert.IsType<Budget>(budget);
             }
         }
     }

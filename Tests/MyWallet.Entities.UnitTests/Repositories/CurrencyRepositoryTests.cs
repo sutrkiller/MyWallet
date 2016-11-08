@@ -9,38 +9,36 @@ using Xunit;
 
 namespace MyWallet.Entities.UnitTests.Repositories
 {
-    public class CurrencyRepositoryTests
+    public class CurrencyRepositoryTests : BaseRepositoryTest
     {
         [Fact]
         public async Task SaveCurrency()
         {
-            var connectionsOptionMock = Substitute.For<IOptions<ConnectionOptions>>();
-            connectionsOptionMock.Value.Returns(new ConnectionOptions
-            {
-                ConnectionString = "" //insert connection string
-            });
-
             var testCurrency = new Currency
             {
                 Code = "Test"
             };
 
-            var currencyRepository = new CurrencyRepository(connectionsOptionMock);
-            var addedCurrency = await currencyRepository.AddCurrency(testCurrency);
+            var addedCurrency = await CurrencyRepository.AddCurrency(testCurrency);
 
             Assert.NotEqual(Guid.Empty, addedCurrency.Id);
             Assert.Equal(testCurrency.Code, addedCurrency.Code);
 
-            var retrievedCurrency = await currencyRepository.GetSingleCurrency(addedCurrency.Id);
+            var retrievedCurrency = await CurrencyRepository.GetSingleCurrency(addedCurrency.Id);
             Assert.Equal(addedCurrency.Id, retrievedCurrency.Id);
             Assert.Equal(addedCurrency.Code, retrievedCurrency.Code);
+        }
 
-            var currencies = await currencyRepository.GetAllCurrencies();
-            Assert.NotEmpty(currencies);
-            foreach (var currency in currencies)
+        [Fact]
+        public async Task GetAllCurrenciesTest()
+        {
+            var allEntities = await CurrencyRepository.GetAllCurrencies();
+            Assert.NotNull(allEntities);
+            Assert.NotEmpty(allEntities);
+            Assert.Equal(2, allEntities.Length);
+            foreach (var entity in allEntities)
             {
-                Assert.NotEqual(Guid.Empty, currency.Id);
-                Assert.NotNull(currency.Code);
+                Assert.IsType<Currency>(entity);
             }
         }
     }

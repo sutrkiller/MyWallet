@@ -11,17 +11,11 @@ using Xunit;
 
 namespace MyWallet.Entities.UnitTests.Repositories
 {
-    public class EntryRepositoryTests
+    public class EntryRepositoryTests : BaseRepositoryTest
     {
         [Fact]
         public async Task SaveEntry()
         {
-            var connectionsOptionMock = Substitute.For<IOptions<ConnectionOptions>>();
-            connectionsOptionMock.Value.Returns(new ConnectionOptions
-            {
-                ConnectionString = "" //insert connection string
-            });
-
             var testEntry = new Entry
             {
                 Amount = 105m,
@@ -29,39 +23,36 @@ namespace MyWallet.Entities.UnitTests.Repositories
                 EntryDateTime = DateTime.Now
             };
 
-            var currencyRepository = new EntryRepository(connectionsOptionMock);
-            var addedEntry = await currencyRepository.AddEntry(testEntry);
+            var addedEntry = await EntryRepository.AddEntry(testEntry);
 
             Assert.NotEqual(Guid.Empty, addedEntry.Id);
             Assert.Equal(testEntry.Amount, addedEntry.Amount);
             Assert.Equal(testEntry.Description, addedEntry.Description);
             Assert.Equal(testEntry.EntryDateTime, addedEntry.EntryDateTime);
 
-            var retrievedEntry = await currencyRepository.GetSingleEntry(addedEntry.Id);
+            var retrievedEntry = await EntryRepository.GetSingleEntry(addedEntry.Id);
             Assert.Equal(addedEntry.Id, retrievedEntry.Id);
             Assert.Equal(addedEntry.Amount, retrievedEntry.Amount);
             Assert.Equal(addedEntry.Description, retrievedEntry.Description);
             Assert.Equal(addedEntry.EntryDateTime, retrievedEntry.EntryDateTime);
+        }
 
-            var entries = await currencyRepository.GetAllEntries();
-            Assert.NotEmpty(entries);
-            foreach (var entry in entries)
+        [Fact]
+        public async Task GetAllEntriesTest()
+        {
+            var allEntities = await EntryRepository.GetAllEntries();
+            Assert.NotNull(allEntities);
+            Assert.NotEmpty(allEntities);
+            Assert.Equal(2, allEntities.Length);
+            foreach (var entity in allEntities)
             {
-                Assert.NotEqual(Guid.Empty, entry.Id);
-                Assert.NotEqual(0m, entry.Amount);
-                Assert.NotEqual(DateTime.MinValue, entry.EntryDateTime);
+                Assert.IsType<Entry>(entity);
             }
         }
 
         [Fact]
         public async Task SaveEntryToBudget()
         {
-            var connectionsOptionMock = Substitute.For<IOptions<ConnectionOptions>>();
-            connectionsOptionMock.Value.Returns(new ConnectionOptions
-            {
-                ConnectionString = "" //insert connection string
-            });
-
             var testEntry = new Entry
             {
                 Amount = 105m,
@@ -74,11 +65,8 @@ namespace MyWallet.Entities.UnitTests.Repositories
                 Amount = 500m,
                 Description = "Budget with entry test."
             };
-
-            var currencyRepository = new EntryRepository(connectionsOptionMock);
-            var budgetRepository = new BudgetRepository(connectionsOptionMock);
-            var addedBudget = await budgetRepository.AddBudget(testBudget);
-            var addedEntry = await currencyRepository.AddEntryToBudget(testEntry, addedBudget);
+            var addedBudget = await BudgetRepository.AddBudget(testBudget);
+            var addedEntry = await EntryRepository.AddEntryToBudget(testEntry, addedBudget);
 
             Assert.NotEmpty(addedEntry.Budgets);
             foreach (var budget in addedEntry.Budgets)

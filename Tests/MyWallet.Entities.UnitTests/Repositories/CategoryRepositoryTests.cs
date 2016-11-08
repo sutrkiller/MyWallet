@@ -9,41 +9,39 @@ using Xunit;
 
 namespace MyWallet.Entities.UnitTests.Repositories
 {
-    public class CategoryRepositoryTests
+    public class CategoryRepositoryTests : BaseRepositoryTest
     {
         [Fact]
         public async Task SaveCategory()
         {
-            var connectionsOptionMock = Substitute.For<IOptions<ConnectionOptions>>();
-            connectionsOptionMock.Value.Returns(new ConnectionOptions
-            {
-                ConnectionString = "" //insert connection string
-            });
-
             var testCategory = new Category
             {
                 Name = "Test Category",
                 Description = "Test"
             };
 
-            var categoryRepository = new CategoryRepository(connectionsOptionMock);
-            var addedCategory = await categoryRepository.AddCategory(testCategory);
+            var addedCategory = await CategoryRepository.AddCategory(testCategory);
 
             Assert.NotEqual(Guid.Empty, addedCategory.Id);
             Assert.Equal(testCategory.Name, addedCategory.Name);
             Assert.Equal(testCategory.Description, addedCategory.Description);
 
-            var retrievedCategory = await categoryRepository.GetSingleCategory(addedCategory.Id);
+            var retrievedCategory = await CategoryRepository.GetSingleCategory(addedCategory.Id);
             Assert.Equal(addedCategory.Id, retrievedCategory.Id);
             Assert.Equal(addedCategory.Name, retrievedCategory.Name);
             Assert.Equal(addedCategory.Description, retrievedCategory.Description);
+        }
 
-            var categories = await categoryRepository.GetAllCategories();
+        [Fact]
+        public async Task GetAllCategories()
+        {
+            var categories = await CategoryRepository.GetAllCategories();
+            Assert.NotNull(categories);
             Assert.NotEmpty(categories);
+            Assert.Equal(2, categories.Length);
             foreach (var category in categories)
             {
-                Assert.NotEqual(Guid.Empty, category.Id);
-                Assert.NotNull(category.Name);
+                Assert.IsType<Category>(category);
             }
         }
     }

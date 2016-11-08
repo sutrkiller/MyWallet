@@ -9,38 +9,36 @@ using Xunit;
 
 namespace MyWallet.Entities.UnitTests.Repositories
 {
-    public class GroupRepositoryTests
+    public class GroupRepositoryTests : BaseRepositoryTest
     {
         [Fact]
         public async Task SaveGroup()
         {
-            var connectionsOptionMock = Substitute.For<IOptions<ConnectionOptions>>();
-            connectionsOptionMock.Value.Returns(new ConnectionOptions
-            {
-                ConnectionString = "" //insert connection string
-            });
-
             var testGroup = new Group
             {
                 Name = "Test Group"
             };
 
-            var groupRepository = new GroupRepository(connectionsOptionMock);
-            var addedGroup = await groupRepository.AddGroup(testGroup);
+            var addedGroup = await GroupRepository.AddGroup(testGroup);
 
             Assert.NotEqual(Guid.Empty, addedGroup.Id);
             Assert.Equal(testGroup.Name, addedGroup.Name);
 
-            var retrievedGroup = await groupRepository.GetSingleGroup(addedGroup.Id);
+            var retrievedGroup = await GroupRepository.GetSingleGroup(addedGroup.Id);
             Assert.Equal(addedGroup.Id, retrievedGroup.Id);
             Assert.Equal(addedGroup.Name, retrievedGroup.Name);
+        }
 
-            var groups = await groupRepository.GetAllGroups();
-            Assert.NotEmpty(groups);
-            foreach (var group in groups)
+        [Fact]
+        public async Task GetAllGroupsTest()
+        {
+            var allEntities = await GroupRepository.GetAllGroups();
+            Assert.NotNull(allEntities);
+            Assert.NotEmpty(allEntities);
+            Assert.Equal(2, allEntities.Length);
+            foreach (var entity in allEntities)
             {
-                Assert.NotEqual(Guid.Empty, group.Id);
-                Assert.NotNull(group.Name);
+                Assert.IsType<Group>(entity);
             }
         }
     }
