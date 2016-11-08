@@ -14,12 +14,23 @@ namespace MyWallet.Entities.Repositories
 {
     public class CategoryRepository : ICategoryRepository
     {
-        private MyWalletContext _context;
+        private readonly MyWalletContext _context;
+
+        internal CategoryRepository(MyWalletContext context)
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+            _context = context;
+        }
 
         public CategoryRepository(IOptions<ConnectionOptions> connectionOptions)
+             : this(new MyWalletContext(connectionOptions.Value.ConnectionString))
         {
-            _context = new MyWalletContext(connectionOptions.Value.ConnectionString);
+
         }
+
         public async Task<Category> AddCategory(Category category)
         {
             if (category == null)

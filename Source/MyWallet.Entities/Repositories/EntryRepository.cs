@@ -13,11 +13,21 @@ namespace MyWallet.Entities.Repositories
 {
     public class EntryRepository : IEntryRepository
     {
-        private MyWalletContext _context;
+        private readonly MyWalletContext _context;
+
+        internal EntryRepository(MyWalletContext context)
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+            _context = context;
+        }
 
         public EntryRepository(IOptions<ConnectionOptions> connectionOptions)
+             : this(new MyWalletContext(connectionOptions.Value.ConnectionString))
         {
-            _context = new MyWalletContext(connectionOptions.Value.ConnectionString);
+
         }
         public async Task<Entry> AddEntry(Entry entry)
         {

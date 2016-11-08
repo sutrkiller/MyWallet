@@ -13,11 +13,21 @@ namespace MyWallet.Entities.Repositories
 {
     public class CurrencyRepository : ICurrencyRepository
     {
-        private MyWalletContext _context;
+        private readonly MyWalletContext _context;
+
+        internal CurrencyRepository(MyWalletContext context)
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+            _context = context;
+        }
 
         public CurrencyRepository(IOptions<ConnectionOptions> connectionOptions)
+             : this(new MyWalletContext(connectionOptions.Value.ConnectionString))
         {
-            _context = new MyWalletContext(connectionOptions.Value.ConnectionString);
+
         }
 
         public async Task<Currency> AddCurrency(Currency currency)

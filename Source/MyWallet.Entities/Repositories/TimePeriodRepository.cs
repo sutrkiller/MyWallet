@@ -13,11 +13,21 @@ namespace MyWallet.Entities.Repositories
 {
     public class TimePeriodRepository : ITimePeriodRepository
     {
-        private MyWalletContext _context;
+        private readonly MyWalletContext _context;
+
+        internal TimePeriodRepository(MyWalletContext context)
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+            _context = context;
+        }
 
         public TimePeriodRepository(IOptions<ConnectionOptions> connectionOptions)
+             : this(new MyWalletContext(connectionOptions.Value.ConnectionString))
         {
-            _context = new MyWalletContext(connectionOptions.Value.ConnectionString);
+
         }
 
         public async Task<TimePeriod> AddTimePeriod(TimePeriod period)

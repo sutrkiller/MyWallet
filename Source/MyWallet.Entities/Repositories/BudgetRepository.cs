@@ -14,12 +14,23 @@ namespace MyWallet.Entities.Repositories
 {
     public class BudgetRepository : IBudgetRepository
     {
-        private MyWalletContext _context;
+        private readonly MyWalletContext _context;
+
+        internal BudgetRepository(MyWalletContext context)
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+            _context = context;
+        }
 
         public BudgetRepository(IOptions<ConnectionOptions> connectionOptions)
+             : this(new MyWalletContext(connectionOptions.Value.ConnectionString))
         {
-            _context = new MyWalletContext(connectionOptions.Value.ConnectionString);
+
         }
+
         public async Task<Budget> AddBudget(Budget budget)
         {
             if (budget == null)

@@ -8,6 +8,7 @@
         "bin/Debug/MyWallet.Entities.dll": {}
       },
       "runtime": {
+        "../../../../.nuget/packages/Microsoft.Extensions.Options/1.0.0/lib/netstandard1.0/Microsoft.Extensions.Options.dll": {},
         "../../packages/AutoMapper.5.1.1/lib/net45/AutoMapper.dll": {},
         "../../packages/EntityFramework.6.1.3/lib/net45/EntityFramework.SqlServer.dll": {},
         "../../packages/EntityFramework.6.1.3/lib/net45/EntityFramework.dll": {},
