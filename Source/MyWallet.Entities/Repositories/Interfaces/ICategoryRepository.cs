@@ -30,6 +30,11 @@ namespace MyWallet.Entities.Repositories.Interfaces
             /// </summary>
             /// <returns>All categories</returns>
             Task<Category[]> GetAllCategories();
+            /// <summary>
+            /// Returns all categories
+            /// </summary>
+            /// <returns>Return specific categories</returns>
+            Task<Category[]> GetCategoriesFromIds(ICollection<Guid> categoryIds);
         }
     }
 

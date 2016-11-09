@@ -48,8 +48,16 @@ namespace MyWallet.Controllers
         public async Task<IActionResult> Create()
         {
             var newBudget = new CreateBudgetViewModel();
-
+            var categories = await _budgetService.GetAllCategories();
+            var categoriesList = categories.Select(d => new { Id = d.Id, Value = d.Name });
+            newBudget.CategoriesList = new SelectList(categoriesList, "Id", "Value");
+            var currencies = await _budgetService.GetAllCurrencies();
+            var currencyList = currencies.Select(d => new { Id = d.Id, Value = d.Code });
+            newBudget.CurrencyList = new SelectList(currencyList, "Id", "Value");
             return View(newBudget);
+
+
+
         }
 
         // POST: Games/Create
@@ -57,15 +65,13 @@ namespace MyWallet.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name", "Description", "Amount")]CreateBudgetViewModel budget)
+        public async Task<IActionResult> Create(CreateBudgetViewModel budget)
         {
             if (ModelState.IsValid)
             {
-                await _budgetService.AddBudget(_mapper.Map<Budget>(budget));
+                await _budgetService.AddBudget(_mapper.Map<Budget>(budget), budget.CurrencyId, budget.CategoryIds);
                 return RedirectToAction("Index");
             }
-
-
             return View(budget);
         }
     }

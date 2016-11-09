@@ -11,8 +11,11 @@ namespace MyWallet.Services.Configuration
     {
         public static void InitialializeMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.AddProfile<TimePeriodMappingProfile>();
             configuration.AddProfile<BudgetsMappingProfile>();
-
+            configuration.AddProfile<GroupMappingProfile>();
+            configuration.AddProfile<CategoryMappingProfile>();
+            configuration.AddProfile<CurrencyMappingProfile>();
         }
     }
 }

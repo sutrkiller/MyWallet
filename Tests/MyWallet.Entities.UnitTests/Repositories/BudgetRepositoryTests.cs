@@ -1,5 +1,6 @@
 ﻿using MyWallet.Entities.DataAccessModels;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -18,7 +19,14 @@ namespace MyWallet.Entities.UnitTests.Repositories
                 Description = "Lunch"
             };
 
-            var addedBudget = await BudgetRepository.AddBudget(testBudget);
+            var testCurrency = new Currency
+            {
+                Code= "CZK"
+            };
+
+            var categories = new List<Category>() { new Category {Name = "Category", Description = "Description"} };
+
+            var addedBudget = await BudgetRepository.AddBudget(testBudget,testCurrency, categories);
 
             Assert.NotEqual(Guid.Empty, addedBudget.Id);
             Assert.Equal(testBudget.Amount, addedBudget.Amount);

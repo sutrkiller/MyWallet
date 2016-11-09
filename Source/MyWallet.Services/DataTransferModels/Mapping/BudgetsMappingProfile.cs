@@ -10,25 +10,10 @@ namespace MyWallet.Services.DataTransferModels.Mapping
     {
         public BudgetsMappingProfile()
         {
-
-            CreateMap<Entities.DataAccessModels.Budget, Budget>().ReverseMap().ForMember(dst => dst.Currency, opt => opt.Ignore())
-                .ForMember(dst => dst.Categories, opt => opt.Ignore())
-                .ForMember(dst => dst.Entries, opt => opt.Ignore())
-                .ForMember(dst => dst.TimePeriods, opt => opt.Ignore())
-                .ForMember(dst => dst.Group, opt => opt.Ignore());
-
             CreateMap<Budget, Entities.DataAccessModels.Budget>()
-    .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
-    .ForMember(dst => dst.Description, opt => opt.MapFrom(src => src.Description))
-    .ForMember(dst => dst.Amount, opt => opt.MapFrom(src => src.Amount))
-    .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
-    .ForMember(dst => dst.Currency, opt => opt.Ignore())
-    .ForMember(dst => dst.Categories, opt => opt.Ignore())
-    .ForMember(dst => dst.Entries, opt => opt.Ignore())
-    .ForMember(dst => dst.TimePeriods, opt => opt.Ignore())
-    .ForMember(dst => dst.Group, opt => opt.Ignore());
-  
+                .ForMember(dst => dst.Entries, opt => opt.Ignore());
+            CreateMap<Entities.DataAccessModels.Budget, Budget>();
+
         }
-    
     }
 }

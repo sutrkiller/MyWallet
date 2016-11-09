@@ -139,7 +139,6 @@ namespace MyWallet.Entities.UnitTests.Repositories
                 Id = new Guid(),
                 Amount = amount,
                 Description = description,
-                ConversionRatio = ratio,
                 Group = group
             };
         }

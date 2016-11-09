@@ -8,17 +8,18 @@ namespace MyWallet.Models.Mappings
     {
         public BudgetsMappingProfile()
         {
-            CreateMap<Budget, BudgetViewModel>()
-                .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dst => dst.Description, opt => opt.MapFrom(src => src.Description))
-                .ForMember(dst => dst.Amount, opt => opt.MapFrom(src => src.Amount));
+            CreateMap<Budget, BudgetViewModel>();
 
-            CreateMap<Budget, CreateBudgetViewModel>().ReverseMap();
-            CreateMap<CreateBudgetViewModel, Budget>().ReverseMap();
-            CreateMap<Budget, BudgetDetailsViewModel>()
-                 .ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Name))
-                 .ForMember(dst => dst.Description, opt => opt.MapFrom(src => src.Description))
-                 .ForMember(dst => dst.Amount, opt => opt.MapFrom(src => src.Amount));
+            CreateMap<Budget, CreateBudgetViewModel>()
+                 .ForMember(dst => dst.CategoriesList, opt => opt.Ignore())
+                 .ForMember(dst => dst.CurrencyList, opt => opt.Ignore())
+                 .ForMember(dst => dst.CurrencyId, opt => opt.Ignore())
+                 .ForMember(dst => dst.CategoryIds, opt => opt.Ignore());
+
+            CreateMap<CreateBudgetViewModel, Budget>()
+                .ForMember(dst => dst.Currency, opt => opt.Ignore())
+                .ForMember(dst => dst.Categories, opt => opt.Ignore());
+            CreateMap<Budget, BudgetDetailsViewModel>().ReverseMap();
         }
     }
 }

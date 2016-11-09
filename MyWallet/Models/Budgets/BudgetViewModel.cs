@@ -8,6 +8,8 @@ namespace MyWallet.Models.Budgets
 {
     public class BudgetViewModel
     {
+        public Guid Id { get; set; }
+
         public decimal Amount { get; set; }
         
         public string Description { get; set; }

@@ -14,6 +14,7 @@ using MyWallet.Entities.Repositories.Interfaces;
 using MyWallet.Entities.Repositories;
 using AutoMapper;
 using MyWallet.Configuration;
+using MyWallet.Entities.Repositories.Interfaces.MyWallet.Entities.Repositories.Interfaces;
 using MyWallet.Services.Configuration;
 
 namespace MyWallet
@@ -41,7 +42,8 @@ namespace MyWallet
             services.AddMvc();
 
             services.AddTransient<IBudgetRepository, BudgetRepository>();
-
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<ICurrencyRepository, CurrencyRepository>();
 
             var mapper = new MapperConfiguration(cfg =>
             {
