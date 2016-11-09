@@ -31,11 +31,25 @@ namespace MyWallet.Entities.Repositories
 
         }
 
-        public async Task<Budget> AddBudget(Budget budget)
+        public async Task<Budget> AddBudget(Budget budget, Currency currency, ICollection<Category> categories)
         {
             if (budget == null)
             {
                 throw new ArgumentNullException(nameof(budget));
+            }
+            if (currency == null)
+            {
+                throw new ArgumentNullException(nameof(currency));
+            }
+            if (categories == null)
+            {
+                throw new ArgumentNullException(nameof(categories));
+            }
+            budget.Currency = _context.Currencies.Find(currency.Id);
+
+            foreach (var cat in categories)
+            {
+                budget.Categories.Add(_context.Categories.Find(cat.Id));
             }
             var addedBudget = _context.Budgets.Add(budget);
             await _context.SaveChangesAsync();

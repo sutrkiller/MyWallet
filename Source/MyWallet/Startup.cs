@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -9,9 +10,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MyWallet.Configuration;
 using MyWallet.Data;
+using MyWallet.Entities.Configuration;
+using MyWallet.Entities.Repositories;
+using MyWallet.Entities.Repositories.Interfaces;
 using MyWallet.Models;
 using MyWallet.Services;
+using MyWallet.Services.Configuration;
+using MyWallet.Services.Services;
+using MyWallet.Services.Services.Interfaces;
 
 namespace MyWallet
 {
@@ -22,7 +30,8 @@ namespace MyWallet
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
 
             if (env.IsDevelopment())
             {
@@ -41,7 +50,9 @@ namespace MyWallet
         {
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("MyWalletConnection")))
+                .Configure<ConnectionOptions>(options => options.ConnectionString = Configuration.GetConnectionString("MyWalletConnection"))
+                .AddScoped<IBudgetService, BudgetService>();
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -52,6 +63,20 @@ namespace MyWallet
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+
+            services.AddTransient<IBudgetRepository, BudgetRepository>();
+             
+
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                ViewModelsMapperConfiguration.InitialializeMappings(cfg);
+                ServicesMapperConfiguration.InitialializeMappings(cfg);
+            }).CreateMapper();
+
+            // Do not allow application to start with broken configuration. Fail fast.
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
+            services.AddSingleton(mapper);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

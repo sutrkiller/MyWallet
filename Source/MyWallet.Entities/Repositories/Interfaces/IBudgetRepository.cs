@@ -11,8 +11,10 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// Adds single budget
         /// </summary>
         /// <param name="budget">New budget</param>
+        /// <param name="currency">Used currency</param>
+        /// <param name="categories">Used categories</param>
         /// <returns>Added budget</returns>
-        Task<Budget> AddBudget(Budget budget);
+        Task<Budget> AddBudget(Budget budget, Currency currency, ICollection<Category> categories);
 
         /// <summary>
         /// Returns single budget

@@ -65,7 +65,14 @@ namespace MyWallet.Entities.UnitTests.Repositories
                 Amount = 500m,
                 Description = "Budget with entry test."
             };
-            var addedBudget = await BudgetRepository.AddBudget(testBudget);
+
+            var testCurrency = new Currency
+            {
+                Code = "CZK"
+            };
+
+            var categories = new List<Category>() { new Category { Name = "Category", Description = "Description" } };
+            var addedBudget = await BudgetRepository.AddBudget(testBudget,testCurrency, categories);
             var addedEntry = await EntryRepository.AddEntryToBudget(testEntry, addedBudget);
 
             Assert.NotEmpty(addedEntry.Budgets);

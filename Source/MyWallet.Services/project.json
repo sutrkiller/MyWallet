@@ -12,6 +12,9 @@
   "frameworks": {
     "net462": {
       "dependencies": {
+        "MyWallet.Entities": {
+          "target": "project"
+        }
       }
     }
   }
