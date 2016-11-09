@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 
 namespace MyWallet.Models.Budgets
 {
-    public class CreateBudgetViewModel
+    public class BudgetViewModel
     {
-        public Guid  Id { get; set; }
-        [Required]
-        public string Name { get; set; }
-
+        public decimal Amount { get; set; }
+        
         public string Description { get; set; }
 
-        public decimal Amount { get; set; }
+        [Display(Name = "Budget name")]
+        public string Name { get; set; }
     }
 }
