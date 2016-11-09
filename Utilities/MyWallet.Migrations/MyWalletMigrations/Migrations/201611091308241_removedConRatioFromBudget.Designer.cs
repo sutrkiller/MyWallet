@@ -7,13 +7,13 @@ namespace MyWallet.Migrations.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class BudgetAddNameProperty : IMigrationMetadata
+    public sealed partial class removedConRatioFromBudget : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(BudgetAddNameProperty));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(removedConRatioFromBudget));
         
         string IMigrationMetadata.Id
         {
-            get { return "201611081738245_BudgetAddNameProperty"; }
+            get { return "201611091308241_removedConRatioFromBudget"; }
         }
         
         string IMigrationMetadata.Source

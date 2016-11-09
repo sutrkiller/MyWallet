@@ -23,7 +23,6 @@ namespace MyWallet.Services.DataTransferModels.Mapping
                 .ForMember(dst => dst.Categories, opt => opt.Ignore())
                 .ForMember(dst => dst.Entries, opt => opt.Ignore())
                 .ForMember(dst => dst.TimePeriods, opt => opt.Ignore())
-                .ForMember(dst => dst.ConversionRatio, opt => opt.Ignore())
                 .ForMember(dst => dst.Group, opt => opt.Ignore())
                 .ForMember(dst => dst.Id, opt => opt.Ignore());
         }

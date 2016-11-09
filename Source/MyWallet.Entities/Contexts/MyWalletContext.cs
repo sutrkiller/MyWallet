@@ -102,7 +102,6 @@ namespace MyWallet.Entities.Contexts
                 .HasMany(b => b.Entries)
                 .WithMany(e => e.Budgets)
                 .Map(m => m.ToTable("BudgetEntries"));
-            modelBuilder.Entity<Budget>().HasRequired(b => b.ConversionRatio).WithMany(c => c.Budgets).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Category>().HasMany(c => c.Entries).WithRequired(e => e.Category).WillCascadeOnDelete(true);
 

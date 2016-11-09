@@ -50,8 +50,8 @@ namespace MyWallet
         {
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")))
-                .Configure<ConnectionOptions>(options => options.ConnectionString = Configuration.GetConnectionString("DefaultConnection"))
+                options.UseSqlServer(Configuration.GetConnectionString("MyWalletConnection")))
+                .Configure<ConnectionOptions>(options => options.ConnectionString = Configuration.GetConnectionString("MyWalletConnection"))
                 .AddScoped<IBudgetService, BudgetService>();
 
             services.AddIdentity<ApplicationUser, IdentityRole>()

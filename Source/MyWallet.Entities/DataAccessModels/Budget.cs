@@ -55,19 +55,6 @@ namespace MyWallet.Entities.DataAccessModels
         /// </summary>
         public virtual ICollection<TimePeriod> TimePeriods { get; set; } = new HashSet<TimePeriod>();
 
-
-
-        /// <summary>
-        /// Gets or sets the conversion ratio. Navigable property.
-        /// </summary>
-        [Required]
-        public virtual ConversionRatio ConversionRatio { get; set; }
-
-        /// <summary>
-        /// Gets or sets the user. Navigable property.
-        /// </summary>
-        //public virtual User User { get; set; }
-
         /// <summary>
         /// Gets or sets the family. Navigable property.
         /// </summary>
