@@ -8,6 +8,7 @@ namespace MyWallet.Services.DataTransferModels.Mapping
         public UserMappingProfile()
         {
             CreateMap<User, UserDTO>()
+                .MaxDepth(1)
                 .ReverseMap();
         }
     }

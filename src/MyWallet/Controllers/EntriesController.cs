@@ -30,7 +30,13 @@ namespace MyWallet.Controllers
         // GET: Budgets/Details/[id]
         public async Task<IActionResult> Details(Guid id)
         {
-            throw new NotImplementedException();
+            var entryDto = await _entryService.GetEntry(id);
+            if (entryDto == null)
+            {
+                return NotFound();
+            }
+            var model = _mapper.Map<EntryDetailsViewModel>(entryDto);
+            return View(model);
         }
 
         // GET: Budgets/Create

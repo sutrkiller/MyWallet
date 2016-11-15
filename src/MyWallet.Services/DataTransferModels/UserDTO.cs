@@ -10,6 +10,6 @@ namespace MyWallet.Services.DataTransferModels
         public string Name { get; set; }
         public string Email { get; set; }
         public ICollection<GroupDTO> Groups { get; set; }
-        //public ICollection<EntryDTO> Entries { get; set; }
+        public ICollection<EntryDTO> Entries { get; set; }
     }
 }
