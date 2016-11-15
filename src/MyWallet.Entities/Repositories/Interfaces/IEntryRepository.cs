@@ -25,5 +25,25 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// </summary>
         /// <returns>All entries </returns>
         Task<Entry[]> GetAllEntries();
+
+        /// <summary>
+        /// Returns all entries for selected user
+        /// </summary>
+        /// <param name="userId">User </param>
+        /// <returns>All entries by user</returns>
+        Task<Entry[]> GetEntriesByUser(Guid userId);
+
+        /// <summary>
+        /// Returns all entries in selected budget
+        /// </summary>
+        /// <param name="budgetId">Budget </param>
+        /// <returns>All entries by budget</returns>
+        Task<Entry[]> GetEntriesByBudget(Guid budgetId);
+
+        /// <summary>
+        /// Returns all curencies
+        /// </summary>
+        /// <returns>All curencies </returns>
+        Task<Currency[]> GetAllCurrencies();
     }
 }
