@@ -13,12 +13,17 @@ namespace MyWallet.Services.Services
 {
     public class EntryService : IEntryService
     {
-        private readonly ILogger<IBudgetService> _logger;
-        private readonly IBudgetRepository _budgetRepository;
-        private readonly ICategoryRepository _categoryRepository;
-        private readonly IUserRepository _userRepository;
         private readonly IEntryRepository _entryRepository;
         private readonly IMapper _mapper;
+
+        public EntryService(
+            IEntryRepository entryRepository,
+            IMapper mapper
+            )
+        {
+            _entryRepository = entryRepository;
+            _mapper = mapper;
+        }
 
         public async Task<EntryDTO> AddEntry(EntryDTO entry)
         {

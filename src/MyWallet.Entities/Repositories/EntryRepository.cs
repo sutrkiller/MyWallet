@@ -43,10 +43,6 @@ namespace MyWallet.Entities.Repositories
         public async Task<Entry> GetSingleEntry(Guid id)
           => await _context
                 .Entries
-                //.Include(e=>e.Budgets)
-                //.Include(e=>e.Category)
-                //.Include(e=>e.ConversionRatio)
-                //.Include(e=>e.User)
                 .Where(entry => entry.Id == id)
                 .SingleOrDefaultAsync();
 
@@ -56,20 +52,12 @@ namespace MyWallet.Entities.Repositories
         public async Task<Entry[]> GetEntriesByUser(Guid userId)
           => await _context
                 .Entries
-                //.Include(e=>e.Budgets)
-                //.Include(e=>e.Category)
-                //.Include(e=>e.ConversionRatio)
-                //.Include(e=>e.User)
                 .Where(entry => entry.User.Id == userId)
                 .ToArrayAsync();
 
         public async Task<Entry[]> GetEntriesByBudget(Guid budgetId)
           => await _context
                 .Entries
-                //.Include(e=>e.Budgets)
-                //.Include(e=>e.Category)
-                //.Include(e=>e.ConversionRatio)
-                //.Include(e=>e.User)
                 .Where(entry => entry.Budgets.Any(budget => budget.Id == budgetId))
                 .ToArrayAsync();
 

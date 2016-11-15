@@ -44,8 +44,6 @@ namespace MyWallet.Entities.Repositories
         public async Task<Group> GetSingleGroup(Guid id)
           => await _context
                 .Groups
-                //.Include(g=>g.Budgets)
-                //.Include(g=>g.Users)
                 .Where(group => group.Id == id)
                 .SingleOrDefaultAsync();
 
