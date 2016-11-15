@@ -11,8 +11,6 @@ namespace MyWallet.Services.DataTransferModels
         public DateTime EntryTime { get; set; }
         public UserDTO User { get; set; }
         public CategoryDTO Category { get; set; }
-        public decimal AmountMain { get; set; }
-        public CurrencyDTO Currency { get; set; }
-        public CurrencyDTO CurrencyMain { get; set; }
+        public virtual ConversionRatio ConversionRatio { get; set; }
     }
 }

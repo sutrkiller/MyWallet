@@ -12,7 +12,7 @@ namespace MyWallet.Services.Services.Interfaces
         Task<EntryDTO[]> GetEntriesByUser(Guid userId);
         Task<CurrencyDTO[]> GetAllCurrencies();
         Task<EntryDTO> GetEntry(Guid entryId);
-        Task<EntryDTO> GetAllEntries(Guid entryId);
-        Task<EntryDTO> GetAllEntriesForBudget(Guid budgetId);
+        Task<EntryDTO[]> GetAllEntries();
+        Task<EntryDTO[]> GetAllEntriesForBudget(Guid budgetId);
     }
 }

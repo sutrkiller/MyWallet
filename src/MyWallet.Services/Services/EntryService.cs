@@ -29,29 +29,34 @@ namespace MyWallet.Services.Services
             return _mapper.Map<EntryDTO>(entryDb);
         }
 
-        public Task<EntryDTO[]> GetEntriesByUser(Guid userId)
+        public async Task<EntryDTO[]> GetEntriesByUser(Guid userId)
         {
-            throw new NotImplementedException();
+            var entryDb = await _entryRepository.GetEntriesByUser(userId);
+            return _mapper.Map<EntryDTO[]>(entryDb);
         }
 
-        public Task<CurrencyDTO[]> GetAllCurrencies()
+        public async Task<CurrencyDTO[]> GetAllCurrencies()
         {
-            throw new NotImplementedException();
+            var entryDb = await _entryRepository.GetAllCurrencies();
+            return _mapper.Map<CurrencyDTO[]>(entryDb);
         }
 
-        public Task<EntryDTO> GetEntry(Guid entryId)
+        public async Task<EntryDTO> GetEntry(Guid entryId)
         {
-            throw new NotImplementedException();
+            var entry = await _entryRepository.GetSingleEntry(entryId);
+            return _mapper.Map<EntryDTO>(entry);
         }
 
-        public Task<EntryDTO> GetAllEntries(Guid entryId)
+        public async Task<EntryDTO[]> GetAllEntries()
         {
-            throw new NotImplementedException();
+            var entryDb = await _entryRepository.GetAllEntries();
+            return _mapper.Map<EntryDTO[]>(entryDb);
         }
 
-        public Task<EntryDTO> GetAllEntriesForBudget(Guid budgetId)
+        public async Task<EntryDTO[]> GetAllEntriesForBudget(Guid budgetId)
         {
-            throw new NotImplementedException();
+            var entryDb = await _entryRepository.GetEntriesByBudget(budgetId);
+            return _mapper.Map<EntryDTO[]>(entryDb);
         }
     }
 }
