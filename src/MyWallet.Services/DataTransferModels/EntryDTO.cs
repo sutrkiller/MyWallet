@@ -12,6 +12,6 @@ namespace MyWallet.Services.DataTransferModels
         public UserDTO User { get; set; }
         public CategoryDTO Category { get; set; }
         public ConversionRatio ConversionRatio { get; set; }
-        public ICollection<Budget> Budgets { get; set; } = new HashSet<Budget>();
+        public ICollection<BudgetDTO> Budgets { get; set; } = new HashSet<BudgetDTO>();
     }
 }
