@@ -9,6 +9,7 @@ namespace MyWallet.Configuration
         public static void InitializeMappings(IMapperConfigurationExpression cfg)
         {
             cfg.AddProfile<BudgetsMappingProfile>();
+            cfg.AddProfile<EntriesMappingProfile>();
         }
     }
 }

@@ -43,16 +43,12 @@ namespace MyWallet.Entities.Repositories
         public async Task<User> GetSingleUser(Guid id)
           => await _context
                 .Users
-                //.Include(u => u.Entries)
-                //.Include(u => u.Groups)
                 .Where(user => user.Id == id)
                 .SingleOrDefaultAsync();
 
         public async Task<User> GetUserByEmail(string email)
             => await _context
                 .Users
-                //.Include(u => u.Entries)
-                //.Include(u => u.Groups)
                 .Where(u => u.Email == email)
                 .SingleOrDefaultAsync();
 

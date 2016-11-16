@@ -44,9 +44,6 @@ namespace MyWallet.Entities.Repositories
         public async Task<ConversionRatio> GetSingleConversionRatio(Guid id)
            => await _context
                 .ConversionRatios
-                //.Include(cr => cr.CurrencyFrom)
-                //.Include(cr => cr.CurrencyTo)
-                //.Include(cr => cr.Entries)
                 .Where(ratio => ratio.Id == id)
                 .SingleOrDefaultAsync();
 

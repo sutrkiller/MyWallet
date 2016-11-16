@@ -45,8 +45,6 @@ namespace MyWallet.Entities.Repositories
         public async Task<Category> GetSingleCategory(Guid id)
         => await _context
                 .Categories
-                //.Include(c=>c.Entries)
-                //.Include(c=>c.Budgets)
                 .Where(category => category.Id == id)
                 .SingleOrDefaultAsync();
 
