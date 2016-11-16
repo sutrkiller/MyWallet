@@ -49,5 +49,12 @@ namespace MyWallet.Entities.Repositories
 
         public async Task<Currency[]> GetAllCurrencies()
           => await _context.Currencies.ToArrayAsync();
+
+        public async Task<Currency> GetCurrencyByCode(string code)
+              => await _context
+                .Currencies
+                .Where(currency => currency.Code.Equals(code))
+                .SingleOrDefaultAsync();
+
     }
 }

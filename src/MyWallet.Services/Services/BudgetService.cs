@@ -16,30 +16,35 @@ namespace MyWallet.Services.Services
         private readonly ILogger<IBudgetService> _logger;
         private readonly IBudgetRepository _budgetRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ICurrencyRepository _currencyRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly IMapper _mapper;
 
         public BudgetService(
             IBudgetRepository budgetRepository,
             ICategoryRepository categoryRepository,
+            ICurrencyRepository currencyRepository,
             IGroupRepository groupRepository,
             ILogger<IBudgetService> logger,
             IMapper mapper)
         {
             _budgetRepository = budgetRepository;
             _categoryRepository = categoryRepository;
+            _currencyRepository = currencyRepository;
             _groupRepository = groupRepository;
             _logger = logger;
             _mapper = mapper;
         }
 
 
-        public async Task<BudgetDTO> AddBudget(BudgetDTO budget, Guid groupId, ICollection<Guid> categoryIds)
+        public async Task<BudgetDTO> AddBudget(BudgetDTO budget, Guid currencyId, Guid groupId, ICollection<Guid> categoryIds)
         {
-            var group = await _groupRepository.GetSingleGroup(groupId);
-            var categories = await _categoryRepository.GetCategoriesFromIds(categoryIds);
+            
             var dataAccessBudgetModel = _mapper.Map<Budget>(budget);
-            dataAccessBudgetModel = await _budgetRepository.AddBudget(dataAccessBudgetModel, group, categories);
+            dataAccessBudgetModel.Group = await _groupRepository.GetSingleGroup(groupId);
+            dataAccessBudgetModel.Currency =  await _currencyRepository.GetSingleCurrency(currencyId);
+            dataAccessBudgetModel.Categories = await _categoryRepository.GetCategoriesFromIds(categoryIds);
+            dataAccessBudgetModel = await _budgetRepository.AddBudget(dataAccessBudgetModel);
 
             return _mapper.Map<BudgetDTO>(dataAccessBudgetModel);
         }

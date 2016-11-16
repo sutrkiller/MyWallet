@@ -7,11 +7,12 @@ using MyWallet.Entities.Models;
 
 namespace MyWallet.Services.DataTransferModels.Mapping
 {
-    public class BudgetsMappingProfile : Profile
+    public class ConversionRatioMappingProfile : Profile
     {
-        public BudgetsMappingProfile()
+        public ConversionRatioMappingProfile()
         {
-            CreateMap<Budget, BudgetDTO>()
+            CreateMap<ConversionRatio, ConversionRatioDTO>()
+                .ForMember(d => d.Type, opt => opt.Ignore())
                 .MaxDepth(1)
                 .ReverseMap();
         }

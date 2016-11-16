@@ -52,9 +52,10 @@ namespace MyWallet.Entities.Repositories
         => await _context.Categories.ToArrayAsync();
 
         public async Task<Category[]> GetCategoriesFromIds(ICollection<Guid> categoryIds)
-        {
-            var categories = _context.Categories;
-            return await categories.Where(r => categoryIds.Contains(r.Id)).ToArrayAsync();
-        }
+        => await _context
+                 .Categories
+                 .Where(r => categoryIds.Contains(r.Id))
+                 .ToArrayAsync();
+     
     }
 }

@@ -25,5 +25,8 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// </summary>
         /// <returns>All currencies</returns>
         Task<Currency[]> GetAllCurrencies();
+
+        Task<Currency> GetCurrencyByCode(string code);
+        
     }
 }
