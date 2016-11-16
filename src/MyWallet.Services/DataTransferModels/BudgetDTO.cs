@@ -13,7 +13,7 @@ namespace MyWallet.Services.DataTransferModels
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public GroupDTO Group { get; set; }
-        public ICollection<Category> Categories { get; set; }
+        public ICollection<CategoryDTO> Categories { get; set; }
 
         public ICollection<EntryDTO> Entries { get; set; }
     }
