@@ -13,10 +13,8 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// Adds single budget to db.
         /// </summary>
         /// <param name="budget">New budget</param>
-        /// <param name="group">Group that created budget. Must be already in db.</param>
-        /// <param name="categories">Used categories. Muset be already in db.</param>
         /// <returns>Added budget</returns>
-        Task<Budget> AddBudget(Budget budget, Group group, ICollection<Category> categories);
+        Task<Budget> AddBudget(Budget budget);
 
         /// <summary>
         /// Returns single budget
@@ -30,5 +28,7 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// </summary>
         /// <returns>All budgets</returns>
         Task<Budget[]> GetAllBudgets();
+
+        Task<Budget[]> GetBudgetsFromIds(ICollection<Guid> budgetIds);
     }
 }

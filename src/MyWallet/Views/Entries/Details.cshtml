@@ -1,4 +1,4 @@
-﻿@model MyWallet.Models.Entries.EntryDetailsViewModel
+﻿@model EntryDetailsViewModel
 @{
     ViewData["Title"] = Model.EntryTime;
 }
@@ -16,7 +16,7 @@
             @Html.DisplayFor(model => model.Amount)
         </dd>
         <dt>
-            @Html.LabelFor(model => model.AmountInMain,"Amount converted")
+            @Html.LabelFor(model => model.AmountInMain, "Amount converted")
         </dt>
         <dd>
             @Html.DisplayFor(model => model.AmountInMain)
@@ -40,10 +40,10 @@
             @Html.DisplayFor(model => model.UserName)
         </dd>
         <dt>
-            @Html.LabelFor(model => model.CategoryName)
+            @Html.LabelFor(model => model.Categories)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.CategoryName)
+            @Html.DisplayFor(model => model.Categories)
         </dd>
         <dt>
             @Html.LabelFor(model => model.Budgets)

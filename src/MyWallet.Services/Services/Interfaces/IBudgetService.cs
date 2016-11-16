@@ -9,7 +9,7 @@ namespace MyWallet.Services.Services.Interfaces
 {
     public interface IBudgetService
     {
-        Task<BudgetDTO> AddBudget(BudgetDTO budget, Guid groupId, ICollection<Guid> categoryIds);
+        Task<BudgetDTO> AddBudget(BudgetDTO budget, Guid currencyId, Guid groupId, ICollection<Guid> categoryIds);
         Task<BudgetDTO[]> GetAllBudgets();
         Task<BudgetDTO> GetBudget(Guid id);
         Task<CategoryDTO[]> GetAllCategories();

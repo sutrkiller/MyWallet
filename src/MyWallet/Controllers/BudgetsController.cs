@@ -15,11 +15,13 @@ namespace MyWallet.Controllers
     public class BudgetsController : Controller
     {
         private readonly IBudgetService _budgetService;
+        private readonly IEntryService _entryService;
         private readonly IMapper _mapper;
 
-        public BudgetsController(IBudgetService budgetService, IMapper mapper)
+        public BudgetsController(IBudgetService budgetService, IEntryService entryService, IMapper mapper)
         {
             _budgetService = budgetService;
+            _entryService = entryService;
             _mapper = mapper;
         }
 
@@ -50,13 +52,13 @@ namespace MyWallet.Controllers
             var categories = await _budgetService.GetAllCategories();
             var categoriesList = categories.Select(d => new { Id = d.Id, Value = d.Name });
             newBudget.CategoriesList = new SelectList(categoriesList, "Id", "Value");
+            var currencies = await _entryService.GetAllCurrencies();
+            var currenciesList = currencies.Select(g => new { g.Id, Value = g.Code });
+            newBudget.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
             var groups = await _budgetService.GetAllGroups();
             var groupsList = groups.Select(g => new {g.Id, Value = g.Name});
             newBudget.GroupsList = new SelectList(groupsList,"Id","Value");
             return View(newBudget);
-
-
-
         }
 
         // POST: Budgets/Create
@@ -68,7 +70,7 @@ namespace MyWallet.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _budgetService.AddBudget(_mapper.Map<BudgetDTO>(budget), budget.GroupId, budget.CategoryIds);
+                await _budgetService.AddBudget(_mapper.Map<BudgetDTO>(budget), budget.CurrencyId, budget.GroupId, budget.CategoryIds);
                 return RedirectToAction("List");
             }
             return View(budget);

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MyWallet.Models.Entries;
+using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Services.Interfaces;
 
 namespace MyWallet.Controllers
@@ -12,11 +14,13 @@ namespace MyWallet.Controllers
     public class EntriesController : Controller
     {
         private readonly IEntryService _entryService;
+        private readonly IBudgetService _budgetService;
         private readonly IMapper _mapper;
 
-        public EntriesController(IEntryService entryService, IMapper mapper)
+        public EntriesController(IEntryService entryService, IBudgetService budgetService, IMapper mapper)
         {
             _entryService = entryService;
+            _budgetService = budgetService;
             _mapper = mapper;
         }
 
@@ -42,19 +46,34 @@ namespace MyWallet.Controllers
         // GET: Budgets/Create
         public async Task<IActionResult> Create()
         {
-            throw new NotImplementedException();
+            var newEntry = new CreateEntryViewModel();
+            var categories = await _budgetService.GetAllCategories();
+            var categoriesList = categories.Select(d => new { Id = d.Id, Value = d.Name });
+            newEntry.CategoriesList = new SelectList(categoriesList, "Id", "Value");
+            var budgets = await _budgetService.GetAllBudgets();
+            var budgetsList = budgets.Select(g => new { g.Id, Value = g.Name });
+            newEntry.BudgetsList = new SelectList(budgetsList, "Id", "Value");
+            var currencies = await _entryService.GetAllCurrencies();
+            var currenciesList = currencies.Select(g => new { g.Id, Value = g.Code });
+            newEntry.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
+            var onversionRatios = await _entryService.GetAllConversionRatios();
+            var onversionRatiosList = onversionRatios.Select(g => new { g.Id, Value = g.CurrencyFrom.Code + " - " + g.CurrencyTo.Code + " - " + g.Ratio });
+            newEntry.ConversionRatiosList = new SelectList(onversionRatiosList, "Id", "Value");
+            return View(newEntry);
         }
 
-        /*
+        
         // POST: Budgets/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateBudgetViewModel budget)
+        public async Task<IActionResult> Create(CreateEntryViewModel entry)
         {
-            throw new NotImplementedException();
+            //entry.UserId = currUser.ID
+            await _entryService.AddEntry(_mapper.Map<EntryDTO>(entry), entry.UserId, entry.ConversionRatioId, entry.CategoryIds,entry.BudgetIds);
+            return RedirectToAction("List");
         }
-        */
+        
     }
 }

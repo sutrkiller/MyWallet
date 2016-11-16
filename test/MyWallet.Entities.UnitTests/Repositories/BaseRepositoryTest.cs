@@ -179,7 +179,7 @@ namespace MyWallet.Entities.UnitTests.Repositories
                 Description = desc,
                 EntryTime = date,
                 User = group,
-                Category = category
+                //Category = category
             };
         }
 

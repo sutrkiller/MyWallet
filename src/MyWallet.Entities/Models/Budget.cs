@@ -51,5 +51,7 @@ namespace MyWallet.Entities.Models
         /// Gets or sets the group. Navigable property. Group of one or more users, whose entries this budget controls.
         /// </summary>
         public virtual Group Group { get; set; }
+
+        public virtual Currency Currency { get; set; }
     }
 }
