@@ -22,5 +22,10 @@ namespace MyWallet.Entities.Models
         /// </summary>
         public virtual ICollection<ConversionRatio> ConversionRatiosTo { get; set; } = new HashSet<ConversionRatio>();
 
+        /// <summary>
+        /// Collection of users whose preferred currency is this.
+        /// </summary>
+        public virtual ICollection<User> Users { get; set; } = new HashSet<User>();
+
     }
 }

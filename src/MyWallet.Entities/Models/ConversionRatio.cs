@@ -19,6 +19,11 @@ namespace MyWallet.Entities.Models
         public DateTime Date { get; set; }
 
         /// <summary>
+        /// Type of this conversion ratio. Whether it was added by user or from CNB.
+        /// </summary>
+        public string Type { get; set; }
+
+        /// <summary>
         /// Gets or sets the currency. This is navigable property. Currency this ratio can convert from.
         /// </summary>
         public virtual Currency CurrencyFrom { get; set; }
@@ -32,5 +37,10 @@ namespace MyWallet.Entities.Models
         /// Gets or sets the entries. Navigable property. Entries with this conversion ratio.
         /// </summary>
         public ICollection<Entry> Entries { get; set; } = new HashSet<Entry>();
+
+        /// <summary>
+        /// Collection of budgets with this conversion ratio.
+        /// </summary>
+        public ICollection<Budget> Budgets { get; set; } = new HashSet<Budget>();
     }
 }

@@ -15,8 +15,8 @@ namespace MyWallet.Models.Entries
         public DateTime EntryTime { get; set; }
         [DisplayName("User")]
         public string UserName { get; set; }
-        [DisplayName("Category")]
-        public string CategoryName { get; set; }
+        [DisplayName("Categories")]
+        public string CategoryNames { get; set; }
         public ICollection<BudgetDTO> Budgets { get; set; } = new HashSet<BudgetDTO>();
     }
 }

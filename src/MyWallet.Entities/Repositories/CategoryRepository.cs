@@ -48,13 +48,11 @@ namespace MyWallet.Entities.Repositories
                 .Where(category => category.Id == id)
                 .SingleOrDefaultAsync();
 
-        public async Task<Category[]> GetAllCategories()
-        => await _context.Categories.ToArrayAsync();
+        public IQueryable<Category> GetAllCategories()
+        => _context.Categories.AsQueryable();
 
         public async Task<Category[]> GetCategoriesFromIds(ICollection<Guid> categoryIds)
-        {
-            var categories = _context.Categories;
-            return await categories.Where(r => categoryIds.Contains(r.Id)).ToArrayAsync();
-        }
+        =>await _context.Categories.Where(r => categoryIds.Contains(r.Id)).ToArrayAsync();
+        
     }
 }

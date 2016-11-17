@@ -13,6 +13,7 @@ namespace MyWallet.Services.Configuration
             configuration.AddProfile<UserMappingProfile>();
             configuration.AddProfile<CurrencyMappingProfile>();
             configuration.AddProfile<EntryMappingProfile>();
+            configuration.AddProfile<ConversionRatioMappingProfile>();
         }
         
     }

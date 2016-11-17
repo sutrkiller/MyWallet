@@ -46,6 +46,9 @@ namespace MyWallet
             services.AddTransient<IEntryRepository, EntryRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IGroupRepository, GroupRepository>();
+            services.AddTransient<ICurrencyRepository, CurrencyRepository>();
+            services.AddTransient<IConversionRatioRepository, ConversionRatioRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
             var mapper = new MapperConfiguration(cfg =>
             {

@@ -52,7 +52,7 @@
             @Html.DisplayNameFor(model => model.Categories)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Categories)
+            @string.Join(", ", Model.Categories.Select(x=>x.Name))
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Entries)

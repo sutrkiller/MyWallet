@@ -120,8 +120,8 @@ namespace MyWallet.Entities.UnitTests.Repositories
             UserRepository = new UserRepository(contextSubstitute);
 
             //entries
-            var e1 = GetNewEntry(10m, "Entry 1", new DateTime(2016, 11, 7), u1, cat1);
-            var e2 = GetNewEntry(20m, "Entry 2", new DateTime(2016, 11, 8), u2, cat2);
+            var e1 = GetNewEntry(10m, "Entry 1", new DateTime(2016, 11, 7), u1, new List<Category>() {cat1});
+            var e2 = GetNewEntry(20m, "Entry 2", new DateTime(2016, 11, 8), u2, new List<Category> { cat2});
             var entries = new List<Entry>() { e1, e2 };
             var entriesSub = SubstituteQueryable(entries);
             contextSubstitute.Entries.Returns(entriesSub);
@@ -170,7 +170,7 @@ namespace MyWallet.Entities.UnitTests.Repositories
             };
         }
 
-        private Entry GetNewEntry(decimal amount, string desc, DateTime date, User group = null, Category category = null)
+        private Entry GetNewEntry(decimal amount, string desc, DateTime date, User group = null,List<Category> categories = null)
         {
             return new Entry()
             {
@@ -179,7 +179,7 @@ namespace MyWallet.Entities.UnitTests.Repositories
                 Description = desc,
                 EntryTime = date,
                 User = group,
-                Category = category
+                Categories = categories
             };
         }
 

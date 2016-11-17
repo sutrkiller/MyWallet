@@ -47,7 +47,7 @@ namespace MyWallet.Entities.Repositories
                 .Where(ratio => ratio.Id == id)
                 .SingleOrDefaultAsync();
 
-        public async Task<ConversionRatio[]> GetAllConversionRatios()
-              => await _context.ConversionRatios.ToArrayAsync();
+        public IQueryable<ConversionRatio> GetAllConversionRatios()
+              => _context.ConversionRatios.AsQueryable();
     }
 }

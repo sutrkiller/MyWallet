@@ -31,24 +31,35 @@ namespace MyWallet.Entities.Repositories
 
         }
 
-        public async Task<Budget> AddBudget(Budget budget, Group group, ICollection<Category> categories)
+        public async Task<Budget> AddBudget(Budget budget)
         {
             if (budget == null)
             {
                 throw new ArgumentNullException(nameof(budget));
             }
-            if (categories == null)
+            if (budget.Categories == null)
             {
-                throw new ArgumentNullException(nameof(categories));
+                throw new ArgumentNullException(nameof(Budget.Categories));
             }
-            if (group == null)
+            if (budget.Group == null)
             {
-                throw new ArgumentNullException(nameof(group));
+                throw new ArgumentNullException(nameof(Budget.Group));
             }
 
-            budget.Group = _context.Groups.Find(group.Id);
+            budget.Group = _context.Groups.Find(budget.Group.Id);
 
-            foreach (var cat in categories)
+            //TODO: change this
+            budget.ConversionRatio = _context.ConversionRatios.Add(new ConversionRatio()
+            {
+                CurrencyFrom = await _context.Currencies.SingleOrDefaultAsync(x => x.Code == "USD"),
+                CurrencyTo = await _context.Currencies.SingleOrDefaultAsync(x => x.Code == "EUR"),
+                Date = DateTime.Today,
+                Ratio = 1.5m
+            });
+
+            var categs = budget.Categories;
+            budget.Categories = new List<Category>();
+            foreach (var cat in categs)
             {
                 budget.Categories.Add(_context.Categories.Find(cat.Id));
             }
@@ -64,7 +75,10 @@ namespace MyWallet.Entities.Repositories
                 .Where(budget => budget.Id == id)
                 .SingleOrDefaultAsync();
 
-        public async Task<Budget[]> GetAllBudgets()
-            => await _context.Budgets.ToArrayAsync();
+        public IQueryable<Budget> GetAllBudgets()
+            => _context.Budgets.AsQueryable();
+
+        public async Task<Budget[]> GetBudgetsFromIds(ICollection<Guid> budgetIDs)
+            => await _context.Budgets.Where(b => budgetIDs.Any(id => id == b.Id)).ToArrayAsync();
     }
 }

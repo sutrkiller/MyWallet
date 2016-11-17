@@ -48,6 +48,12 @@ namespace MyWallet.Entities.Models
         public virtual ICollection<Entry> Entries { get; set; } = new HashSet<Entry>();
 
         /// <summary>
+        /// Currency of created budget. It is possible to convert entries values into this currency.
+        /// </summary>
+        [Required]
+        public virtual ConversionRatio ConversionRatio { get; set; }
+
+        /// <summary>
         /// Gets or sets the group. Navigable property. Group of one or more users, whose entries this budget controls.
         /// </summary>
         public virtual Group Group { get; set; }
