@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Threading.Tasks;
 using MyWallet.Entities.Models;
 using Xunit;
@@ -31,7 +32,7 @@ namespace MyWallet.Entities.UnitTests.Repositories
         [Fact]
         public async Task GetAllConversionRatiosTest()
         {
-            var allEntities = await ConversionRatioRepository.GetAllConversionRatios();
+            var allEntities = await ConversionRatioRepository.GetAllConversionRatios().ToArrayAsync();
             Assert.NotNull(allEntities);
             Assert.NotEmpty(allEntities);
             Assert.Equal(2, allEntities.Length);

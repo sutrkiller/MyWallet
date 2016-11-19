@@ -1,6 +1,5 @@
 ﻿@using System.Threading.Tasks
-@using MyWallet.Models.Budgets
-@model IEnumerable<MyWallet.Models.Entries.EntryViewModel>
+@model IEnumerable<EntryViewModel>
 
 @{
     ViewData["Title"] = "Entries";
@@ -27,7 +26,7 @@
                 @Html.DisplayNameFor(model => model.User)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Category)
+                @Html.DisplayNameFor(model => model.Categories)
             </th>
             <th></th>
         </tr>
@@ -49,7 +48,7 @@
                     @Html.DisplayFor(modelItem => item.User.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Category.Name)
+                   @string.Join(", ", @item.Categories.Select(x => x.Name))
                 </td>
                 <td>
                 <td>

@@ -13,6 +13,6 @@ namespace MyWallet.Models.Entries
         public string Description { get; set; }
         public DateTime EntryTime { get; set; }
         public UserDTO User { get; set; }
-        public CategoryDTO Category { get; set; }
+        public ICollection<CategoryDTO> Categories { get; set; }
     }
 }

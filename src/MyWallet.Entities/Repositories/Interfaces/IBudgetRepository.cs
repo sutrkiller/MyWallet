@@ -16,7 +16,7 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// <param name="group">Group that created budget. Must be already in db.</param>
         /// <param name="categories">Used categories. Muset be already in db.</param>
         /// <returns>Added budget</returns>
-        Task<Budget> AddBudget(Budget budget, Group group, ICollection<Category> categories);
+        Task<Budget> AddBudget(Budget budget);
 
         /// <summary>
         /// Returns single budget
@@ -26,9 +26,11 @@ namespace MyWallet.Entities.Repositories.Interfaces
         Task<Budget> GetSingleBudget(Guid id);
 
         /// <summary>
-        /// Returns all budgets
+        /// Returns all budgets as queryable. So further condition can be set without materialization.
         /// </summary>
         /// <returns>All budgets</returns>
-        Task<Budget[]> GetAllBudgets();
+        IQueryable<Budget> GetAllBudgets();
+
+        Task<Budget[]> GetBudgetsFromIds(ICollection<Guid> budgetIDs);
     }
 }

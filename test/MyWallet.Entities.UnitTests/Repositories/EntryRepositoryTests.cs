@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Threading.Tasks;
 using MyWallet.Entities.Models;
 using Xunit;
@@ -15,7 +16,10 @@ namespace MyWallet.Entities.UnitTests.Repositories
             {
                 Amount = 105m,
                 Description = "Test",
-                EntryTime = DateTime.Now
+                EntryTime = DateTime.Now,
+                ConversionRatio = new ConversionRatio() { Date = DateTime.Today,Ratio = 15m,Type = "Testing",CurrencyTo = new Currency() { Code = "CZK"},CurrencyFrom = new Currency() { Code = "EUR"} },
+                User = new User() { Email = "email@email.com",Name = "Name", PreferredCurrency = new Currency() { Code = "EUR"} },
+                Categories = new List<Category>() { new Category() {Name = "Cat1"} }
             };
 
             var addedEntry = await EntryRepository.AddEntry(testEntry);
@@ -35,7 +39,7 @@ namespace MyWallet.Entities.UnitTests.Repositories
         [Fact]
         public async Task GetAllEntriesTest()
         {
-            var allEntities = await EntryRepository.GetAllEntries();
+            var allEntities = await EntryRepository.GetAllEntries().ToArrayAsync();
             Assert.NotNull(allEntities);
             Assert.NotEmpty(allEntities);
             Assert.Equal(2, allEntities.Length);

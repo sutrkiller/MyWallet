@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Threading.Tasks;
 using MyWallet.Entities.Models;
 using Xunit;
@@ -28,7 +29,7 @@ namespace MyWallet.Entities.UnitTests.Repositories
         [Fact]
         public async Task GetAllGroupsTest()
         {
-            var allEntities = await GroupRepository.GetAllGroups();
+            var allEntities = await GroupRepository.GetAllGroups().ToArrayAsync();
             Assert.NotNull(allEntities);
             Assert.NotEmpty(allEntities);
             Assert.Equal(2, allEntities.Length);
