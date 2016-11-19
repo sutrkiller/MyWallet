@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,6 +35,33 @@ namespace MyWallet.Entities.Repositories
             {
                 throw new ArgumentNullException(nameof(entry));
             }
+            if (entry.Categories == null)
+            {
+                throw new ArgumentNullException(nameof(Entry.Categories));
+            }
+            if (entry.ConversionRatio == null)
+            {
+                throw new ArgumentNullException(nameof(Entry.ConversionRatio));
+            }
+            if (entry.User == null)
+            {
+                throw new ArgumentNullException(nameof(Entry.User));
+            }
+            entry.User = _context.Users.Find(entry.User.Id);
+            entry.ConversionRatio = _context.ConversionRatios.Find(entry.ConversionRatio.Id);
+            var categories = entry.Categories;
+            entry.Categories = new List<Category>();
+            foreach (var cat in categories)
+            {
+                entry.Categories.Add(_context.Categories.Find(cat.Id));
+            }
+            var budgets = entry.Budgets;
+            entry.Budgets = new List<Budget>();
+            foreach (var bud in budgets ?? new List<Budget>())
+            {
+                entry.Budgets.Add(_context.Budgets.Find(bud.Id));
+            }
+
             var addedEntry = _context.Entries.Add(entry);
             await _context.SaveChangesAsync();
 
@@ -46,8 +74,8 @@ namespace MyWallet.Entities.Repositories
                 .Where(entry => entry.Id == id)
                 .SingleOrDefaultAsync();
 
-        public async Task<Entry[]> GetAllEntries()
-         => await _context.Entries.ToArrayAsync();
+        public IQueryable<Entry> GetAllEntries()
+         => _context.Entries.AsQueryable();
 
         public async Task<Entry[]> GetEntriesByUser(Guid userId)
           => await _context
@@ -60,8 +88,5 @@ namespace MyWallet.Entities.Repositories
                 .Entries
                 .Where(entry => entry.Budgets.Any(budget => budget.Id == budgetId))
                 .ToArrayAsync();
-
-        public async Task<Currency[]> GetAllCurrencies()
-         => await _context.Currencies.ToArrayAsync();
     }
 }

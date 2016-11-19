@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using MyWallet.Entities.Models;
@@ -33,7 +34,7 @@ namespace MyWallet.Entities.UnitTests.Repositories
         [Fact]
         public async Task GetAllUsersTest()
         {
-            var allEntities = await UserRepository.GetAllUsers();
+            var allEntities = await UserRepository.GetAllUsers().ToArrayAsync();
             Assert.NotNull(allEntities);
             Assert.NotEmpty(allEntities);
             Assert.Equal(2, allEntities.Length);

@@ -27,6 +27,6 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// Returns all conversion ratios
         /// </summary>
         /// <returns>All conversion ratios</returns>
-        Task<ConversionRatio[]> GetAllConversionRatios();
+        IQueryable<ConversionRatio> GetAllConversionRatios();
     }
 }

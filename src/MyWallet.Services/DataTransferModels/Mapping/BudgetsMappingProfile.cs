@@ -12,6 +12,7 @@ namespace MyWallet.Services.DataTransferModels.Mapping
         public BudgetsMappingProfile()
         {
             CreateMap<Budget, BudgetDTO>()
+                .MaxDepth(1)
                 .ReverseMap();
         }
     }

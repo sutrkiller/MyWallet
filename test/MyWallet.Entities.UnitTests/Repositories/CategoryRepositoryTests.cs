@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Threading.Tasks;
 using MyWallet.Entities.Models;
 using Xunit;
@@ -31,7 +32,7 @@ namespace MyWallet.Entities.UnitTests.Repositories
         [Fact]
         public async Task GetAllCategories()
         {
-            var categories = await CategoryRepository.GetAllCategories();
+            var categories = await CategoryRepository.GetAllCategories().ToArrayAsync();
             Assert.NotNull(categories);
             Assert.NotEmpty(categories);
             Assert.Equal(2, categories.Length);

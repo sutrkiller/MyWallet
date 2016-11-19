@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MyWallet.Entities.Models;
 
@@ -24,6 +25,6 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// Returns all groups
         /// </summary>
         /// <returns>All groups</returns>
-        Task<Group[]> GetAllGroups();
+        IQueryable<Group> GetAllGroups();
     }
 }

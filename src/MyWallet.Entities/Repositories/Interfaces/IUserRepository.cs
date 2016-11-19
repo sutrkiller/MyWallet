@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MyWallet.Entities.Models;
 
@@ -31,6 +32,6 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// Returns all users
         /// </summary>
         /// <returns>All users</returns>
-        Task<User[]> GetAllUsers();
+        IQueryable<User> GetAllUsers();
     }
 }

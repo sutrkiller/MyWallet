@@ -10,8 +10,8 @@ namespace MyWallet.Services.DataTransferModels
         public string Description { get; set; }
         public DateTime EntryTime { get; set; }
         public UserDTO User { get; set; }
-        public CategoryDTO Category { get; set; }
+        public ICollection<CategoryDTO> Categories { get; set; }
         public ConversionRatio ConversionRatio { get; set; }
-        public ICollection<Budget> Budgets { get; set; } = new HashSet<Budget>();
+        public ICollection<BudgetDTO> Budgets { get; set; } = new HashSet<BudgetDTO>();
     }
 }
