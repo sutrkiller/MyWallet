@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MyWallet.Entities.Models;
 
@@ -24,26 +25,20 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// Returns all entries
         /// </summary>
         /// <returns>All entries </returns>
-        Task<Entry[]> GetAllEntries();
+        IQueryable<Entry> GetAllEntries();
 
         /// <summary>
         /// Returns all entries for selected user
         /// </summary>
         /// <param name="userId">User </param>
         /// <returns>All entries by user</returns>
-        Task<Entry[]> GetEntriesByUser(Guid userId);
+        Task<Entry[]> GetEntriesByUser(Guid userId); //TODO: this should be implemented on service using GetAllEntries
 
         /// <summary>
         /// Returns all entries in selected budget
         /// </summary>
         /// <param name="budgetId">Budget </param>
         /// <returns>All entries by budget</returns>
-        Task<Entry[]> GetEntriesByBudget(Guid budgetId);
-
-        /// <summary>
-        /// Returns all curencies
-        /// </summary>
-        /// <returns>All curencies </returns>
-        Task<Currency[]> GetAllCurrencies();
+        Task<Entry[]> GetEntriesByBudget(Guid budgetId); //TODO: this should be implemented on service using 
     }
 }

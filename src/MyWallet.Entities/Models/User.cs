@@ -26,5 +26,8 @@ namespace MyWallet.Entities.Models
         /// </summary>
         public virtual ICollection<Entry> Entries { get; set; } = new HashSet<Entry>();
 
+        [Required]
+        public virtual Currency PreferredCurrency { get; set; }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -34,8 +35,7 @@ namespace MyWallet.Entities.Models
         /// <summary>
         /// Gets or sets the category. Navigable property. Each entry muset belong to some category.
         /// </summary>
-        [Required]
-        public virtual Category Category { get; set; }
+        public virtual ICollection<Category> Categories { get; set; } = new HashSet<Category>();
 
         /// <summary>
         /// Gets or sets the budgets. Navigable property. Budgets that include this entry.

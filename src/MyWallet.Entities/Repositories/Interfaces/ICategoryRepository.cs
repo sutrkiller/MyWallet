@@ -27,7 +27,7 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// Returns all categories
         /// </summary>
         /// <returns>All categories</returns>
-        Task<Category[]> GetAllCategories();
+        IQueryable<Category> GetAllCategories();
         /// <summary>
         /// Returns all categories
         /// </summary>

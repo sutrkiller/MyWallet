@@ -52,7 +52,7 @@ namespace MyWallet.Entities.Repositories
                 .Where(u => u.Email == email)
                 .SingleOrDefaultAsync();
 
-        public async Task<User[]> GetAllUsers()
-        => await _context.Users.ToArrayAsync();
+        public IQueryable<User> GetAllUsers()
+        => _context.Users.AsQueryable();
     }
 }

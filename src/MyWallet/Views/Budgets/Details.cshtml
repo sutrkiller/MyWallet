@@ -46,14 +46,23 @@
             @Html.DisplayNameFor(model => model.Group)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Group)
+            @Html.DisplayFor(model => model.Group.Name)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Categories)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Categories)
+            @string.Join(", ", Model.Categories.Select(x=>x.Name))
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Entries)
+        </dt>
+        @foreach (var entry in Model.Entries)
+        {
+            <dd>@entry.Description - @entry.Amount @entry.ConversionRatio.CurrencyFrom.Code</dd>
+            
+        }
+
     </dl>
 </div>
 <div>
