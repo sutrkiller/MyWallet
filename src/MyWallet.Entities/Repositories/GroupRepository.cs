@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,5 +50,8 @@ namespace MyWallet.Entities.Repositories
 
         public IQueryable<Group> GetAllGroups()
          => _context.Groups.AsQueryable();
+        
+        public async Task<Group[]> GetGroupsFromIds(ICollection<Guid> groupIds)
+        => await _context.Groups.Where(r => groupIds.Contains(r.Id)).ToArrayAsync();
     }
 }

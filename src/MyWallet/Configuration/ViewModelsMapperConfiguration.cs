@@ -11,6 +11,7 @@ namespace MyWallet.Configuration
             cfg.AddProfile<BudgetsMappingProfile>();
             cfg.AddProfile<EntriesMappingProfile>();
             cfg.AddProfile<CategoriesMappingProfile>();
+            cfg.AddProfile<GroupsMappingProfile>();
         }
     }
 }

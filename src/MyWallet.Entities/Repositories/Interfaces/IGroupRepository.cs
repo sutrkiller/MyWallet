@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MyWallet.Entities.Models;
@@ -26,5 +27,12 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// </summary>
         /// <returns>All groups</returns>
         IQueryable<Group> GetAllGroups();
+
+        /// <summary>
+        /// Returns specific groupús
+        /// </summary>
+        /// <param name="groupIds">Collection of guid of groups</param>
+        /// <returns>Groups specified by groupIds</returns>
+        Task<Group[]> GetGroupsFromIds(ICollection<Guid> groupIds);
     }
 }

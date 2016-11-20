@@ -38,6 +38,8 @@ namespace MyWallet
             services.Configure<ConnectionOptions>(
                     options => options.ConnectionString = Configuration.GetConnectionString("MyWalletConnection"))
                 .AddScoped<IBudgetService, BudgetService>().
+                AddScoped<ICategoryService, CategoryService>().
+                AddScoped<IGroupService, GroupService>().
                 AddScoped<IEntryService, EntryService>();
             // Add framework services.
             services.AddMvc();
