@@ -71,6 +71,7 @@ namespace MyWallet.Services.Services
         public async Task<CategoryDTO[]> GetAllCategories()
         {
             //TODO: change this later
+            //TODO: change usages of thisone to category service
             await Task.Delay(0);
             var categories = _categoryRepository.GetAllCategories().ToArray();
             return _mapper.Map<CategoryDTO[]>(categories);
