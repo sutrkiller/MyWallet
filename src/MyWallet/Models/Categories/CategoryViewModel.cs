@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using MyWallet.Entities.Models;
 
-namespace MyWallet.Services.DataTransferModels
+namespace MyWallet.Models.Categories
 {
-    public class CategoryDTO : BaseDTO
+    public class CategoryViewModel
     {
+        public Guid Id { get; set; }
+
+        [Display(Name = "Category name")]
         public string Name { get; set; }
 
         public string Description { get; set; }
-        
-        public ICollection<EntryDTO> Entries { get; set; }
     }
 }

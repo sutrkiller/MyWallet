@@ -8,6 +8,7 @@ namespace MyWallet.Services.DataTransferModels.Mapping
         public CategoryMapping()
         {
             CreateMap<Category, CategoryDTO>()
+                .MaxDepth(1)
                 .ReverseMap();
         }
     }

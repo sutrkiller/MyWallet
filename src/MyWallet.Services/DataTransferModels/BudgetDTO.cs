@@ -15,7 +15,6 @@ namespace MyWallet.Services.DataTransferModels
         public GroupDTO Group { get; set; }
         public ConversionRatio ConversionRatio { get; set; }
         public ICollection<CategoryDTO> Categories { get; set; }
-
         public ICollection<EntryDTO> Entries { get; set; }
     }
 }
