@@ -1,0 +1,36 @@
+﻿@using System.Threading.Tasks
+@using MyWallet.Models.Groups
+@model GroupDetailsViewModel
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Group</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.LabelFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.LabelFor(model => model.UserNames)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UserNames)
+        </dd>
+        <dt>
+            @Html.LabelFor(model => model.Budgets)
+        </dt>
+        <dd>
+            @string.Join(", ", Model.Budgets.Select(x => x.Name))
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="List">Back to List</a>
+</div>

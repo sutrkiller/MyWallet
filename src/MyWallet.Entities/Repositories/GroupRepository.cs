@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,6 +36,12 @@ namespace MyWallet.Entities.Repositories
             {
                 throw new ArgumentNullException(nameof(group));
             }
+            var users = group.Users;
+            group.Users = new List<User>();
+            foreach (var user in users)
+            {
+                group.Users.Add(_context.Users.Find(user.Id));
+            }
             var addedGroup = _context.Groups.Add(group);
             await _context.SaveChangesAsync();
 
@@ -49,5 +56,8 @@ namespace MyWallet.Entities.Repositories
 
         public IQueryable<Group> GetAllGroups()
          => _context.Groups.AsQueryable();
+        
+        public async Task<Group[]> GetGroupsFromIds(ICollection<Guid> groupIds)
+        => await _context.Groups.Where(r => groupIds.Contains(r.Id)).ToArrayAsync();
     }
 }
