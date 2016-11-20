@@ -18,6 +18,8 @@ namespace MyWallet.Models.Budgets
 
         public ICollection<CategoryDTO> Categories { get; set; } = new List<CategoryDTO>();
 
+        public ICollection<EntryDTO> Entries { get; set; } = new List<EntryDTO>();
+
         public GroupDTO Group { get; set; }
     }
 }

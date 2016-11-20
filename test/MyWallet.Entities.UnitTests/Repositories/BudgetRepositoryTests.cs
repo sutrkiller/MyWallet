@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 using MyWallet.Entities.Models;
 using Xunit;
@@ -16,6 +18,14 @@ namespace MyWallet.Entities.UnitTests.Repositories
                 Name = "Family"
             };
 
+            var cr = new ConversionRatio()
+            {
+                CurrencyFrom = new Currency() {Code = "CZK"},
+                CurrencyTo = new Currency() {Code = "EUR"},
+                Date = DateTime.Today,
+                Ratio = 25.6m
+            };
+
             var categories = new List<Category>() { new Category { Name = "Category", Description = "Description" } };
 
             var testBudget = new Budget
@@ -25,9 +35,12 @@ namespace MyWallet.Entities.UnitTests.Repositories
                 Description = "Lunch",
                 StartDate = DateTime.Now,
                 EndDate = DateTime.Now.AddDays(7),
+                Group = testGroup,
+                ConversionRatio = cr,
+                Categories = categories
             };
 
-            var addedBudget = await BudgetRepository.AddBudget(testBudget, testGroup, categories);
+            var addedBudget = await BudgetRepository.AddBudget(testBudget);
 
             Assert.NotEqual(Guid.Empty, addedBudget.Id);
             Assert.Equal(testBudget.Amount, addedBudget.Amount);
@@ -43,7 +56,7 @@ namespace MyWallet.Entities.UnitTests.Repositories
         [Fact]
         public async Task GetAllBudgetsTest()
         {
-            var allBudgets = await BudgetRepository.GetAllBudgets();
+            var allBudgets = await BudgetRepository.GetAllBudgets().ToArrayAsync();
             Assert.NotNull(allBudgets);
             Assert.NotEmpty(allBudgets);
             Assert.Equal(2, allBudgets.Length);

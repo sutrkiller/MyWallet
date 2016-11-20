@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -26,6 +29,7 @@ namespace MyWallet
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("googleauth.json", optional: false)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -37,8 +41,9 @@ namespace MyWallet
         {
             services.Configure<ConnectionOptions>(
                     options => options.ConnectionString = Configuration.GetConnectionString("MyWalletConnection"))
-                .AddScoped<IBudgetService, BudgetService>().
-                AddScoped<IEntryService, EntryService>();
+                .AddScoped<IBudgetService, BudgetService>()
+                .AddScoped<IEntryService, EntryService>()
+                .AddScoped<IUserService, UserService>();
             // Add framework services.
             services.AddMvc();
 
@@ -46,6 +51,9 @@ namespace MyWallet
             services.AddTransient<IEntryRepository, EntryRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IGroupRepository, GroupRepository>();
+            services.AddTransient<ICurrencyRepository, CurrencyRepository>();
+            services.AddTransient<IConversionRatioRepository, ConversionRatioRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
             var mapper = new MapperConfiguration(cfg =>
             {
@@ -54,7 +62,8 @@ namespace MyWallet
             }).CreateMapper();
 
             mapper.ConfigurationProvider.AssertConfigurationIsValid();
-            services.AddSingleton(mapper);
+            services.AddSingleton(mapper)
+                .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,6 +83,36 @@ namespace MyWallet
             }
 
             app.UseStaticFiles();
+
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationScheme = "Cookie",
+                AccessDeniedPath = new PathString("/Accounts/AccessDenied"),
+                LoginPath = new PathString("/Accounts/AccessDenied"),
+                AutomaticChallenge = true,
+                AutomaticAuthenticate = true,
+            });
+
+            app.UseGoogleAuthentication(new GoogleOptions
+            {
+                //ClientId = "812033040925-6p5cvr5v3c8v5o9bcvfnffl5ed5823vf.apps.googleusercontent.com",
+                //ClientSecret = "Xxqlo3hwy8Z92_IGD0lQJ2YQ",
+                ClientId = Configuration["web:client_id"],
+                ClientSecret = Configuration["web:client_secret"],
+                AuthenticationScheme = "Google",
+                CallbackPath = "/Home/Index",
+                SignInScheme = "Cookie",
+                AutomaticAuthenticate = true,
+                Events = new OAuthEvents
+                {
+                    OnTicketReceived = context =>
+                    {
+                        var userService = context.HttpContext.RequestServices.GetService<IUserService>();
+                        userService.EnsureUserExists(context.Principal.Identity as ClaimsIdentity);
+                        return Task.FromResult(0);
+                    }
+                }
+            });
 
             app.UseMvc(routes =>
             {

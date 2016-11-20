@@ -47,7 +47,7 @@ namespace MyWallet.Entities.Repositories
                 .Where(group => group.Id == id)
                 .SingleOrDefaultAsync();
 
-        public async Task<Group[]> GetAllGroups()
-         => await _context.Groups.ToArrayAsync();
+        public IQueryable<Group> GetAllGroups()
+         => _context.Groups.AsQueryable();
     }
 }

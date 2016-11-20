@@ -26,7 +26,9 @@ namespace MyWallet.Models.Budgets
         public SelectList CategoriesList { get; set; }
 
         public Guid GroupId { get; set; }
-        public GroupDTO Group { get; set; }
         public SelectList GroupsList { get; set; }
+
+        public Guid CurrencyId { get; set; }
+        public SelectList CurrenciesList { get; set; }
     }
 }
