@@ -36,6 +36,12 @@ namespace MyWallet.Entities.Repositories
             {
                 throw new ArgumentNullException(nameof(group));
             }
+            var users = group.Users;
+            group.Users = new List<User>();
+            foreach (var user in users)
+            {
+                group.Users.Add(_context.Users.Find(user.Id));
+            }
             var addedGroup = _context.Groups.Add(group);
             await _context.SaveChangesAsync();
 

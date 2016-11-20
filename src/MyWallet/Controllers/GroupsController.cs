@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyWallet.Models.Entries;
@@ -15,17 +16,18 @@ namespace MyWallet.Controllers
     public class GroupsController : Controller
     {
         private readonly IGroupService _groupService;
-        private readonly IBudgetService _budgetService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public GroupsController(IGroupService groupService, IMapper mapper, IBudgetService budgetService)
+        public GroupsController(IGroupService groupService, IMapper mapper, IUserService userService)
         {
             _groupService = groupService;
             _mapper = mapper;
-            _budgetService = budgetService;
+            _userService = userService;
         }
 
         // GET: Groups
+        [Authorize]
         public async Task<IActionResult> List()
         {
             var groupsDto = await _groupService.GetAllGroups();
@@ -33,53 +35,46 @@ namespace MyWallet.Controllers
         }
 
         // GET: Groups/Details/[id]
+        [Authorize]
         public async Task<IActionResult> Details(Guid id)
         {
-            throw new NotImplementedException();/*
-            var entryDto = await _entryService.GetEntry(id);
-            if (entryDto == null)
+            
+            var groupDto = await _groupService.GetGroup(id);
+            if (groupDto == null)
             {
                 return NotFound();
             }
-            var model = _mapper.Map<EntryDetailsViewModel>(entryDto);
+            var model = _mapper.Map<GroupDetailsViewModel>(groupDto);
             return View(model);
-            */
+            
         }
 
         // GET: Groups/Create
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             var newEntry = new CreateGroupViewModel();
-            //var users = await _userService.GetAllUsers();
-            //var userssList = users.Select(d => new { Id = d.Id, Value = d.Name });
-            //newEntry.UsersList = new SelectList(userssList, "Id", "Value");
+            var users = await _userService.GetAllUsers();
+            var userssList = users.Select(d => new { Id = d.Id, Value = d.Name });
+            newEntry.UsersList = new SelectList(userssList, "Id", "Value");
             return View(newEntry);
                         
         }
 
-        /*
+        
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateEntryViewModel entry)
+        public async Task<IActionResult> Create(CreateGroupViewModel group)
         {
             if (ModelState.IsValid)
             {
-                await _entryService.AddEntry(_mapper.Map<EntryDTO>(entry), entry.UserId, entry.ConversionRatioId, entry.CategoryIds, entry.BudgetIds);
+                await _groupService.AddGroup(_mapper.Map<GroupDTO>(group), group.UserIds);
                 return RedirectToAction("List");
             }
-            return View(entry);
+            return View(group);
         }
 
-        /*
-        // POST: Groups/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateBudgetViewModel budget)
-        {
-            throw new NotImplementedException();
-        }
-        */
+        
         }
 }

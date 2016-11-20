@@ -41,16 +41,12 @@ namespace MyWallet
         {
             services.Configure<ConnectionOptions>(
                     options => options.ConnectionString = Configuration.GetConnectionString("MyWalletConnection"))
-<<<<<<< HEAD
+
                 .AddScoped<IBudgetService, BudgetService>().
                 AddScoped<ICategoryService, CategoryService>().
                 AddScoped<IGroupService, GroupService>().
-                AddScoped<IEntryService, EntryService>();
-=======
-                .AddScoped<IBudgetService, BudgetService>()
-                .AddScoped<IEntryService, EntryService>()
-                .AddScoped<IUserService, UserService>();
->>>>>>> refs/remotes/origin/master
+                AddScoped<IEntryService, EntryService>().
+                AddScoped<IUserService, UserService>();
             // Add framework services.
             services.AddMvc();
 
