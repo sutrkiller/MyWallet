@@ -38,6 +38,7 @@
                     <li><a asp-area="" asp-controller="Budgets" asp-action="List">Budgets</a></li>
                     <li><a asp-area="" asp-controller="Groups" asp-action="List">Groups</a></li>
                 </ul>
+                @await Component.InvokeAsync("SignIn");
             </div>
         </div>
     </div>

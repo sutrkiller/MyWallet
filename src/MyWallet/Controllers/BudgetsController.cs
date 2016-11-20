@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using MyWallet.Entities.Models;
 using MyWallet.Models.Budgets;
 using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Services.Interfaces;
@@ -26,6 +26,7 @@ namespace MyWallet.Controllers
         }
 
         // GET: Budgets
+        [Authorize]
         public async Task<IActionResult> List()
         {
             var budgetsDTO = await _budgetService.GetAllBudgets();
@@ -33,6 +34,7 @@ namespace MyWallet.Controllers
         }
 
         // GET: Budgets/Details/[id]
+        [Authorize]
         public async Task<IActionResult> Details(Guid id)
         {
 
@@ -46,6 +48,7 @@ namespace MyWallet.Controllers
         }
 
         // GET: Budgets/Create
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             var newBudget = new CreateBudgetViewModel();
@@ -68,6 +71,7 @@ namespace MyWallet.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateBudgetViewModel budget)
         {
