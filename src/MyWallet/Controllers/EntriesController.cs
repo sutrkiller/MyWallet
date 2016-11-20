@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyWallet.Models.Entries;
@@ -25,6 +26,7 @@ namespace MyWallet.Controllers
         }
 
         // GET: Budgets
+        [Authorize]
         public async Task<IActionResult> List()
         {
             var entriesDTO = await _entryService.GetAllEntries();
@@ -32,6 +34,7 @@ namespace MyWallet.Controllers
         }
 
         // GET: Budgets/Details/[id]
+        [Authorize]
         public async Task<IActionResult> Details(Guid id)
         {
             var entryDto = await _entryService.GetEntry(id);
@@ -44,6 +47,7 @@ namespace MyWallet.Controllers
         }
 
         // GET: Budgets/Create
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             var newEntry = new CreateEntryViewModel();
@@ -63,6 +67,7 @@ namespace MyWallet.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateEntryViewModel entry)
         {
