@@ -98,8 +98,6 @@ namespace MyWallet
 
             app.UseGoogleAuthentication(new GoogleOptions
             {
-                //ClientId = "812033040925-6p5cvr5v3c8v5o9bcvfnffl5ed5823vf.apps.googleusercontent.com",
-                //ClientSecret = "Xxqlo3hwy8Z92_IGD0lQJ2YQ",
                 ClientId = Configuration["web:client_id"],
                 ClientSecret = Configuration["web:client_secret"],
                 AuthenticationScheme = "Google",

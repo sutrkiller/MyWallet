@@ -12,13 +12,15 @@ namespace MyWallet.Services.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
+        private readonly ICurrencyRepository _currencyRepository;
 
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper, ICurrencyRepository currencyRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _currencyRepository = currencyRepository;
         }
 
         public async Task<User> EnsureUserExists(ClaimsIdentity userClaims)
@@ -28,14 +30,20 @@ namespace MyWallet.Services.Services
                 throw new ArgumentNullException(nameof(userClaims));
             }
 
-            var gamer = await _userRepository.GetUserByEmail(userClaims.FindFirst(ClaimTypes.Email)?.Value) ??
-                        await _userRepository.AddUser(new User
-                        {
-                            Email = userClaims.FindFirst(ClaimTypes.Email)?.Value,
-                            Name = userClaims.Name,
-                        });
+            var currency = await _currencyRepository.GetDefaultCurrency();
 
-            return gamer;
+            var user = await _userRepository.GetUserByEmail(userClaims.FindFirst(ClaimTypes.Email)?.Value);
+            if (user == null)
+            {
+                await _userRepository.AddUser(new User
+                {
+                    Email = userClaims.FindFirst(ClaimTypes.Email)?.Value,
+                    Name = userClaims.Name,
+                    PreferredCurrency = currency
+                });
+            }
+
+            return user;
         }
 
         public async Task<UserDTO[]> GetAllUsers()

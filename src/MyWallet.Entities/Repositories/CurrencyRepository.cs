@@ -52,5 +52,8 @@ namespace MyWallet.Entities.Repositories
 
         public async Task<Currency[]> GetAllCurrencies()
           => await _context.Currencies.ToArrayAsync();
+
+        public async Task<Currency> GetDefaultCurrency()
+            => await GetCurrencyByCode("CZK");
     }
 }

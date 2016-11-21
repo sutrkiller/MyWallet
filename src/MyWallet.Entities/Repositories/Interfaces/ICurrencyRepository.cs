@@ -27,5 +27,11 @@ namespace MyWallet.Entities.Repositories.Interfaces
         Task<Currency[]> GetAllCurrencies();
 
         Task<Currency> GetCurrencyByCode(string code);
+
+        /// <summary>
+        /// Returns default currency - CZK
+        /// </summary>
+        /// <returns></returns>
+        Task<Currency> GetDefaultCurrency();
     }
 }
