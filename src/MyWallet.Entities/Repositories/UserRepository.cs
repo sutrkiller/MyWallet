@@ -64,7 +64,7 @@ namespace MyWallet.Entities.Repositories
         public IQueryable<User> GetAllUsers()
         => _context.Users.AsQueryable();
 
-        public async Task<User[]> GetUsersFromIds(ICollection<Guid> userIds)
-        => await _context.Users.Where(r => userIds.Contains(r.Id)).ToArrayAsync();
+        public IQueryable<User> GetUsersFromIds(ICollection<Guid> userIds)
+        => _context.Users.Where(r => userIds.Contains(r.Id));
     }
 }

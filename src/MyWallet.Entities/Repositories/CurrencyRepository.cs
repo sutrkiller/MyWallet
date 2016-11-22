@@ -50,8 +50,8 @@ namespace MyWallet.Entities.Repositories
         public async Task<Currency> GetCurrencyByCode(string code)
             => await _context.Currencies.SingleOrDefaultAsync(c => c.Code == code);
 
-        public async Task<Currency[]> GetAllCurrencies()
-          => await _context.Currencies.ToArrayAsync();
+        public IQueryable<Currency> GetAllCurrencies()
+          => _context.Currencies;
 
         public async Task<Currency> GetDefaultCurrency()
             => await GetCurrencyByCode("CZK");
