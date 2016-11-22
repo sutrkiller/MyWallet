@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IdentityModel.Claims;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -16,13 +18,16 @@ namespace MyWallet.Controllers
     {
         private readonly IEntryService _entryService;
         private readonly IBudgetService _budgetService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public EntriesController(IEntryService entryService, IMapper mapper, IBudgetService budgetService)
+        public EntriesController(IEntryService entryService, IMapper mapper, IBudgetService budgetService,
+            IUserService userService)
         {
             _entryService = entryService;
             _mapper = mapper;
             _budgetService = budgetService;
+            _userService = userService;
         }
 
         // GET: Budgets
@@ -52,18 +57,20 @@ namespace MyWallet.Controllers
         {
             var newEntry = new CreateEntryViewModel();
             var categories = await _budgetService.GetAllCategories();
-            var categoriesList = categories.Select(d => new { Id = d.Id, Value = d.Name });
+            var categoriesList = categories.Select(d => new {Id = d.Id, Value = d.Name});
             newEntry.CategoriesList = new SelectList(categoriesList, "Id", "Value");
             var budgets = await _budgetService.GetAllBudgets();
-            var budgetsList = budgets.Select(g => new { g.Id, Value = g.Name });
+            var budgetsList = budgets.Select(g => new {g.Id, Value = g.Name});
             newEntry.BudgetsList = new SelectList(budgetsList, "Id", "Value");
             var currencies = await _entryService.GetAllCurrencies();
-            var currenciesList = currencies.Select(g => new { g.Id, Value = g.Code });
+            var currenciesList = currencies.Select(g => new {g.Id, Value = g.Code});
             newEntry.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
             var onversionRatios = await _entryService.GetAllConversionRatios();
-            var onversionRatiosList = onversionRatios.Select(g => new { g.Id, Value = g.CurrencyFrom.Code + " - " + g.CurrencyTo.Code + " - " + g.Ratio });
+            var onversionRatiosList =
+                onversionRatios.Select(
+                    g => new {g.Id, Value = g.CurrencyFrom.Code + " - " + g.CurrencyTo.Code + " - " + g.Ratio});
             newEntry.ConversionRatiosList = new SelectList(onversionRatiosList, "Id", "Value");
-                        return View(newEntry);
+            return View(newEntry);
         }
 
         [HttpPost]
@@ -73,8 +80,17 @@ namespace MyWallet.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _entryService.AddEntry(_mapper.Map<EntryDTO>(entry), entry.UserId, entry.ConversionRatioId, entry.CategoryIds, entry.BudgetIds);
-                return RedirectToAction("List");
+                try
+                {
+                    var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                    await _entryService.AddEntry(_mapper.Map<EntryDTO>(entry), email, entry.ConversionRatioId, entry.CategoryIds, entry.BudgetIds);
+                    return RedirectToAction("List");
+                }
+                catch (NullReferenceException ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+                
             }
             return View(entry);
         }

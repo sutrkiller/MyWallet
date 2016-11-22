@@ -15,6 +15,7 @@ using MyWallet.Configuration;
 using MyWallet.Entities.Configuration;
 using MyWallet.Entities.Repositories;
 using MyWallet.Entities.Repositories.Interfaces;
+using MyWallet.Middlewares;
 using MyWallet.Services.Configuration;
 using MyWallet.Services.Services;
 using MyWallet.Services.Services.Interfaces;
@@ -84,6 +85,8 @@ namespace MyWallet
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            //This should call CNB as soon as possible
+            app.UseCurrencyUpdaterMiddleware();
 
             app.UseStaticFiles();
 
