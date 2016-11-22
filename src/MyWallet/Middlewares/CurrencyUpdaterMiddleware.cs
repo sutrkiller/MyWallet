@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Routing;
 using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Services.Interfaces;
 
@@ -51,7 +54,8 @@ namespace MyWallet.Middlewares
         private async Task RequestNewConversionRatios()
         {
             string date = DateTime.Today.ToString("dd.MM.yyyy");
-            var request = (HttpWebRequest)WebRequest.Create($"http://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt?date={date}");
+            var address = new Uri($"http://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt?date={date}");
+            var request = (HttpWebRequest)WebRequest.Create(address);
 
             var response = await request.GetResponseAsync();
             var stream = response.GetResponseStream();
@@ -85,11 +89,11 @@ namespace MyWallet.Middlewares
 
                 var ratios = lines.Skip(2).Select(x =>
                 {
-                    var splitted = x.Replace(',', '.').Split('|');
+                    var splitted = x.Split('|');
                     var currency = splitted[3];
                     decimal ratio;
                     decimal baseR;
-                    if (!decimal.TryParse(splitted[4], out ratio) || !decimal.TryParse(splitted[2], out baseR))
+                    if (!decimal.TryParse(splitted[4], out ratio) || !decimal.TryParse(splitted[2], NumberStyles.Currency,CultureInfo.InvariantCulture,out baseR))
                     {
                         return null;
                     }
