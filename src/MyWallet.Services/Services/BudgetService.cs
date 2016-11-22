@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -42,9 +43,8 @@ namespace MyWallet.Services.Services
         {
             var dataAccessBudgetModel = _mapper.Map<Budget>(budget);
             dataAccessBudgetModel.Group = await _groupRepository.GetSingleGroup(groupId);
-            //TODO: get real cr
-            dataAccessBudgetModel.ConversionRatio =  _conversionRatioRepository.GetAllConversionRatios().FirstOrDefault(cr=>cr.CurrencyFrom.Id == currencyId);
-            dataAccessBudgetModel.Categories = await _categoryRepository.GetCategoriesFromIds(categoryIds);
+            dataAccessBudgetModel.ConversionRatio =  _conversionRatioRepository.GetAllConversionRatios().OrderByDescending(x=>x.Date).FirstOrDefault(cr=>cr.CurrencyFrom.Id == currencyId);
+            dataAccessBudgetModel.Categories = await _categoryRepository.GetCategoriesFromIds(categoryIds).ToArrayAsync();
 
             dataAccessBudgetModel = await _budgetRepository.AddBudget(dataAccessBudgetModel);
 
@@ -54,10 +54,7 @@ namespace MyWallet.Services.Services
         public async Task<BudgetDTO[]> GetAllBudgets()
         {
             _logger.LogInformation("Starting Budget service method");
-
-            //TODO: create filters
-            await Task.Delay(0); //only to keep async, will be useless after change
-            var dataAccessBudgetsModel = _budgetRepository.GetAllBudgets().ToArray();
+            var dataAccessBudgetsModel = await _budgetRepository.GetAllBudgets().ToArrayAsync();
             return _mapper.Map<BudgetDTO[]>(dataAccessBudgetsModel);
         }
 
@@ -70,10 +67,8 @@ namespace MyWallet.Services.Services
 
         public async Task<CategoryDTO[]> GetAllCategories()
         {
-            //TODO: change this later
-            //TODO: change usages of thisone to category service
-            await Task.Delay(0);
-            var categories = _categoryRepository.GetAllCategories().ToArray();
+            //TODO: filter?
+            var categories = await _categoryRepository.GetAllCategories().ToArrayAsync();
             return _mapper.Map<CategoryDTO[]>(categories);
         }
 

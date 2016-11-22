@@ -30,9 +30,10 @@ namespace MyWallet.Migrations.Migrations
             var u1 = new User() { Email = "email@provider.com", Name = "User 1", PreferredCurrency = cur3 };
             context.Users.AddOrUpdate(u1);
 
-            var con1 = new ConversionRatio() { CurrencyFrom = cur1, CurrencyTo = cur2, Date = DateTime.Now, Ratio = 1.1m };
-            var con2 = new ConversionRatio() { CurrencyFrom = cur3, CurrencyTo = cur2, Date = DateTime.Now, Ratio = 1.2m };
-            context.ConversionRatios.AddOrUpdate(con1, con2);
+            var con1 = new ConversionRatio() { CurrencyFrom = cur1, CurrencyTo = cur3, Date = DateTime.Now, Ratio = 1.1m };
+            var con2 = new ConversionRatio() { CurrencyFrom = cur2, CurrencyTo = cur3, Date = DateTime.Now, Ratio = 1.2m };
+            var con3 = new ConversionRatio() { CurrencyFrom = cur3, CurrencyTo = cur3, Date = DateTime.Now, Ratio = 1m };
+            context.ConversionRatios.AddOrUpdate(con1, con2, con3);
 
             var b1 = new Budget { Name = "Prázdniny", Description = "Peníze které utratím na prázdninách", Amount = 222m, Group = g1, StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(5), ConversionRatio = con1 };
             var b2 = new Budget { Name = "Chlastaèka", Description = "Co všechno propiju", Amount = 5000m, Group = g2, StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(15), ConversionRatio = con2 };

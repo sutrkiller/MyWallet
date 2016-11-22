@@ -31,7 +31,7 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// <returns>All budgets</returns>
         IQueryable<Budget> GetAllBudgets();
 
-        Task<Budget[]> GetBudgetsFromIds(ICollection<Guid> budgetIDs);
+        IQueryable<Budget> GetBudgetsFromIds(ICollection<Guid> budgetIDs);
         Task DeleteBudget(Budget budget);
     }
 }

@@ -77,17 +77,15 @@ namespace MyWallet.Entities.Repositories
         public IQueryable<Entry> GetAllEntries()
          => _context.Entries.AsQueryable();
 
-        public async Task<Entry[]> GetEntriesByUser(Guid userId)
-          => await _context
+        public IQueryable<Entry> GetEntriesByUser(Guid userId)
+          => _context
                 .Entries
-                .Where(entry => entry.User.Id == userId)
-                .ToArrayAsync();
+                .Where(entry => entry.User.Id == userId);
 
-        public async Task<Entry[]> GetEntriesByBudget(Guid budgetId)
-          => await _context
+        public IQueryable<Entry> GetEntriesByBudget(Guid budgetId)
+            => _context
                 .Entries
-                .Where(entry => entry.Budgets.Any(budget => budget.Id == budgetId))
-                .ToArrayAsync();
+                .Where(entry => entry.Budgets.Any(budget => budget.Id == budgetId));
 
         public async Task DeleteEntry(Entry entry)
         {

@@ -46,8 +46,8 @@ namespace MyWallet.Services.Services
             var user = dataAccessEntryModel.User = await _userRepository.GetUserByEmail(userEmail);
             dataAccessEntryModel.User = user;
                        
-           dataAccessEntryModel.Categories = await _categoryRepository.GetCategoriesFromIds(categoryIds);
-           dataAccessEntryModel.Budgets = await _budgetRepository.GetBudgetsFromIds(budgetIds);
+           dataAccessEntryModel.Categories = await _categoryRepository.GetCategoriesFromIds(categoryIds).ToArrayAsync();
+           dataAccessEntryModel.Budgets = await _budgetRepository.GetBudgetsFromIds(budgetIds).ToArrayAsync();
            dataAccessEntryModel.ConversionRatio = await _conversionRatioRepository.GetSingleConversionRatio(conversionRatioId);
            dataAccessEntryModel = await _entryRepository.AddEntry(dataAccessEntryModel);
                        return _mapper.Map<EntryDTO>(dataAccessEntryModel);
@@ -55,13 +55,13 @@ namespace MyWallet.Services.Services
 
         public async Task<EntryDTO[]> GetEntriesByUser(Guid userId)
         {
-            var entryDb = await _entryRepository.GetEntriesByUser(userId);
+            var entryDb = await _entryRepository.GetEntriesByUser(userId).ToArrayAsync();
             return _mapper.Map<EntryDTO[]>(entryDb);
         }
 
         public async Task<CurrencyDTO[]> GetAllCurrencies()
         {
-            var entryDb = await _currencyRepository.GetAllCurrencies();
+            var entryDb = await _currencyRepository.GetAllCurrencies().ToArrayAsync();
             return _mapper.Map<CurrencyDTO[]>(entryDb);
         }
 
