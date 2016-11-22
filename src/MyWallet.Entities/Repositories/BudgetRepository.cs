@@ -80,5 +80,12 @@ namespace MyWallet.Entities.Repositories
 
         public async Task<Budget[]> GetBudgetsFromIds(ICollection<Guid> budgetIDs)
             => await _context.Budgets.Where(b => budgetIDs.Any(id => id == b.Id)).ToArrayAsync();
+
+        public async Task DeleteBudget(Budget budget)
+        {
+            _context.Budgets.Remove(budget);
+            await _context.SaveChangesAsync();
+        }
+            
     }
 }

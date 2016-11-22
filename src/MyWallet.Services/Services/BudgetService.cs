@@ -84,5 +84,11 @@ namespace MyWallet.Services.Services
             var groups = _groupRepository.GetAllGroups().ToArray();
             return _mapper.Map<Group[]>(groups);
         }
+
+        public async Task DeleteBudget(Guid id)
+        {
+            var budget = await _budgetRepository.GetSingleBudget(id);
+            await _budgetRepository.DeleteBudget(budget);
+        }
     }
 }

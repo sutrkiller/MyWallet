@@ -88,5 +88,11 @@ namespace MyWallet.Entities.Repositories
                 .Entries
                 .Where(entry => entry.Budgets.Any(budget => budget.Id == budgetId))
                 .ToArrayAsync();
+
+        public async Task DeleteEntry(Entry entry)
+        {
+            _context.Entries.Remove(entry);
+            await _context.SaveChangesAsync();
+        }
     }
 }

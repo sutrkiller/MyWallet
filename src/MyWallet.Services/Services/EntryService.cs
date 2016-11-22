@@ -101,5 +101,11 @@ namespace MyWallet.Services.Services
                 await _conversionRatioRepository.AddConversionRatio(ratio);
             }
         }
+
+        public async Task DeleteEntry(Guid id)
+        {
+            var entry = await _entryRepository.GetSingleEntry(id);
+            await _entryRepository.DeleteEntry(entry);
+        }
     }
 }

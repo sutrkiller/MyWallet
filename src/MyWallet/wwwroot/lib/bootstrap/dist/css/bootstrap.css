@@ -3401,6 +3401,14 @@ fieldset[disabled] .btn-danger.focus {
   color: #d9534f;
   background-color: #fff;
 }
+
+.btn-href {
+    border: 0;
+    padding: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
 .btn-link {
   font-weight: normal;
   color: #337ab7;

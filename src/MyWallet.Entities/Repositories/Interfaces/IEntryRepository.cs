@@ -40,5 +40,6 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// <param name="budgetId">Budget </param>
         /// <returns>All entries by budget</returns>
         Task<Entry[]> GetEntriesByBudget(Guid budgetId); //TODO: this should be implemented on service using 
+        Task DeleteEntry(Entry entry);
     }
 }
