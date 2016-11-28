@@ -35,10 +35,10 @@ namespace MyWallet.Services.Services
             return _mapper.Map<CategoryDTO>(dataAccessCategoryModel);
         }
 
-        public void EditCategory(CategoryDTO category)
+        public async Task EditCategory(CategoryDTO category)
         {
             var dataAccessCategoryModel = _mapper.Map<Category>(category);
-            _categoryRepository.EditCategory(dataAccessCategoryModel);
+            await _categoryRepository.EditCategory(dataAccessCategoryModel);
         }
 
         public async Task<CategoryDTO[]> GetAllCategories()

@@ -43,7 +43,7 @@ namespace MyWallet.Entities.Repositories
             return addedCategory;
         }
 
-        public async void EditCategory(Category category)
+        public async Task EditCategory(Category category)
         {
             if (category == null)
             {

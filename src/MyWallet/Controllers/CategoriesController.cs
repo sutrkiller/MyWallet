@@ -97,11 +97,11 @@ namespace MyWallet.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(CreateCategoryViewModel category)
+        public async Task<IActionResult> Edit(EditCategoryViewModel category)
         {
             if (ModelState.IsValid)
             {
-                _categoryService.EditCategory(_mapper.Map<CategoryDTO>(category));
+                await _categoryService.EditCategory(_mapper.Map<CategoryDTO>(category));
                 return RedirectToAction("List");
             }
             return View(category);

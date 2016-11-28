@@ -11,6 +11,6 @@ namespace MyWallet.Services.Services.Interfaces
         Task<CategoryDTO> AddCategory(CategoryDTO category);
         Task<CategoryDTO[]> GetAllCategories();
         Task<CategoryDTO> GetCategory(Guid id);
-        void EditCategory(CategoryDTO category);
+        Task EditCategory(CategoryDTO category);
     }
 }
