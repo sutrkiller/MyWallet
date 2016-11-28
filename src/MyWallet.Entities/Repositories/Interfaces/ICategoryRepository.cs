@@ -32,6 +32,6 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// Returns all categories
         /// </summary>
         /// <returns>Return specific categories</returns>
-        Task<Category[]> GetCategoriesFromIds(ICollection<Guid> categoryIds);
+        IQueryable<Category> GetCategoriesFromIds(ICollection<Guid> categoryIds);
     }
 }

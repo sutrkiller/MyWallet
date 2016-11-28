@@ -33,8 +33,16 @@ namespace MyWallet.Entities.Repositories
         public async Task<User> AddUser(User user)
         {
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
+            }
 
+            if (user.PreferredCurrency == null)
+            {
+                throw new ArgumentNullException(nameof(user.PreferredCurrency));
+            }
+            
+            user.PreferredCurrency = _context.Currencies.Find(user.PreferredCurrency.Id);
             var addedUser = _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
@@ -56,7 +64,7 @@ namespace MyWallet.Entities.Repositories
         public IQueryable<User> GetAllUsers()
         => _context.Users.AsQueryable();
 
-        public async Task<User[]> GetUsersFromIds(ICollection<Guid> userIds)
-        => await _context.Users.Where(r => userIds.Contains(r.Id)).ToArrayAsync();
+        public IQueryable<User> GetUsersFromIds(ICollection<Guid> userIds)
+        => _context.Users.Where(r => userIds.Contains(r.Id));
     }
 }

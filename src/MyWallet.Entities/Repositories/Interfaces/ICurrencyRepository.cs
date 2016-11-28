@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MyWallet.Entities.Models;
 
@@ -24,8 +25,14 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// Returns all currencies
         /// </summary>
         /// <returns>All currencies</returns>
-        Task<Currency[]> GetAllCurrencies();
+        IQueryable<Currency> GetAllCurrencies();
 
         Task<Currency> GetCurrencyByCode(string code);
+
+        /// <summary>
+        /// Returns default currency - CZK
+        /// </summary>
+        /// <returns></returns>
+        Task<Currency> GetDefaultCurrency();
     }
 }

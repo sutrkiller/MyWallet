@@ -15,6 +15,7 @@ using MyWallet.Configuration;
 using MyWallet.Entities.Configuration;
 using MyWallet.Entities.Repositories;
 using MyWallet.Entities.Repositories.Interfaces;
+using MyWallet.Middlewares;
 using MyWallet.Services.Configuration;
 using MyWallet.Services.Services;
 using MyWallet.Services.Services.Interfaces;
@@ -84,6 +85,8 @@ namespace MyWallet
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            //This should call CNB as soon as possible
+            app.UseCurrencyUpdaterMiddleware();
 
             app.UseStaticFiles();
 
@@ -98,8 +101,6 @@ namespace MyWallet
 
             app.UseGoogleAuthentication(new GoogleOptions
             {
-                //ClientId = "812033040925-6p5cvr5v3c8v5o9bcvfnffl5ed5823vf.apps.googleusercontent.com",
-                //ClientSecret = "Xxqlo3hwy8Z92_IGD0lQJ2YQ",
                 ClientId = Configuration["web:client_id"],
                 ClientSecret = Configuration["web:client_secret"],
                 AuthenticationScheme = "Google",

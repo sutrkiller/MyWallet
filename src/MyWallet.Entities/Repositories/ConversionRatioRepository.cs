@@ -35,6 +35,8 @@ namespace MyWallet.Entities.Repositories
             {
                 throw new ArgumentNullException(nameof(ratio));
             }
+            ratio.CurrencyFrom = _context.Currencies.Find(ratio.CurrencyFrom.Id);
+            ratio.CurrencyTo = _context.Currencies.Find(ratio.CurrencyTo.Id);
             var addedRatio = _context.ConversionRatios.Add(ratio);
             await _context.SaveChangesAsync();
 

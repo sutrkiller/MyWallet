@@ -33,6 +33,6 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// </summary>
         /// <param name="groupIds">Collection of guid of groups</param>
         /// <returns>Groups specified by groupIds</returns>
-        Task<Group[]> GetGroupsFromIds(ICollection<Guid> groupIds);
+        IQueryable<Group> GetGroupsFromIds(ICollection<Guid> groupIds);
     }
 }

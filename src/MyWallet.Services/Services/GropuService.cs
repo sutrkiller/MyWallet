@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -34,7 +35,7 @@ namespace MyWallet.Services.Services
         public async Task<GroupDTO> AddGroup(GroupDTO group, ICollection<Guid> userIds)
         {
             var dataAccessGroupModel = _mapper.Map<Group>(group);
-            dataAccessGroupModel.Users = await _userRepository.GetUsersFromIds(userIds);
+            dataAccessGroupModel.Users = await _userRepository.GetUsersFromIds(userIds).ToArrayAsync();
             dataAccessGroupModel = await _groupRepository.AddGroup(dataAccessGroupModel);
             return _mapper.Map<GroupDTO>(dataAccessGroupModel);
         }

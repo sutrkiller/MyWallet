@@ -32,13 +32,14 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// </summary>
         /// <param name="userId">User </param>
         /// <returns>All entries by user</returns>
-        Task<Entry[]> GetEntriesByUser(Guid userId); //TODO: this should be implemented on service using GetAllEntries
+        IQueryable<Entry> GetEntriesByUser(Guid userId); //TODO: this should be implemented on service using GetAllEntries
 
         /// <summary>
         /// Returns all entries in selected budget
         /// </summary>
         /// <param name="budgetId">Budget </param>
         /// <returns>All entries by budget</returns>
-        Task<Entry[]> GetEntriesByBudget(Guid budgetId); //TODO: this should be implemented on service using 
+        IQueryable<Entry> GetEntriesByBudget(Guid budgetId); //TODO: this should be implemented on service using 
+        Task DeleteEntry(Entry entry);
     }
 }

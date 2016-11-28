@@ -52,7 +52,7 @@ namespace MyWallet.Controllers
 
         // GET: Categoreis/Create
         [Authorize]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             //throw new NotImplementedException();
             

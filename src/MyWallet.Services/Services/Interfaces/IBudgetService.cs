@@ -14,5 +14,6 @@ namespace MyWallet.Services.Services.Interfaces
         Task<BudgetDTO> GetBudget(Guid id);
         Task<CategoryDTO[]> GetAllCategories();
         Task<Group[]> GetAllGroups();
+        Task DeleteBudget(Guid id);
     }
 }
