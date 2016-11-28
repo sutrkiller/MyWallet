@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -40,6 +41,16 @@ namespace MyWallet.Entities.Repositories
             await _context.SaveChangesAsync();
 
             return addedCategory;
+        }
+
+        public async void EditCategory(Category category)
+        {
+            if (category == null)
+            {
+                throw new ArgumentNullException(nameof(category));
+            }
+            _context.Categories.AddOrUpdate(category);
+            await _context.SaveChangesAsync();         
         }
 
         public async Task<Category> GetSingleCategory(Guid id)

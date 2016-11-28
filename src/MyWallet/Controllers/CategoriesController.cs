@@ -50,6 +50,19 @@ namespace MyWallet.Controllers
             
         }
 
+        public async Task<IActionResult> Edit(Guid id)
+        {
+
+            var categoryDTO = await _categoryService.GetCategory(id);
+            if (categoryDTO == null)
+            {
+                return NotFound();
+            }
+            var model = _mapper.Map<EditCategoryViewModel>(categoryDTO);
+            return View(model);
+
+        }
+
         // GET: Categoreis/Create
         [Authorize]
         public IActionResult Create()
@@ -77,5 +90,21 @@ namespace MyWallet.Controllers
             }
             return View(category);
         }
+
+        // POST: Category/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(CreateCategoryViewModel category)
+        {
+            if (ModelState.IsValid)
+            {
+                _categoryService.EditCategory(_mapper.Map<CategoryDTO>(category));
+                return RedirectToAction("List");
+            }
+            return View(category);
         }
+    }
     }
