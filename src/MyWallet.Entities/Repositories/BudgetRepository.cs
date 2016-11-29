@@ -94,7 +94,7 @@ namespace MyWallet.Entities.Repositories
             {
                 budget.Categories.Add(_context.Categories.Find(cat.Id));
             }
-             _context.Budgets.AddOrUpdate(budget);
+            _context.Entry(budget).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 
