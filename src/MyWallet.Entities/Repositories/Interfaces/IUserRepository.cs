@@ -40,6 +40,6 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// </summary>
         /// <param name="userIds">Collection of ids of users</param>
         /// <returns>Users specified by groupIds</returns>
-        Task<User[]> GetUsersFromIds(ICollection<Guid> userIds);
+        IQueryable<User> GetUsersFromIds(ICollection<Guid> userIds);
     }
 }

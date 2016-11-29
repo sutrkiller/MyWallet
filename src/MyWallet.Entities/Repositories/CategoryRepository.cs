@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -42,6 +43,16 @@ namespace MyWallet.Entities.Repositories
             return addedCategory;
         }
 
+        public async Task EditCategory(Category category)
+        {
+            if (category == null)
+            {
+                throw new ArgumentNullException(nameof(category));
+            }
+            _context.Categories.AddOrUpdate(category);
+            await _context.SaveChangesAsync();         
+        }
+
         public async Task<Category> GetSingleCategory(Guid id)
         => await _context
                 .Categories
@@ -51,8 +62,8 @@ namespace MyWallet.Entities.Repositories
         public IQueryable<Category> GetAllCategories()
         => _context.Categories.AsQueryable();
 
-        public async Task<Category[]> GetCategoriesFromIds(ICollection<Guid> categoryIds)
-        =>await _context.Categories.Where(r => categoryIds.Contains(r.Id)).ToArrayAsync();
+        public IQueryable<Category> GetCategoriesFromIds(ICollection<Guid> categoryIds)
+        => _context.Categories.Where(r => categoryIds.Contains(r.Id));
         
     }
 }

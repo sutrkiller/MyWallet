@@ -1,4 +1,5 @@
-﻿@using System.Threading.Tasks
+﻿@using System.Security.Claims
+@using System.Threading.Tasks
 @model IEnumerable<EntryViewModel>
 
 @{
@@ -48,13 +49,25 @@
                     @Html.DisplayFor(modelItem => item.User.Name)
                 </td>
                 <td>
-                   @string.Join(", ", @item.Categories.Select(x => x.Name))
+                    @string.Join(", ", @item.Categories.Select(x => x.Name))
                 </td>
                 <td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    @if (item.User.Email == User.FindFirst(ClaimTypes.Email)?.Value)
+                    {
+                        using (Html.BeginForm("Delete", "Entries", new {id = item.Id}, FormMethod.Post, true, null))
+                        {
+                            <input type="button" style="border: 0; padding: 0; padding-right: 5px" class="btn-link" value="Details" onclick="location.href = '@Url.Action("Details", "Entries", new {id = item.Id})'"/>
+                            <span> |</span>
+                            <input type="submit" style="border: 0; padding: 0; padding-left: 5px;" class="btn-link" value="Delete"/>
+                        }
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    }
+
                 </td>
-                </td>
+
             </tr>
         }
     </tbody>
