@@ -33,5 +33,12 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// </summary>
         /// <returns>Return specific categories</returns>
         IQueryable<Category> GetCategoriesFromIds(ICollection<Guid> categoryIds);
+
+        /// <summary>
+        /// Edit single Category
+        /// </summary>
+        /// <param name="category">existing category</param>
+        /// <returns>Edit category</returns>
+        Task EditCategory(Category category);
     }
 }

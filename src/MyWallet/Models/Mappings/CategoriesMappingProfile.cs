@@ -12,6 +12,9 @@ namespace MyWallet.Models.Mappings
             CreateMap<CategoryDTO, CategoryViewModel>().ReverseMap();
             CreateMap<CreateCategoryViewModel, CategoryDTO>()
                 .ForMember(d => d.Entries, opt => opt.Ignore());
+            CreateMap<CategoryDTO, EditCategoryViewModel>();
+            CreateMap<EditCategoryViewModel, CategoryDTO>()
+                .ForMember(d => d.Entries, opt => opt.Ignore());
             CreateMap<CategoryDTO, CategoryDetailsViewModel>()
                 .ForMember(d => d.Income, opt => opt.MapFrom(m => m.Entries.Where(e => e.Amount > 0 ).Sum(e => e.Amount)))
                 .ForMember(d => d.Expence, opt => opt.MapFrom(m => m.Entries.Where(e => e.Amount < 0).Sum(e => e.Amount)))
