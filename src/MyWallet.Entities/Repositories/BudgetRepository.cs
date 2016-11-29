@@ -45,21 +45,17 @@ namespace MyWallet.Entities.Repositories
             {
                 throw new ArgumentNullException(nameof(Budget.Group));
             }
+            if (budget.ConversionRatio == null)
+            {
+                throw new ArgumentNullException(nameof(Budget.ConversionRatio));
+            }
 
             budget.Group = _context.Groups.Find(budget.Group.Id);
-
-            //TODO: change this
-            budget.ConversionRatio = _context.ConversionRatios.Add(new ConversionRatio()
-            {
-                CurrencyFrom = await _context.Currencies.SingleOrDefaultAsync(x => x.Code == "USD"),
-                CurrencyTo = await _context.Currencies.SingleOrDefaultAsync(x => x.Code == "EUR"),
-                Date = DateTime.Today,
-                Ratio = 1.5m
-            });
-
-            var categs = budget.Categories;
+            budget.ConversionRatio = _context.ConversionRatios.Find(budget.ConversionRatio.Id);
+            
+            var categories = budget.Categories;
             budget.Categories = new List<Category>();
-            foreach (var cat in categs)
+            foreach (var cat in categories)
             {
                 budget.Categories.Add(_context.Categories.Find(cat.Id));
             }
@@ -78,7 +74,14 @@ namespace MyWallet.Entities.Repositories
         public IQueryable<Budget> GetAllBudgets()
             => _context.Budgets.AsQueryable();
 
-        public async Task<Budget[]> GetBudgetsFromIds(ICollection<Guid> budgetIDs)
-            => await _context.Budgets.Where(b => budgetIDs.Any(id => id == b.Id)).ToArrayAsync();
+        public IQueryable<Budget> GetBudgetsFromIds(ICollection<Guid> budgetIDs)
+            => _context.Budgets.Where(b => budgetIDs.Any(id => id == b.Id));
+
+        public async Task DeleteBudget(Budget budget)
+        {
+            _context.Budgets.Remove(budget);
+            await _context.SaveChangesAsync();
+        }
+            
     }
 }

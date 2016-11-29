@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -48,9 +49,8 @@ namespace MyWallet.Services.Services
 
         public async Task<UserDTO[]> GetAllUsers()
         {
-            //TODO: change this later
             await Task.Delay(0);
-            var users = _userRepository.GetAllUsers().ToArray();
+            var users = _userRepository.GetAllUsers().ToArrayAsync();
             return _mapper.Map<UserDTO[]>(users);
         }
     }

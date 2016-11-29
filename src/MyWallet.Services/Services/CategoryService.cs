@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -34,13 +35,17 @@ namespace MyWallet.Services.Services
             return _mapper.Map<CategoryDTO>(dataAccessCategoryModel);
         }
 
+        public async Task EditCategory(CategoryDTO category)
+        {
+            var dataAccessCategoryModel = _mapper.Map<Category>(category);
+            await _categoryRepository.EditCategory(dataAccessCategoryModel);
+        }
+
         public async Task<CategoryDTO[]> GetAllCategories()
         {
             _logger.LogInformation("Starting Category service method");
 
-            //TODO: change this later
-            await Task.Delay(0);
-            var categories = _categoryRepository.GetAllCategories().ToArray();
+            var categories = await _categoryRepository.GetAllCategories().ToArrayAsync();
             return _mapper.Map<CategoryDTO[]>(categories);
         }
 
