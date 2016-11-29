@@ -47,6 +47,29 @@ namespace MyWallet.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var budgetDTO = await _budgetService.GetBudget(id);
+            if (budgetDTO == null)
+            {
+                return NotFound();
+            }
+            var model = _mapper.Map<EditBudgetViewModel>(budgetDTO);
+            
+            var categories = await _budgetService.GetAllCategories();
+            var categoriesList = categories.Select(d => new { Id = d.Id, Value = d.Name });
+            model.CategoriesList = new SelectList(categoriesList, "Id", "Value");
+            var currencies = await _entryService.GetAllCurrencies();
+            var currenciesList = currencies.Select(g => new { g.Id, Value = g.Code });
+            model.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
+            var groups = await _budgetService.GetAllGroups();
+            var groupsList = groups.Select(g => new { g.Id, Value = g.Name });
+            model.GroupsList = new SelectList(groupsList, "Id", "Value");
+            
+            return View(model);
+
+        }
+
         // GET: Budgets/Create
         [Authorize]
         public async Task<IActionResult> Create()
@@ -78,6 +101,19 @@ namespace MyWallet.Controllers
             if (ModelState.IsValid)
             {
                 await _budgetService.AddBudget(_mapper.Map<BudgetDTO>(budget), budget.GroupId, budget.CurrencyId, budget.CategoryIds);
+                return RedirectToAction("List");
+            }
+            return View(budget);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditBudgetViewModel budget)
+        {
+            if (ModelState.IsValid)
+            {
+                await _budgetService.EditBudget(_mapper.Map<BudgetDTO>(budget), budget.GroupId, budget.CurrencyId, budget.CategoryIds);
                 return RedirectToAction("List");
             }
             return View(budget);
