@@ -12,6 +12,6 @@ namespace MyWallet.Services.Services.Interfaces
         Task<GroupDTO[]> GetAllGroups();
         Task<GroupDTO> GetGroup(Guid id);
         Task DeleteGroup(Guid id);
-        Task<GroupDTO> UpdateGroup(GroupDTO groupDto, ICollection<Guid> userIds);
+        Task<GroupDTO> EditGroup(GroupDTO groupDto, ICollection<Guid> userIds);
     }
 }

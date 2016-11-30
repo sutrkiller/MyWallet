@@ -66,7 +66,7 @@ namespace MyWallet.Entities.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Group> UpdateGroup(Group group)
+        public async Task<Group> EditGroup(Group group)
         {
             var local = await _context.Groups.Include(x=>x.Users).SingleOrDefaultAsync(x=>x.Id == group.Id);
             _context.Entry(local).CurrentValues.SetValues(group);

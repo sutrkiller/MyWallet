@@ -93,7 +93,7 @@ namespace MyWallet.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _groupService.UpdateGroup(_mapper.Map<GroupDTO>(group), group.UserIds);
+                await _groupService.EditGroup(_mapper.Map<GroupDTO>(group), group.UserIds);
                 return RedirectToAction("List");
             }
             return View(group);

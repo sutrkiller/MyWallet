@@ -35,6 +35,6 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// <returns>Groups specified by groupIds</returns>
         IQueryable<Group> GetGroupsFromIds(ICollection<Guid> groupIds);
         Task DeleteGroup(Group group);
-        Task<Group> UpdateGroup(Group group);
+        Task<Group> EditGroup(Group group);
     }
 }

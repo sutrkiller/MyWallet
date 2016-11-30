@@ -63,11 +63,11 @@ namespace MyWallet.Services.Services
             await _groupRepository.DeleteGroup(group);
         }
 
-        public async Task<GroupDTO> UpdateGroup(GroupDTO groupDto, ICollection<Guid> userIds)
+        public async Task<GroupDTO> EditGroup(GroupDTO groupDto, ICollection<Guid> userIds)
         {
             var model = _mapper.Map<Group>(groupDto);
             model.Users = await _userRepository.GetUsersFromIds(userIds).ToArrayAsync();
-            model = await _groupRepository.UpdateGroup(model);
+            model = await _groupRepository.EditGroup(model);
             return _mapper.Map<GroupDTO>(model);
         }
     }
