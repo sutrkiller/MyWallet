@@ -59,5 +59,21 @@ namespace MyWallet.Entities.Repositories
         
         public IQueryable<Group> GetGroupsFromIds(ICollection<Guid> groupIds)
         => _context.Groups.Where(r => groupIds.Contains(r.Id));
+
+        public async Task DeleteGroup(Group group)
+        {
+            _context.Entry(group).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Group> UpdateGroup(Group group)
+        {
+            var local = await _context.Groups.Include(x=>x.Users).SingleOrDefaultAsync(x=>x.Id == group.Id);
+            _context.Entry(local).CurrentValues.SetValues(group);
+            var users = group.Users.Select(x => _context.Users.Find(x.Id)).ToList();
+            local.Users = new HashSet<User>(users);
+            await _context.SaveChangesAsync();
+            return group;
+        }
     }
 }

@@ -75,6 +75,38 @@ namespace MyWallet.Controllers
             return View(group);
         }
 
-        
+        [Authorize]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var group = await _groupService.GetGroup(id);
+            var createModel = _mapper.Map<CreateGroupViewModel>(group); //TODO: not sure whether mapping works
+            var usersList = (await _userService.GetAllUsers()).Select(g => new { Id = g.Id, Value = g.Name });
+            createModel.UsersList = new SelectList(usersList, "Id", "Value");
+            createModel.UserIds = group.Users.Select(g => g.Id).ToList(); //not working
+            return View("Edit", createModel);
         }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(CreateGroupViewModel group)
+        {
+            if (ModelState.IsValid)
+            {
+                await _groupService.UpdateGroup(_mapper.Map<GroupDTO>(group), group.UserIds);
+                return RedirectToAction("List");
+            }
+            return View(group);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _groupService.DeleteGroup(id);
+            return RedirectToAction("List");
+        }
+
+    }
 }

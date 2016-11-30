@@ -56,5 +56,19 @@ namespace MyWallet.Services.Services
 
             return _mapper.Map<GroupDTO>(group);
         }
+
+        public async Task DeleteGroup(Guid id)
+        {
+            var group = await _groupRepository.GetSingleGroup(id);
+            await _groupRepository.DeleteGroup(group);
+        }
+
+        public async Task<GroupDTO> UpdateGroup(GroupDTO groupDto, ICollection<Guid> userIds)
+        {
+            var model = _mapper.Map<Group>(groupDto);
+            model.Users = await _userRepository.GetUsersFromIds(userIds).ToArrayAsync();
+            model = await _groupRepository.UpdateGroup(model);
+            return _mapper.Map<GroupDTO>(model);
+        }
     }
 }
