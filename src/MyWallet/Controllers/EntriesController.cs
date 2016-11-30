@@ -70,6 +70,7 @@ namespace MyWallet.Controllers
                 onversionRatios.Select(
                     g => new {g.Id, Value = g.CurrencyFrom.Code + " - " + g.CurrencyTo.Code + " - " + g.Ratio});
             newEntry.ConversionRatiosList = new SelectList(onversionRatiosList, "Id", "Value");
+            newEntry.EntryTime = DateTime.Now;
             return View(newEntry);
         }
 
@@ -83,6 +84,7 @@ namespace MyWallet.Controllers
                 try
                 {
                     var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                    entry.Amount = entry.IsIncome == true ? entry.Amount : "-" + entry.Amount;
                     await _entryService.AddEntry(_mapper.Map<EntryDTO>(entry), email, entry.ConversionRatioId, entry.CategoryIds, entry.BudgetIds);
                     return RedirectToAction("List");
                 }

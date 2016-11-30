@@ -14,6 +14,7 @@ namespace MyWallet.Models.Entries
         public Guid Id { get; set; }
         public string Amount { get; set; }
         public string Description { get; set; }
+        public bool IsIncome { get; set; } = true;
         public DateTime EntryTime { get; set; }
         [DisplayName("User")]
         public Guid UserId { get; set; }
