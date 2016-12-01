@@ -112,5 +112,23 @@ namespace MyWallet.Services.Services
             var entry = await _entryRepository.GetSingleEntry(id);
             await _entryRepository.DeleteEntry(entry);
         }
+
+        public async Task<ConversionRatioDTO> AddConversionRatio(Guid currencyId, string customRatioAmount, Guid customRatioCurrencyId)
+        {
+            var customRatio = new ConversionRatio();
+            var currency = await _currencyRepository.GetSingleCurrency(currencyId);
+            var currency2 = await _currencyRepository.GetSingleCurrency(customRatioCurrencyId);
+            decimal amount = 0;
+            decimal.TryParse(customRatioAmount, out amount);
+            customRatio.Ratio = amount;
+            customRatio.CurrencyFrom = currency;
+            customRatio.CurrencyTo = currency2;
+            customRatio.Type = "Custom";
+            customRatio.Date = DateTime.Now;
+            var dataAccessRatioModel = _mapper.Map<ConversionRatio>(customRatio);
+            dataAccessRatioModel = await _conversionRatioRepository.AddConversionRatio(customRatio);
+            return _mapper.Map<ConversionRatioDTO>(dataAccessRatioModel);
+        }
     }
 }
+

@@ -46,3 +46,6 @@ textarea {
 .toggle {
     width: 280px !important;
 }
+.maxWidthHack {
+    max-width: 200px;
+}

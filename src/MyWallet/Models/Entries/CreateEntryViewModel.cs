@@ -13,6 +13,10 @@ namespace MyWallet.Models.Entries
     {
         public Guid Id { get; set; }
         public string Amount { get; set; }
+        public string CustomRatioAmount { get; set; }
+        [Display(Name = "Custom conversion ratios")]
+        public Guid CustomRatioCurrencyId { get; set; }
+        public SelectList CustomCurrenciesList { get; set; }
         public string Description { get; set; }
         public bool IsIncome { get; set; } = true;
         [Display(Name = "Entry time")]
@@ -27,7 +31,7 @@ namespace MyWallet.Models.Entries
         public SelectList BudgetsList { get; set; }
         public Guid CurrencyId { get; set; }
         public SelectList CurrenciesList { get; set; }
-        [Display(Name = "Conversion ratios")]
+        [Display(Name = "Conversion ratio")]
         public Guid ConversionRatioId { get; set; }
         public SelectList ConversionRatiosList { get; set; }
     }
