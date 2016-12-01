@@ -15,7 +15,7 @@ namespace MyWallet.Services.Services.Interfaces
         Task<EntryDTO[]> GetAllEntries();
         Task<ConversionRatioDTO[]> GetAllConversionRatios();
         Task<EntryDTO[]> GetAllEntriesForBudget(Guid budgetId);
-
+        Task<ConversionRatioDTO[]> GetConversionRatiosForCurrency(Guid currencyId);
         Task AddConversionRatios(IEnumerable<ConversionRatioDTO> ratios);
         Task DeleteEntry(Guid id);
     }

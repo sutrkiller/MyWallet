@@ -65,11 +65,8 @@ namespace MyWallet.Controllers
             var currencies = await _entryService.GetAllCurrencies();
             var currenciesList = currencies.Select(g => new {g.Id, Value = g.Code});
             newEntry.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
-            var onversionRatios = await _entryService.GetAllConversionRatios();
-            var onversionRatiosList =
-                onversionRatios.Select(
-                    g => new {g.Id, Value = g.CurrencyFrom.Code + " - " + g.CurrencyTo.Code + " - " + g.Ratio});
-            newEntry.ConversionRatiosList = new SelectList(onversionRatiosList, "Id", "Value");
+            var conversionRatios = await _entryService.GetConversionRatiosForCurrency(currencies.FirstOrDefault().Id);
+            newEntry.ConversionRatiosList = FormatConversionRatioForSelectList(conversionRatios);
             newEntry.EntryTime = DateTime.Now;
             return View(newEntry);
         }
@@ -95,6 +92,31 @@ namespace MyWallet.Controllers
                 
             }
             return View(entry);
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> GetConversionRatiosByCurrencyId(string currencyId)
+        {
+            Guid id;
+            bool isValid = Guid.TryParse(currencyId, out id);
+
+            if (!isValid || string.IsNullOrEmpty(currencyId))
+            {
+                var conversionRatiosEr = await  _entryService.GetAllConversionRatios();
+                var resultEr = FormatConversionRatioForSelectList(conversionRatiosEr);
+                return Json(resultEr);
+            }
+
+            var conversionRatios = await _entryService.GetConversionRatiosForCurrency(id);
+            var result = FormatConversionRatioForSelectList(conversionRatios);
+            return Json(result);
+        }
+
+        private static SelectList FormatConversionRatioForSelectList(ConversionRatioDTO[] conversionRatios)
+        {
+            var result = conversionRatios.Select(
+                g => new {g.Id, Value = g.CurrencyFrom.Code + " - " + g.CurrencyTo.Code + " - " + g.Ratio});
+            return  new SelectList(result, "Id", "Value");
         }
 
         [HttpPost]

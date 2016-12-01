@@ -36,7 +36,7 @@
                 <div class="input-group removeSpace">
                     <input asp-for="Amount" type="text" class="form-control" aria-label="...">
                     <div class="input-group-btn">
-                        <select asp-for="CurrencyId" asp-items="@Model.CurrenciesList" class="btn btn-default paddingHack dropdown-toggle" aria-haspopup="true" aria-expanded="false"></select>
+                        <select asp-for="CurrencyId" id="CurrencyId" asp-items="@Model.CurrenciesList" class="btn btn-default paddingHack dropdown-toggle" aria-haspopup="true" aria-expanded="false"></select>
                     </div>
                     </div>
             </div>
@@ -45,7 +45,7 @@
         <div class="form-group">
             <label asp-for="ConversionRatioId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="ConversionRatioId" asp-items="@Model.ConversionRatiosList" class="form-control"></select>
+                <select asp-for="ConversionRatioId" id="conversionRatiosId" asp-items="@Model.ConversionRatiosList" class="form-control"></select>
                 <span asp-validation-for="ConversionRatioId" class="text-danger"></span>
             </div>
         </div>
@@ -79,7 +79,7 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-primary" />
 
             </div>
 
@@ -97,19 +97,34 @@
 @section scripts {
 <script src="~/lib/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
 <script type="text/javascript" src="~/lib/moment/min/moment.min.js"></script>
- <script type="text/javascript" src="~/lib/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="~/lib/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 <script type="text/javascript" src="~/lib/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
-    <script>
-        $(function() {
-            $('#IsIncome').bootstrapToggle();
+<script type="text/javascript">
+   $('#IsIncome').bootstrapToggle();
             $('#datetimepicker4').datetimepicker({
                 format: 'DD-MM-YYYY HH:mm'
             });
             $('.multiselectBudgets').multiselect();
             $('.multiselectCategories').multiselect();
-        });
 
-    </script>
- 
-
+            $("#CurrencyId").change(function () {
+                var selectedItem = $(this).val();
+                var ddlCRs = $("#conversionRatiosId");
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.RouteUrl("GetConversionRatiosByCurrencyId"))",
+                    data: { "currencyId": selectedItem },
+                    success: function (data) {
+                    ddlCRs.html('');
+                    for (let item of data) {
+                    ddlCRs.append($('<option></option>').val(item.value).html(item.text));
+                    }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                    console.log('Failed to retrieve conversionRatios.');
+                    }
+                });
+            });
+</script>
 }

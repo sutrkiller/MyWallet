@@ -79,12 +79,12 @@ namespace MyWallet.Services.Services
         }
 
         public async Task<ConversionRatioDTO[]> GetAllConversionRatios()
-      {
+        {
           var conversionRatios = await _conversionRatioRepository.GetAllConversionRatios().ToArrayAsync();
           return _mapper.Map<ConversionRatioDTO[]>(conversionRatios);
-      }
+        }
 
-    public async Task<EntryDTO[]> GetAllEntriesForBudget(Guid budgetId)
+        public async Task<EntryDTO[]> GetAllEntriesForBudget(Guid budgetId)
         {
             //TODO: change this later
             await Task.Delay(0);
@@ -100,6 +100,11 @@ namespace MyWallet.Services.Services
             {
                 await _conversionRatioRepository.AddConversionRatio(ratio);
             }
+        }
+        public async Task<ConversionRatioDTO[]> GetConversionRatiosForCurrency(Guid currencyId)
+        {
+            var conversionRatios = await _conversionRatioRepository.GetAllConversionRatios().Where(cr => cr.CurrencyFrom.Id == currencyId).ToArrayAsync();
+            return _mapper.Map<ConversionRatioDTO[]>(conversionRatios);
         }
 
         public async Task DeleteEntry(Guid id)
