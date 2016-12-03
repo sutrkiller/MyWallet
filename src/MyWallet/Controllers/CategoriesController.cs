@@ -50,6 +50,7 @@ namespace MyWallet.Controllers
             
         }
 
+        [Authorize]
         public async Task<IActionResult> Edit(Guid id)
         {
 
@@ -105,6 +106,15 @@ namespace MyWallet.Controllers
                 return RedirectToAction("List");
             }
             return View(category);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _categoryService.DeleteCategory(id);
+            return RedirectToAction("List");
         }
     }
     }

@@ -9,7 +9,7 @@ using MyWallet.Services.DataTransferModels;
 
 namespace MyWallet.Models.Entries
 {
-    public class CreateEntryViewModel
+    public class EditEntryViewModel
     {
         public Guid Id { get; set; }
         public decimal Amount { get; set; }

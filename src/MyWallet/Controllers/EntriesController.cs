@@ -37,6 +37,32 @@ namespace MyWallet.Controllers
             var entriesDTO = await _entryService.GetAllEntries();
             return View(_mapper.Map<IEnumerable<EntryViewModel>>(entriesDTO));
         }
+        [Authorize]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var entryDto = await _entryService.GetEntry(id);
+            if (entryDto == null)
+            {
+                return NotFound();
+            }
+            var model = _mapper.Map<EditEntryViewModel>(entryDto);
+            model.IsIncome = model.Amount  > 0;
+            model.Amount = Math.Abs(Convert.ToDecimal(model.Amount));
+            var categories = await _budgetService.GetAllCategories();
+            var categoriesList = categories.Select(d => new { Id = d.Id, Value = d.Name });
+            model.CategoriesList = new SelectList(categoriesList, "Id", "Value");
+            var budgets = await _budgetService.GetAllBudgets();
+            var budgetsList = budgets.Select(g => new { g.Id, Value = g.Name });
+            model.BudgetsList = new SelectList(budgetsList, "Id", "Value");
+            var currencies = await _entryService.GetAllCurrencies();
+            var currenciesList = currencies.Select(g => new { g.Id, Value = g.Code });
+            var currenciesList2 = currencies.Select(g => new { g.Id, Value = g.Code });
+            model.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
+            model.CustomCurrenciesList = new SelectList(currenciesList2, "Id", "Value");
+            var conversionRatios = await _entryService.GetConversionRatiosForCurrency(currencies.FirstOrDefault().Id);
+            model.ConversionRatiosList = FormatConversionRatioForSelectList(conversionRatios);
+            return View(model);
+        }
 
         // GET: Budgets/Details/[id]
         [Authorize]
@@ -83,7 +109,7 @@ namespace MyWallet.Controllers
                 try
                 {
                     var email = User.FindFirst(ClaimTypes.Email)?.Value;
-                    entry.Amount = entry.IsIncome == true ? entry.Amount : "-" + entry.Amount;
+                    entry.Amount = entry.IsIncome == true ? entry.Amount : -1*entry.Amount;
                     if(entry.ConversionRatioId.ToString() == "ffffffff-ffff-ffff-ffff-ffffffffffff")
                     { 
                         var customRatio = await _entryService.AddConversionRatio(entry.CurrencyId,entry.CustomRatioAmount,entry.CustomRatioCurrencyId);
@@ -100,7 +126,27 @@ namespace MyWallet.Controllers
             }
             return View(entry);
         }
-        
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditEntryViewModel entry)
+        {
+            if (ModelState.IsValid)
+            {
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                entry.Amount = entry.IsIncome == true ? entry.Amount : -1 * entry.Amount;
+                if (entry.ConversionRatioId.ToString() == "ffffffff-ffff-ffff-ffff-ffffffffffff")
+                {
+                    var customRatio = await _entryService.AddConversionRatio(entry.CurrencyId, entry.CustomRatioAmount, entry.CustomRatioCurrencyId);
+                    entry.ConversionRatioId = customRatio.Id;
+                }
+                await _entryService.EditEntry(_mapper.Map<EntryDTO>(entry), email, entry.ConversionRatioId, entry.CategoryIds, entry.BudgetIds);
+                return RedirectToAction("List");
+            }
+            return View(entry);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetConversionRatiosByCurrencyId(string currencyId)
         {

@@ -9,6 +9,7 @@ namespace MyWallet.Services.Services.Interfaces
     public interface IEntryService
     {
         Task<EntryDTO> AddEntry(EntryDTO entry, string userEmail, Guid conversionRatioId, ICollection<Guid> categoryId, ICollection<Guid> budgetIds);
+        Task EditEntry(EntryDTO entry, string userEmail, Guid conversionRatioId, ICollection<Guid> categoryId, ICollection<Guid> budgetIds);
         Task<EntryDTO[]> GetEntriesByUser(Guid userId);
         Task<CurrencyDTO[]> GetAllCurrencies();
         Task<EntryDTO> GetEntry(Guid entryId);

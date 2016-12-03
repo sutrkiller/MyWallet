@@ -25,6 +25,28 @@ namespace MyWallet.Models.Mappings
                 .ForMember(d => d.Categories, opt => opt.Ignore())
                 .ForMember(d => d.ConversionRatio, opt => opt.Ignore())
                 .ForMember(d => d.Budgets, opt => opt.Ignore());
+
+            CreateMap<EntryDTO, EditEntryViewModel>()
+                .ForMember(d => d.CurrencyId, opt => opt.MapFrom(m => m.ConversionRatio.CurrencyFrom.Id))
+                .ForMember(d => d.CurrenciesList, opt => opt.Ignore())
+                .ForMember(d => d.CategoryIds, opt => opt.MapFrom(m => m.Categories.Select(x => x.Id)))
+                .ForMember(d => d.CategoriesList, opt => opt.Ignore())
+                .ForMember(d => d.BudgetIds, opt => opt.MapFrom(m => m.Budgets.Select(x => x.Id)))
+                .ForMember(d => d.BudgetsList, opt => opt.Ignore())
+                .ForMember(d => d.ConversionRatioId, opt => opt.MapFrom(m => m.ConversionRatio.Id))
+                .ForMember(d => d.ConversionRatiosList, opt => opt.Ignore())
+                .ForMember(d => d.CustomRatioAmount, opt => opt.Ignore())
+                .ForMember(d => d.CustomRatioCurrencyId, opt => opt.Ignore())
+                .ForMember(d => d.IsIncome, opt => opt.Ignore())
+                .ForMember(d => d.CustomCurrenciesList, opt => opt.Ignore());
+
+
+            CreateMap<EditEntryViewModel, EntryDTO>()
+                .ForMember(d => d.User, opt => opt.Ignore())
+                .ForMember(d => d.Categories, opt => opt.Ignore())
+                .ForMember(d => d.ConversionRatio, opt => opt.Ignore())
+                .ForMember(d => d.Budgets, opt => opt.Ignore());
+
         }
     }
 }
