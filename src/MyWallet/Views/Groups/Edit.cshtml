@@ -22,11 +22,10 @@
         <div class="form-group">
             <label asp-for="UserIds" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="UserIds" asp-items="@Model.UsersList" class="form-control"></select>
+                <select asp-for="UserIds" asp-items="@Model.UsersList" class="form-control multiselectUsers"></select>
                 <span asp-validation-for="UserIds" class="text-danger"></span>
 
             </div>
-
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -45,3 +44,11 @@
 
 </div>
 
+@section scripts {
+
+    <script type="text/javascript" src="~/lib/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
+    <script type="text/javascript">
+        $('.multiselectUsers').multiselect();
+
+    </script>
+}
