@@ -40,5 +40,6 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// <param name="category">existing category</param>
         /// <returns>Edit category</returns>
         Task EditCategory(Category category);
+        Task DeleteCategory(Category category);
     }
 }

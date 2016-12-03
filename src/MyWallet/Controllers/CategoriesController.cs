@@ -107,5 +107,14 @@ namespace MyWallet.Controllers
             }
             return View(category);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _categoryService.DeleteCategory(id);
+            return RedirectToAction("List");
+        }
     }
     }

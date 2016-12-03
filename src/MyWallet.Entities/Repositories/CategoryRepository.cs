@@ -64,6 +64,11 @@ namespace MyWallet.Entities.Repositories
 
         public IQueryable<Category> GetCategoriesFromIds(ICollection<Guid> categoryIds)
         => _context.Categories.Where(r => categoryIds.Contains(r.Id));
-        
+
+        public async Task DeleteCategory(Category category)
+        {
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
+        }
     }
 }
