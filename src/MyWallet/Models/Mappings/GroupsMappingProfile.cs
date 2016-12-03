@@ -20,7 +20,8 @@ namespace MyWallet.Models.Mappings
 
             CreateMap<CreateGroupViewModel, GroupDTO>()
                 .ForMember(d => d.Users, opt => opt.Ignore())
-                .ForMember(d => d.Budgets, opt => opt.Ignore());
+                .ForMember(d => d.Budgets, opt => opt.Ignore())
+                .ReverseMap();
                 
         }
     }

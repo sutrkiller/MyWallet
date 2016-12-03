@@ -49,8 +49,7 @@ namespace MyWallet.Services.Services
 
         public async Task<UserDTO[]> GetAllUsers()
         {
-            await Task.Delay(0);
-            var users = _userRepository.GetAllUsers().ToArrayAsync();
+            var users = await _userRepository.GetAllUsers().ToArrayAsync();
             return _mapper.Map<UserDTO[]>(users);
         }
     }

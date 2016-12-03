@@ -34,9 +34,15 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
-                    <input type="button" style="border: 0; padding: 0; padding-right: 5px" class="btn-link" value="Details" onclick="location.href = '@Url.Action("Details", "Categories", new {id = item.Id})'" />
-                    <span> |</span>
-                    <input type="submit" style="border: 0; padding: 0; padding-left: 5px;" class="btn-link" value="Edit" onclick="location.href = '@Url.Action("Edit", "Categories", new {id = item.Id})'" />
+                   @using (Html.BeginForm("Delete", "Categories", new { id = item.Id }, FormMethod.Post, true, null))
+                   {
+                        <input type="button" style="border: 0; padding: 0; padding-left: 5px; padding-right: 5px" class="btn-link" value="Details" onclick="location.href='@Url.Action("Details","Categories",new {id = item.Id})'" />
+                        <span> |</span>
+                        <input type="button" style="border: 0; padding: 0; padding-left: 5px; padding-right: 5px" class="btn-link" value="Edit" onclick="location.href='@Url.Action("Edit", "Categories", new {id = item.Id})'" />
+                        <span> |</span>
+                        <input type="submit" style="border: 0; padding: 0; padding-left: 5px; padding-right: 5px" class="btn-link" value="Delete" />
+
+                   }
                 </td>
             </tr>
         }

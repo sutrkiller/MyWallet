@@ -41,5 +41,6 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// <returns>All entries by budget</returns>
         IQueryable<Entry> GetEntriesByBudget(Guid budgetId); //TODO: this should be implemented on service using 
         Task DeleteEntry(Entry entry);
+        Task EditEntry(Entry entry);
     }
 }
