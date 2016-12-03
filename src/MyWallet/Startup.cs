@@ -120,9 +120,12 @@ namespace MyWallet
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute("GetConversionRatiosByCurrencyId",
+                                "entries/GetConversionRatiosByCurrencyId/",
+                                new { controller = "Entries", action = "GetConversionRatiosByCurrencyId" });
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");                
             });
         }
     }

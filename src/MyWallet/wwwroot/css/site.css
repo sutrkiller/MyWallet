@@ -36,3 +36,16 @@ textarea {
     display: none
   }
 }
+
+.removeSpace {
+    display: block;
+}
+.paddingHack {
+    padding: 7px 12px;
+}
+.toggle {
+    width: 280px !important;
+}
+.maxWidthHack {
+    max-width: 200px;
+}
