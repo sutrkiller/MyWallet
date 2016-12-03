@@ -38,6 +38,8 @@
                     <div class="input-group-btn">
                         <select asp-for="CurrencyId" id="CurrencyId" asp-items="@Model.CurrenciesList" class="btn btn-default paddingHack dropdown-toggle" aria-haspopup="true" aria-expanded="false"></select>
                     </div>
+
+                    <span asp-validation-for="Amount" class="text-danger"></span>
                 </div>
             </div>
         </div>
