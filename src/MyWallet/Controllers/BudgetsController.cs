@@ -85,6 +85,8 @@ namespace MyWallet.Controllers
             var groups = await _budgetService.GetAllGroups();
             var groupsList = groups.Select(g => new {g.Id, Value = g.Name});
             newBudget.GroupsList = new SelectList(groupsList,"Id","Value");
+            newBudget.StartDate = DateTime.Now;
+            newBudget.EndDate = DateTime.Now;
             return View(newBudget);
 
 

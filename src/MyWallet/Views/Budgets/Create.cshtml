@@ -42,20 +42,27 @@
             </div>
 
         </div>
+
         <div class="form-group">
             <label asp-for="StartDate" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="StartDate" class="form-control" />
+                <input asp-for="StartDate" class="form-control" id="datetimepicker4" value="@Model.StartDate" />
                 <span asp-validation-for="StartDate" class="text-danger"></span>
+
             </div>
+
         </div>
         <div class="form-group">
             <label asp-for="EndDate" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="EndDate" class="form-control" />
+                <input asp-for="EndDate" class="form-control" id="datetimepicker5" value="@Model.EndDate" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
+
             </div>
+
         </div>
+
+        
         <div class="form-group">
             <label asp-for="GroupId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -66,9 +73,11 @@
         <div class="form-group">
             <label asp-for="CategoryIds" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="CategoryIds" asp-items="@Model.CategoriesList" class="form-control"></select>
+                <select asp-for="CategoryIds" asp-items="@Model.CategoriesList" class="form-control multiselectCategories"></select>
                 <span asp-validation-for="CategoryIds" class="text-danger"></span>
+
             </div>
+
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -81,3 +90,19 @@
 <div>
     <a asp-action="List">Back to List</a>
 </div>
+
+@section scripts {
+    <script type="text/javascript" src="~/lib/moment/min/moment.min.js"></script>
+    <script type="text/javascript" src="~/lib/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="~/lib/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
+    <script type="text/javascript">
+            $('#datetimepicker4').datetimepicker({
+                format: 'DD-MM-YYYY HH:mm'
+            });
+            $('#datetimepicker5').datetimepicker({
+                format: 'DD-MM-YYYY HH:mm'
+            });
+            $('.multiselectCategories').multiselect();
+
+    </script>
+}
