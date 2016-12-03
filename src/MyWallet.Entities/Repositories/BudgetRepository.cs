@@ -84,32 +84,16 @@ namespace MyWallet.Entities.Repositories
             {
                 throw new ArgumentNullException(nameof(Budget.ConversionRatio));
             }
-<<<<<<< HEAD
-            budget.Group = _context.Groups.Find(budget.Group.Id);
-            budget.ConversionRatio = _context.ConversionRatios.Find(budget.ConversionRatio.Id);
-
-            var categories = budget.Categories;
-            budget.Categories = new List<Category>();
-            foreach (var cat in categories)
-=======
-
             var local = await _context.Budgets.FindAsync(budget.Id);
             _context.Entry(local).CurrentValues.SetValues(budget);
             local.Group = await _context.Groups.FindAsync(budget.Group.Id);
             local.ConversionRatio = await _context.ConversionRatios.FindAsync(budget.ConversionRatio.Id);
             foreach (var category in local.Categories)
->>>>>>> origin/dev_marek
             {
                 category.Budgets = category.Budgets.Where(x => x.Id != local.Id).ToList();
             }
-<<<<<<< HEAD
-            //todo fix update for objects
-
-            _context.Entry(budget).State = EntityState.Modified;
-=======
             var categories = budget.Categories.Select(x => _context.Categories.Find(x.Id)).ToList();
             local.Categories = new HashSet<Category>(categories);
->>>>>>> origin/dev_marek
             await _context.SaveChangesAsync();
         }
 

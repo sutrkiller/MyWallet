@@ -53,6 +53,21 @@ namespace MyWallet.Services.Services
                        return _mapper.Map<EntryDTO>(dataAccessEntryModel);
         }
 
+        public async Task EditEntry(EntryDTO entry, string userEmail, Guid conversionRatioId, ICollection<Guid> categoryIds, ICollection<Guid> budgetIds)
+        {
+            if (userEmail==null) throw new NullReferenceException("User is not logged in.");
+            //todo: download conversion from net
+            var dataAccessEntryModel = _mapper.Map<Entry>(entry);
+
+            var user = dataAccessEntryModel.User = await _userRepository.GetUserByEmail(userEmail);
+            dataAccessEntryModel.User = user;
+                       
+           dataAccessEntryModel.Categories = await _categoryRepository.GetCategoriesFromIds(categoryIds).ToArrayAsync();
+           dataAccessEntryModel.Budgets = await _budgetRepository.GetBudgetsFromIds(budgetIds).ToArrayAsync();
+           dataAccessEntryModel.ConversionRatio = await _conversionRatioRepository.GetSingleConversionRatio(conversionRatioId);
+           await _entryRepository.EditEntry(dataAccessEntryModel);
+        }
+
         public async Task<EntryDTO[]> GetEntriesByUser(Guid userId)
         {
             var entryDb = await _entryRepository.GetEntriesByUser(userId).ToArrayAsync();

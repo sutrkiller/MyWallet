@@ -36,6 +36,12 @@ namespace MyWallet.Models.Mappings
                 .ForMember(d => d.ConversionRatioId, opt => opt.MapFrom(m => m.ConversionRatio.Id))
                 .ForMember(d => d.ConversionRatiosList, opt => opt.Ignore());
 
+            CreateMap<EditEntryViewModel, EntryDTO>()
+                .ForMember(d => d.User, opt => opt.Ignore())
+                .ForMember(d => d.Categories, opt => opt.Ignore())
+                .ForMember(d => d.ConversionRatio, opt => opt.Ignore())
+                .ForMember(d => d.Budgets, opt => opt.Ignore());
+
         }
     }
 }

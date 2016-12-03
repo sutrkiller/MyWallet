@@ -126,7 +126,21 @@ namespace MyWallet.Controllers
             }
             return View(entry);
         }
-        
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditEntryViewModel entry)
+        {
+            if (ModelState.IsValid)
+            {
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                await _entryService.EditEntry(_mapper.Map<EntryDTO>(entry), email, entry.ConversionRatioId, entry.CategoryIds, entry.BudgetIds);
+                return RedirectToAction("List");
+            }
+            return View(entry);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetConversionRatiosByCurrencyId(string currencyId)
         {
