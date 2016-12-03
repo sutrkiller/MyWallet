@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
 using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Services.Interfaces;
+using System.Threading;
 
 namespace MyWallet.Middlewares
 {
@@ -29,6 +30,7 @@ namespace MyWallet.Middlewares
 
         public async Task Invoke(HttpContext httpContext)
         {
+            await _semaphore.WaitAsync().ConfigureAwait(false);
             try
             {
                 if (await NewConversionRatiosNeeded())
@@ -39,11 +41,15 @@ namespace MyWallet.Middlewares
             catch (Exception)
             {
                 Debug.WriteLine("Exception occured when downloading ratios.");
+            } finally
+            {
+                _semaphore.Release();
             }
             
             await _next(httpContext);
         }
 
+        private SemaphoreSlim _semaphore = new SemaphoreSlim(1);
         private async Task<bool> NewConversionRatiosNeeded()
         {
             var ratios = await _entryService.GetAllConversionRatios();
