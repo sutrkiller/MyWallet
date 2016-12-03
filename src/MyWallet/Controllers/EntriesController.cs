@@ -59,7 +59,8 @@ namespace MyWallet.Controllers
             var currenciesList2 = currencies.Select(g => new { g.Id, Value = g.Code });
             model.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
             model.CustomCurrenciesList = new SelectList(currenciesList2, "Id", "Value");
-            var conversionRatios = await _entryService.GetConversionRatiosForCurrency(currencies.FirstOrDefault().Id);
+            var conversionRatios = await _entryService.GetConversionRatiosForCurrency(entryDto.ConversionRatio.CurrencyFrom.Id);
+            model.ConversionRatioId = entryDto.ConversionRatio.Id;
             model.ConversionRatiosList = FormatConversionRatioForSelectList(conversionRatios);
             return View(model);
         }
