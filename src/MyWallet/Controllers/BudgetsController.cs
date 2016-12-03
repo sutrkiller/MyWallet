@@ -47,6 +47,7 @@ namespace MyWallet.Controllers
             return View(model);
         }
 
+        [Authorize]
         public async Task<IActionResult> Edit(Guid id)
         {
             var budgetDTO = await _budgetService.GetBudget(id);

@@ -50,6 +50,7 @@ namespace MyWallet.Controllers
             
         }
 
+        [Authorize]
         public async Task<IActionResult> Edit(Guid id)
         {
 

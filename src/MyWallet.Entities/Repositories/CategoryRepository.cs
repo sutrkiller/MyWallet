@@ -49,7 +49,7 @@ namespace MyWallet.Entities.Repositories
             {
                 throw new ArgumentNullException(nameof(category));
             }
-            _context.Categories.AddOrUpdate(category);
+            _context.Entry(category).State = EntityState.Modified;
             await _context.SaveChangesAsync();         
         }
 

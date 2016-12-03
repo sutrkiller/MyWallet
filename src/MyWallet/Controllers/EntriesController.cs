@@ -37,6 +37,32 @@ namespace MyWallet.Controllers
             var entriesDTO = await _entryService.GetAllEntries();
             return View(_mapper.Map<IEnumerable<EntryViewModel>>(entriesDTO));
         }
+        [Authorize]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var entryDto = await _entryService.GetEntry(id);
+            if (entryDto == null)
+            {
+                return NotFound();
+            }
+            var model = _mapper.Map<EditEntryViewModel>(entryDto);
+
+            var categories = await _budgetService.GetAllCategories();
+            var categoriesList = categories.Select(d => new { Id = d.Id, Value = d.Name });
+            model.CategoriesList = new SelectList(categoriesList, "Id", "Value");
+            var budgets = await _budgetService.GetAllBudgets();
+            var budgetsList = budgets.Select(g => new { g.Id, Value = g.Name });
+            model.BudgetsList = new SelectList(budgetsList, "Id", "Value");
+            var currencies = await _entryService.GetAllCurrencies();
+            var currenciesList = currencies.Select(g => new { g.Id, Value = g.Code });
+            model.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
+            var onversionRatios = await _entryService.GetAllConversionRatios();
+            var onversionRatiosList =
+                onversionRatios.Select(
+                    g => new { g.Id, Value = g.CurrencyFrom.Code + " - " + g.CurrencyTo.Code + " - " + g.Ratio });
+            model.ConversionRatiosList = new SelectList(onversionRatiosList, "Id", "Value");
+            return View(model);
+        }
 
         // GET: Budgets/Details/[id]
         [Authorize]

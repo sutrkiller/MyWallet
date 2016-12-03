@@ -84,7 +84,6 @@ namespace MyWallet.Entities.Repositories
             {
                 throw new ArgumentNullException(nameof(Budget.ConversionRatio));
             }
-
             budget.Group = _context.Groups.Find(budget.Group.Id);
             budget.ConversionRatio = _context.ConversionRatios.Find(budget.ConversionRatio.Id);
 
@@ -94,6 +93,8 @@ namespace MyWallet.Entities.Repositories
             {
                 budget.Categories.Add(_context.Categories.Find(cat.Id));
             }
+            //todo fix update for objects
+
             _context.Entry(budget).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
