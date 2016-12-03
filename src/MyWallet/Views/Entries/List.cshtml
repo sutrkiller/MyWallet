@@ -58,6 +58,8 @@
                         {
                             <input type="button" style="border: 0; padding: 0; padding-right: 5px" class="btn-link" value="Details" onclick="location.href = '@Url.Action("Details", "Entries", new {id = item.Id})'"/>
                             <span> |</span>
+                            <input type="button" style="border: 0; padding: 0; padding-right: 5px" class="btn-link" value="Edit" onclick="location.href = '@Url.Action("Edit", "Entries", new {id = item.Id})'" />
+                            <span> |</span>
                             <input type="submit" style="border: 0; padding: 0; padding-left: 5px;" class="btn-link" value="Delete"/>
                         }
                     }

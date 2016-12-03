@@ -55,5 +55,11 @@ namespace MyWallet.Services.Services
 
             return _mapper.Map<CategoryDTO>(category);
         }
+
+        public async Task DeleteCategory(Guid id)
+        {
+            var budget = await _categoryRepository.GetSingleCategory(id);
+            await _categoryRepository.DeleteCategory(budget);
+        }
     }
 }

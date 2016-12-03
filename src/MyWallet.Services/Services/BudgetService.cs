@@ -51,6 +51,17 @@ namespace MyWallet.Services.Services
             return _mapper.Map<BudgetDTO>(dataAccessBudgetModel);
         }
 
+        public async Task EditBudget(BudgetDTO budget, Guid groupId, Guid currencyId, ICollection<Guid> categoryIds)
+        {
+            var dataAccessBudgetModel = _mapper.Map<Budget>(budget);
+            dataAccessBudgetModel.Group = await _groupRepository.GetSingleGroup(groupId);
+            dataAccessBudgetModel.ConversionRatio = _conversionRatioRepository.GetAllConversionRatios().OrderByDescending(x => x.Date).FirstOrDefault(cr => cr.CurrencyFrom.Id == currencyId);
+            dataAccessBudgetModel.Categories = await _categoryRepository.GetCategoriesFromIds(categoryIds).ToArrayAsync();
+
+            await _budgetRepository.EditBudget(dataAccessBudgetModel);
+            
+        }
+
         public async Task<BudgetDTO[]> GetAllBudgets()
         {
             _logger.LogInformation("Starting Budget service method");
