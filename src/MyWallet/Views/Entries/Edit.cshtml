@@ -12,6 +12,14 @@
         <h4>Entry</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+        <div class="form-group">
+            <label class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input type="checkbox" id="IsIncome" class="form-control" asp-for="IsIncome" data-toggle="toggle" data-on="Income" data-off="Expense" data-onstyle="success" data-offstyle="danger">
+            </div>
+
+        </div>
         <div class="form-group">
             <label asp-for="Description" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -21,37 +29,43 @@
             </div>
 
         </div>
+
         <div class="form-group">
             <label asp-for="Amount" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Amount" class="form-control" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
+                <div class="input-group removeSpace">
+                    <input asp-for="Amount" type="text" class="form-control" aria-label="...">
+                    <div class="input-group-btn">
+                        <select asp-for="CurrencyId" id="CurrencyId" asp-items="@Model.CurrenciesList" class="btn btn-default paddingHack dropdown-toggle" aria-haspopup="true" aria-expanded="false"></select>
+                    </div>
 
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
             </div>
-
-        </div>
-        <div class="form-group">
-            <label asp-for="CurrencyId" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="CurrencyId" asp-items="@Model.CurrenciesList" class="form-control"></select>
-                <span asp-validation-for="CurrencyId" class="text-danger"></span>
-
-            </div>
-
         </div>
         <div class="form-group">
             <label asp-for="ConversionRatioId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="ConversionRatioId" asp-items="@Model.ConversionRatiosList" class="form-control"></select>
+                <select asp-for="ConversionRatioId" id="conversionRatiosId" asp-items="@Model.ConversionRatiosList" class="form-control"></select>
                 <span asp-validation-for="ConversionRatioId" class="text-danger"></span>
-
             </div>
-
+        </div>
+        <div class="hidden form-group" id="CustomRatio">
+            <label asp-for="CustomRatioAmount" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1"></span>
+                    <input asp-for="CustomRatioAmount" type="text" class="form-control maxWidthHack" aria-label="...">
+                    <div class="input-group-btn removeSpace">
+                        <select asp-for="CustomRatioCurrencyId" asp-items="@Model.CustomCurrenciesList" class="btn btn-default paddingHack dropdown-toggle" aria-haspopup="true" aria-expanded="false"></select>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="form-group">
             <label asp-for="EntryTime" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="EntryTime" class="form-control" />
+                <input asp-for="EntryTime" class="form-control" id="datetimepicker4" value="@Model.EntryTime" />
                 <span asp-validation-for="EntryTime" class="text-danger"></span>
 
             </div>
@@ -61,7 +75,7 @@
         <div class="form-group">
             <label asp-for="CategoryIds" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="CategoryIds" asp-items="@Model.CategoriesList" class="form-control"></select>
+                <select asp-for="CategoryIds" asp-items="@Model.CategoriesList" class="form-control multiselectCategories"></select>
                 <span asp-validation-for="CategoryIds" class="text-danger"></span>
 
             </div>
@@ -70,7 +84,7 @@
         <div class="form-group">
             <label asp-for="BudgetIds" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="BudgetIds" asp-items="@Model.BudgetsList" class="form-control"></select>
+                <select asp-for="BudgetIds" asp-items="@Model.BudgetsList" class="form-control multiselectBudgets"></select>
                 <span asp-validation-for="BudgetIds" class="text-danger"></span>
 
             </div>
@@ -92,3 +106,67 @@
     <a asp-action="List">Back to List</a>
 
 </div>
+
+@section scripts {
+<script src="~/lib/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
+<script type="text/javascript" src="~/lib/moment/min/moment.min.js"></script>
+<script type="text/javascript" src="~/lib/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="~/lib/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript">
+            $('#IsIncome').bootstrapToggle();
+            $('#datetimepicker4').datetimepicker({
+                format: 'DD-MM-YYYY HH:mm'
+            });
+            $('.multiselectBudgets').multiselect();
+            $('.multiselectCategories').multiselect();
+
+            $("#CurrencyId").change(function () {
+                var selectedItem = $(this).val();
+                var selectedCode = $("#CurrencyId option[value='" + selectedItem + "']").text();
+                $('#basic-addon1').text("1 " + selectedCode + " to ");
+                var ddlCRs = $("#conversionRatiosId");
+                var isCustomSelected = false;
+
+                if (ddlCRs.val() === 'ffffffff-ffff-ffff-ffff-ffffffffffff') {
+                    isCustomSelected = true;
+                }
+
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.RouteUrl("GetConversionRatiosByCurrencyId"))",
+                    data: { "currencyId": selectedItem},
+                    success: function (data) {
+                    ddlCRs.html('');
+                    for (let item of data) {
+                    ddlCRs.append($('<option></option>').val(item.value).html(item.text));
+                    }
+                    if (isCustomSelected) {
+                        console.log($("#conversionRatiosId"));
+                        $('#conversionRatiosId option[value=ffffffff-ffff-ffff-ffff-ffffffffffff]').prop('selected', true);
+                    }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                    console.log('Failed to retrieve conversionRatios.');
+                    }
+                });
+
+
+
+            });
+
+    $('#conversionRatiosId').change(function () {
+        var selectedItem = $(this).val();
+        var ddlCR = $("#CustomRatio");
+        if (selectedItem === 'ffffffff-ffff-ffff-ffff-ffffffffffff') {
+            selectedItem = $('#CurrencyId').val();
+            var selectedCode = $("#CurrencyId option[value='" + selectedItem + "']").text();
+            $('#basic-addon1').text("1 " + selectedCode + " to ");
+            ddlCR.removeClass('hidden');
+        } else {
+            ddlCR.addClass('hidden');
+        }
+
+    });
+</script>
+}
