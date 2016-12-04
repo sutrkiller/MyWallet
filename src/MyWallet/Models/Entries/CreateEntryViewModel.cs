@@ -17,6 +17,7 @@ namespace MyWallet.Models.Entries
         [Display(Name = "Custom conversion ratios")]
         public Guid CustomRatioCurrencyId { get; set; }
         public SelectList CustomCurrenciesList { get; set; }
+        [Required]
         public string Description { get; set; }
         public bool IsIncome { get; set; } = true;
         [Display(Name = "Entry time")]

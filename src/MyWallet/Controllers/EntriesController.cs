@@ -48,19 +48,7 @@ namespace MyWallet.Controllers
             var model = _mapper.Map<EditEntryViewModel>(entryDto);
             model.IsIncome = model.Amount  > 0;
             model.Amount = Math.Abs(Convert.ToDecimal(model.Amount));
-            var categories = await _budgetService.GetAllCategories();
-            var categoriesList = categories.Select(d => new { Id = d.Id, Value = d.Name });
-            model.CategoriesList = new SelectList(categoriesList, "Id", "Value");
-            var budgets = await _budgetService.GetAllBudgets();
-            var budgetsList = budgets.Select(g => new { g.Id, Value = g.Name });
-            model.BudgetsList = new SelectList(budgetsList, "Id", "Value");
-            var currencies = await _entryService.GetAllCurrencies();
-            var currenciesList = currencies.Select(g => new { g.Id, Value = g.Code });
-            var currenciesList2 = currencies.Select(g => new { g.Id, Value = g.Code });
-            model.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
-            model.CustomCurrenciesList = new SelectList(currenciesList2, "Id", "Value");
-            var conversionRatios = await _entryService.GetConversionRatiosForCurrency(currencies.FirstOrDefault().Id);
-            model.ConversionRatiosList = FormatConversionRatioForSelectList(conversionRatios);
+            await FillSelectLists(model);
             return View(model);
         }
 
@@ -82,6 +70,13 @@ namespace MyWallet.Controllers
         public async Task<IActionResult> Create()
         {
             var newEntry = new CreateEntryViewModel();
+            await FillSelectLists(newEntry);
+            newEntry.EntryTime = DateTime.Now;
+            return View(newEntry);
+        }
+
+        private async Task FillSelectLists(CreateEntryViewModel newEntry)
+        {
             var categories = await _budgetService.GetAllCategories();
             var categoriesList = categories.Select(d => new {Id = d.Id, Value = d.Name});
             newEntry.CategoriesList = new SelectList(categoriesList, "Id", "Value");
@@ -89,14 +84,29 @@ namespace MyWallet.Controllers
             var budgetsList = budgets.Select(g => new {g.Id, Value = g.Name});
             newEntry.BudgetsList = new SelectList(budgetsList, "Id", "Value");
             var currencies = await _entryService.GetAllCurrencies();
-            var currenciesList = currencies.Select(g => new {g.Id, Value = g.Code});           
-            var currenciesList2 = currencies.Select(g => new { g.Id, Value = g.Code });            
+            var currenciesList = currencies.Select(g => new {g.Id, Value = g.Code});
+            var currenciesList2 = currencies.Select(g => new {g.Id, Value = g.Code});
             newEntry.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
             newEntry.CustomCurrenciesList = new SelectList(currenciesList2, "Id", "Value");
             var conversionRatios = await _entryService.GetConversionRatiosForCurrency(currencies.FirstOrDefault().Id);
             newEntry.ConversionRatiosList = FormatConversionRatioForSelectList(conversionRatios);
-            newEntry.EntryTime = DateTime.Now;
-            return View(newEntry);
+        }
+
+        private async Task FillSelectLists(EditEntryViewModel newEntry)
+        {
+            var categories = await _budgetService.GetAllCategories();
+            var categoriesList = categories.Select(d => new { Id = d.Id, Value = d.Name });
+            newEntry.CategoriesList = new SelectList(categoriesList, "Id", "Value");
+            var budgets = await _budgetService.GetAllBudgets();
+            var budgetsList = budgets.Select(g => new { g.Id, Value = g.Name });
+            newEntry.BudgetsList = new SelectList(budgetsList, "Id", "Value");
+            var currencies = await _entryService.GetAllCurrencies();
+            var currenciesList = currencies.Select(g => new { g.Id, Value = g.Code });
+            var currenciesList2 = currencies.Select(g => new { g.Id, Value = g.Code });
+            newEntry.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
+            newEntry.CustomCurrenciesList = new SelectList(currenciesList2, "Id", "Value");
+            var conversionRatios = await _entryService.GetConversionRatiosForCurrency(currencies.FirstOrDefault().Id);
+            newEntry.ConversionRatiosList = FormatConversionRatioForSelectList(conversionRatios);
         }
 
         [HttpPost]
@@ -124,6 +134,7 @@ namespace MyWallet.Controllers
                 }
                 
             }
+            await FillSelectLists(entry);
             return View(entry);
         }
 
@@ -144,6 +155,7 @@ namespace MyWallet.Controllers
                 await _entryService.EditEntry(_mapper.Map<EntryDTO>(entry), email, entry.ConversionRatioId, entry.CategoryIds, entry.BudgetIds);
                 return RedirectToAction("List");
             }
+            await FillSelectLists(entry);
             return View(entry);
         }
 

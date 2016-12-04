@@ -12,8 +12,9 @@ namespace MyWallet.Models.Groups
     public class CreateGroupViewModel
     {
         public Guid Id { get; set; }
+        [Required]
         public string Name { get; set; }
-        [DisplayName("Users")]
+        [Display(Name = "Users")]
         public ICollection<Guid> UserIds { get; set; } = new List<Guid>();
         public SelectList UsersList { get; set; }
     }
