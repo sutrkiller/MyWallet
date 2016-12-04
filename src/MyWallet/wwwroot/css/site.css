@@ -41,7 +41,7 @@ textarea {
     display: block;
 }
 .paddingHack {
-    padding: 7px 12px;
+    padding: 5px 12px 6px 12px;
 }
 .toggle {
     width: 280px !important;
@@ -49,3 +49,39 @@ textarea {
 .maxWidthHack {
     max-width: 200px;
 }
+
+.headerMine {
+
+    color: #ffffff;
+    font-size: 20px;
+    padding: 8px 20px 12px;
+    float: left;
+    margin-left: -20px;
+    line-height: 1;
+    
+}
+.brand {
+    top: 7px !important;
+}
+a.brand:hover  {
+   text-decoration: none !important;
+   color: #ffffff !important;
+ }
+ a.brand:active   {
+   text-decoration: none !important;
+   color: #ffffff !important;
+ }
+  a.brand:focus  {
+   text-decoration: none !important;
+   color: #ffffff !important;
+ }
+ .transparentBackground {
+    background: transparent !important;
+}
+.transparentBackground:hover {
+    background: transparent !important;
+}
+.transparentBackground:active {
+    background: transparent !important;
+}
+
