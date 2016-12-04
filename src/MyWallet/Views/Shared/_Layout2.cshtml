@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MyWallet</title>
+
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link href="~/lib/bootstrap-toggle/css/bootstrap-toggle.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="~/lib/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap-multiselect/dist/css/bootstrap-multiselect.css" type="text/css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+ 
+
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
+        <link href="~/css/font-awesome.css" rel="stylesheet">
+        <link href="~/css/style.css" rel="stylesheet">
+
+        <link href="~/css/pages/dashboard.css" rel="stylesheet">
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+</head>
+<body style="padding: 0px;">
+<div class="navbar navbar-fixed-top" style="margin-bottom: 0px;">
+    <div class="navbar-inner" style="padding: 0px;">
+        <div class="container">
+            <a asp-area="" class="brand headerMine" asp-controller="Home" asp-action="Index">My Wallet</a>
+            @await Component.InvokeAsync("SignIn")
+         
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /navbar-inner -->
+</div>
+    @if(User.Identity.IsAuthenticated) { 
+<div class="subnavbar">
+    <div class="subnavbar-inner">
+        <div class="container">
+            <ul class="mainnav">
+                <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="icon-home"></i><span>Dashboard</span> </a></li>
+                <li><a asp-area="" asp-controller="Entries" asp-action="List"><i class="icon-money"></i><span>Entries</span></a></li>
+                <li><a asp-area="" asp-controller="Categories" asp-action="List"><i class="icon-list"></i><span>Categories</span></a></li>
+                <li><a asp-area="" asp-controller="Budgets" asp-action="List"><i class="icon-list-alt"></i><span>Budgets</span></a></li>
+                <li><a asp-area="" asp-controller="Groups" asp-action="List"><i class="icon-group"></i><span>Groups</span></a></li>
+            </ul>
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /subnavbar-inner -->
+</div>
+    }
+<div class="main" style ="border: none; min-height: 100%; position: relative; padding-bottom: 60px;">
+    <div class="main-inner">
+        <div class="container" style="overflow: auto;">
+            @RenderBody()
+
+        </div>
+    </div>
+
+</div>
+   
+    <div class="footer" style="position: fixed; bottom: 0px; left: 0px; right: 0px;"  >
+        <div class="footer-inner">
+            <div class="container">
+                <div class="row">
+                    <div class="span12"> &copy; 2016 <a asp-area="" class="brand" asp-controller="Home" asp-action="Index">My Wallet</a>. </div>
+                    <!-- /span12 -->
+                </div>
+                <!-- /row -->
+            </div>
+            <!-- /container -->
+        </div>
+        <!-- /footer-inner -->
+    </div>
+
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/excanvas.min.js"></script>
+        <script src="~/js/chart.min.js" type="text/javascript"></script>
+        <script src="~/js/base.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+<script>
+    $(document).ready(function () {
+        var url = window.location;
+  
+        $('ul.mainnav a[href="' + url + '"]').parent().addClass('active');
+        // Will also work for relative and absolute hrefs
+        $('ul.mainnav a').filter(function () {
+            return this.href == url;
+        }).parent().addClass('active').parent().parent().addClass('active');
+    });
+</script>
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
