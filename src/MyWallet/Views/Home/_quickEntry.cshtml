@@ -1,0 +1,64 @@
+﻿@using System.Threading.Tasks
+@model CreateEntryViewModel
+<div class="widget">
+    <div class="widget-header">
+        <i class="icon-file"></i>
+        <h3 class="marginHack">Quick entry</h3>
+    </div>
+    <!-- /widget-header -->
+    <div class="widget-content">
+        <form asp-action="Create">
+            <div class="form-horizontal">
+            
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input type="checkbox" id="IsIncome" class="form-control" asp-for="IsIncome" data-toggle="toggle" data-on="Income" data-off="Expense" data-onstyle="success" data-offstyle="danger">
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Amount" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <div class="input-group removeSpace">
+                            <input asp-for="Amount" type="text" class="form-control" aria-label="...">
+                            <div class="input-group-btn">
+                                <select asp-for="CurrencyId" id="CurrencyId" asp-items="@Model.CurrenciesList" class="btn btn-default paddingHack dropdown-toggle" aria-haspopup="true" aria-expanded="false"></select>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Amount" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BudgetIds" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <select asp-for="BudgetIds" asp-items="@Model.BudgetsList" class="form-control multiselectBudgets"></select>
+                        <span asp-validation-for="BudgetIds" class="text-danger"></span>
+
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+    <!-- /widget-content -->
+</div>
+
