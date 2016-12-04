@@ -1,5 +1,26 @@
-﻿@{
+﻿@using System.Threading.Tasks
+@model DashboardModel
+@{
     ViewData["Title"] = "Home Page";
 }
+<p></p>
+<div class="col-md-6">
+    @Html.Partial("_quickActions")
+    @Html.Partial("_dashboardGraph")
+</div>
+<div class="col-md-6">
+    @Html.Partial("_quickEntry", Model.Entry)
+    @Html.Partial("_dashboardStats")
+</div>
+@section scripts {
+    <script src="~/lib/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
+
+    <script type="text/javascript" src="~/lib/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
+    <script type="text/javascript">
+        $('#IsIncome').bootstrapToggle();
+
+        $('.multiselectBudgets').multiselect();
 
 
+    </script>
+}

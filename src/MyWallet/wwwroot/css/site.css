@@ -84,4 +84,6 @@ a.brand:hover  {
 .transparentBackground:active {
     background: transparent !important;
 }
-
+.marginHack {
+    margin-top: 0px !important;
+}

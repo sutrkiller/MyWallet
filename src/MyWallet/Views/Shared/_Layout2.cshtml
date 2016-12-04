@@ -38,33 +38,46 @@
     </div>
     <!-- /navbar-inner -->
 </div>
-    @if(User.Identity.IsAuthenticated) { 
-<div class="subnavbar">
-    <div class="subnavbar-inner">
-        <div class="container">
-            <ul class="mainnav">
-                <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="icon-home"></i><span>Dashboard</span> </a></li>
-                <li><a asp-area="" asp-controller="Entries" asp-action="List"><i class="icon-money"></i><span>Entries</span></a></li>
-                <li><a asp-area="" asp-controller="Categories" asp-action="List"><i class="icon-list"></i><span>Categories</span></a></li>
-                <li><a asp-area="" asp-controller="Budgets" asp-action="List"><i class="icon-list-alt"></i><span>Budgets</span></a></li>
-                <li><a asp-area="" asp-controller="Groups" asp-action="List"><i class="icon-group"></i><span>Groups</span></a></li>
-            </ul>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="subnavbar">
+            <div class="subnavbar-inner">
+                <div class="container">
+                    <ul class="mainnav">
+                        <li class="dashboard"><a asp-area="" asp-controller="Home" asp-action="Index"><i class="icon-home"></i><span>Dashboard</span> </a></li>
+                        <li class="entries"><a asp-area="" asp-controller="Entries" asp-action="List"><i class="icon-money"></i><span>Entries</span></a></li>
+                        <li class="categories"><a asp-area="" asp-controller="Categories" asp-action="List"><i class="icon-list"></i><span>Categories</span></a></li>
+                        <li class="budgets"><a asp-area="" asp-controller="Budgets" asp-action="List"><i class="icon-list-alt"></i><span>Budgets</span></a></li>
+                        <li class="groups"><a asp-area="" asp-controller="Groups" asp-action="List"><i class="icon-group"></i><span>Groups</span></a></li>
+                    </ul>
+                </div>
+                <!-- /container -->
+            </div>
+            <!-- /subnavbar-inner -->
         </div>
-        <!-- /container -->
-    </div>
-    <!-- /subnavbar-inner -->
-</div>
+
+        <div class="main" style="border: none; min-height: 100%; position: relative; padding-bottom: 60px;">
+            <div class="main-inner">
+                <div class="container" style="overflow: auto;">
+                    @RenderBody()
+
+                </div>
+            </div>
+
+        </div>
     }
-<div class="main" style ="border: none; min-height: 100%; position: relative; padding-bottom: 60px;">
-    <div class="main-inner">
-        <div class="container" style="overflow: auto;">
-            @RenderBody()
+    else
+    {
+        <div class="main" style="border: none; min-height: 100%; position: relative; padding-bottom: 60px;">
+            <div class="main-inner">
+                <div class="container" style="overflow: auto;">
+                    @Html.Partial("_landingPage")
+                    @{ RenderBody(); } 
+                </div>
+            </div>
 
         </div>
-    </div>
-
-</div>
-   
+    }
     <div class="footer" style="position: fixed; bottom: 0px; left: 0px; right: 0px;"  >
         <div class="footer-inner">
             <div class="container">
@@ -100,13 +113,29 @@
     </environment>
 <script>
     $(document).ready(function () {
+
+        // most elegant solution like ever -_-
         var url = window.location;
-  
-        $('ul.mainnav a[href="' + url + '"]').parent().addClass('active');
-        // Will also work for relative and absolute hrefs
-        $('ul.mainnav a').filter(function () {
-            return this.href == url;
-        }).parent().addClass('active').parent().parent().addClass('active');
+        if (/Entries/i.test(url)) {
+            $('.entries').addClass('active');
+            return;
+        } else 
+        if (/Categories/i.test(url)) {
+            $('.categories').addClass('active');
+            return;
+        } else 
+        if (/Budgets/i.test(url)) {
+            $('.budgets').addClass('active');
+            return;
+        } else 
+        if (/Groups/i.test(url)) {
+            $('.groups').addClass('active');
+            return;
+        }
+        
+        $('.dashboard').addClass('active');
+        return;
+        
     });
 </script>
     @RenderSection("scripts", required: false)
