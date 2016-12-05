@@ -24,7 +24,7 @@ namespace MyWallet.Services.Services
             _currencyRepository = currencyRepository;
         }
 
-        public async Task<User> EnsureUserExists(ClaimsIdentity userClaims)
+        public async Task<UserDTO> EnsureUserExists(ClaimsIdentity userClaims)
         {
             if (userClaims == null)
             {
@@ -44,13 +44,29 @@ namespace MyWallet.Services.Services
                 });
             }
 
-            return user;
+            return _mapper.Map<UserDTO>(user);
         }
 
         public async Task<UserDTO[]> GetAllUsers()
         {
             var users = await _userRepository.GetAllUsers().ToArrayAsync();
             return _mapper.Map<UserDTO[]>(users);
+        }
+
+        public async Task<UserDTO> EditCurrency(string userEmail, Guid currencyId)
+        {
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                throw new ArgumentNullException(nameof(userEmail));
+            }
+            var user = await _userRepository.GetUserByEmail(userEmail);
+            if (user == null) throw new ArgumentException("User with this email not found.");
+            var currency = await _currencyRepository.GetSingleCurrency(currencyId);
+            if (currency == null) throw new ArgumentException("Currency not found.");
+            user.PreferredCurrency = currency;
+
+            var result = await _userRepository.EditUser(user);
+            return _mapper.Map<UserDTO>(result);
         }
     }
 }
