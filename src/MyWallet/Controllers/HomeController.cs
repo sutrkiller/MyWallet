@@ -16,6 +16,7 @@ using MyWallet.Services.Services.Interfaces;
 
 namespace MyWallet.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly IEntryService _entryService;
@@ -32,6 +33,7 @@ namespace MyWallet.Controllers
             _userService = userService;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var dashmodel = new DashboardModel();
@@ -57,13 +59,9 @@ namespace MyWallet.Controllers
             var currenciesList2 = currencies.Select(g => new { g.Id, Value = g.Code });
             newEntry.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
             newEntry.CustomCurrenciesList = new SelectList(currenciesList2, "Id", "Value");
+            var prefCurrency =(await _userService.EnsureUserExists(User.Identity as ClaimsIdentity)).PreferredCurrency.Id;
+            newEntry.CurrencyId = prefCurrency;
 
-            if (User.Identity.IsAuthenticated)
-            {
-                var prefCurrency =
-                    (await _userService.EnsureUserExists(User.Identity as ClaimsIdentity)).PreferredCurrency.Id;
-                newEntry.CurrencyId = prefCurrency;
-            }
 
         }
 
