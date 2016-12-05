@@ -2,8 +2,15 @@
 
 @{
     ViewBag.Title = "Manage account";
-    ViewData["currency"] = Model.CurrencyId;
 }
+
+@*@if (TempData["Message"]!=null)*@
+@*{*@
+@*    <div class="alert alert-success">*@
+@*        <button class="close" type="button" data-dismiss="alert">×</button>*@
+@*        <strong>@TempData["Message"]</strong>*@
+@*    </div>  *@
+@*}*@
 
 <h2>
     @Html.DisplayFor(model => model.Name)

@@ -17,6 +17,7 @@ namespace MyWallet.Models.Mappings
                 .ForMember(d => d.OriginalCurrencyId, opt => opt.MapFrom(m => m.PreferredCurrency.Id))
                 .ForMember(d => d.CurrenciesList, opt => opt.Ignore())
                 .ForMember(d => d.Groups, opt => opt.MapFrom(m => m.Groups));
+
         }
     }
 }

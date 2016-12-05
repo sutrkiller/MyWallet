@@ -4,14 +4,6 @@
     ViewData["Title"] = "Home Page";
 }
 
-@if (!string.IsNullOrEmpty(Model.Note))
-{
-    <div class="alert alert-success">
-        <button class="close" type="button" data-dismiss="alert">×</button>
-        <strong>Entry</strong> @Model.Note
-    </div>
-}
-
 <p></p>
 <div class="col-md-6">
     @Html.Partial("_quickActions")

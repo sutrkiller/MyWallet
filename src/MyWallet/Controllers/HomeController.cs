@@ -34,13 +34,9 @@ namespace MyWallet.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Index(string note)
+        public async Task<IActionResult> Index()
         {
             var dashmodel = new DashboardModel();
-            if (!string.IsNullOrEmpty(note))
-            {
-                dashmodel.Note = note;
-            }
             var newEntry = new CreateEntryViewModel();
             await FillSelectLists(newEntry);
             newEntry.EntryTime = DateTime.Now;
@@ -120,9 +116,11 @@ namespace MyWallet.Controllers
                         _entryService.AddEntry(_mapper.Map<EntryDTO>(entry), email, entry.ConversionRatioId,
                             entry.CategoryIds, entry.BudgetIds);
                     var currencyCode = entry.CurrenciesList.FirstOrDefault(x => Guid.Parse(x.Value) == entry.CurrencyId).Text;
-                    var note = $"{entry.Description}: {entry.Amount} {currencyCode} from {entry.EntryTime} was added.";
+
+                    TempData["MessageTitle"] = "Entry";
+                    TempData["Message"] = $"{entry.Description}: {entry.Amount} {currencyCode} from {entry.EntryTime} was added.";
                   
-                    return RedirectToAction("Index", new { Note = note});
+                    return RedirectToAction("Index");
                 }
                 catch (NullReferenceException ex)
                 {
@@ -152,4 +150,5 @@ namespace MyWallet.Controllers
             return View();
         }
     }
+
 }
