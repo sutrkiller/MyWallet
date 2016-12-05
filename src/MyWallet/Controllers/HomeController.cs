@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IdentityModel.Claims;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -54,8 +54,9 @@ namespace MyWallet.Controllers
             var currenciesList2 = currencies.Select(g => new { g.Id, Value = g.Code });
             newEntry.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
             newEntry.CustomCurrenciesList = new SelectList(currenciesList2, "Id", "Value");
+            var prefCurrency = (await _userService.EnsureUserExists(User.Identity as ClaimsIdentity)).PreferredCurrency.Id;
+            newEntry.CurrencyId = prefCurrency;
 
-            
         }
         public IActionResult About()
         {
