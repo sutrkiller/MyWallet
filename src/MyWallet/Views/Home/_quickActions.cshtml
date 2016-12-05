@@ -1,4 +1,5 @@
-﻿
+﻿@using MyWallet.Services.Filters
+
 <div class="widget">
     <div class="widget-header">
         <i class="icon-bookmark"> </i>
@@ -8,13 +9,12 @@
     <div class="widget-content">
         <div class="shortcuts">
             <a asp-area="" class="shortcut" asp-controller="Entries" asp-action="Create"><i class="shortcut-icon icon-plus"></i><span class="shortcut-label">Add entry</span> </a>
-            <a asp-area="" class="shortcut" asp-controller="Entries" asp-action="List"><i class="shortcut-icon  icon-calendar"></i><span class="shortcut-label">Last month entries</span> </a>
-            <a asp-area="" class="shortcut" asp-controller="Entries" asp-action="List"><i class="shortcut-icon icon-align-justify"></i><span class="shortcut-label">Todays entries</span> </a>
+            <a asp-area="" class="shortcut" asp-controller="Entries" asp-action="List" asp-route-from="@DateTime.Today.AddMonths(-1)"><i class="shortcut-icon  icon-calendar"></i><span class="shortcut-label">Last month entries</span> </a>
+            <a asp-area="" class="shortcut" asp-controller="Entries" asp-action="List" asp-route-from="@DateTime.Today"><i class="shortcut-icon icon-align-justify"></i><span class="shortcut-label">Todays entries</span> </a>
             <a asp-area="" class="shortcut" asp-controller="Home" asp-action="AddRatio"><i class="shortcut-icon icon-plus-sign"></i><span class="shortcut-label">Add ratio</span> </a>
             <a asp-area="" class="shortcut" asp-controller="Home" asp-action="Graphs"><i class="shortcut-icon icon-bar-chart"></i><span class="shortcut-label">Graphs</span> </a>
             <a asp-area="" class="shortcut" asp-controller="Home" asp-action="Stats"><i class="shortcut-icon icon-table"></i><span class="shortcut-label">Stats</span> </a>
             <a asp-area="" class="shortcut" asp-controller="Home" asp-action="EasterEgg"><i class="shortcut-icon icon-user-md"></i><span class="shortcut-label">Easter egg</span> </a>
-
         </div>
         <!-- /shortcuts -->
     </div>

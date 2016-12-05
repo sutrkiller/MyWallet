@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyWallet.Models.Entries;
 using MyWallet.Services.DataTransferModels;
+using MyWallet.Services.Filters;
 using MyWallet.Services.Services.Interfaces;
 
 namespace MyWallet.Controllers
@@ -29,14 +30,14 @@ namespace MyWallet.Controllers
             _budgetService = budgetService;
             _userService = userService;
         }
-
         // GET: Budgets
         [Authorize]
-        public async Task<IActionResult> List()
+        public async Task<IActionResult> List(DateTime? from = null, DateTime? to =null)
         {
-            var entriesDTO = await _entryService.GetAllEntries();
-            return View(_mapper.Map<IEnumerable<EntryViewModel>>(entriesDTO));
+            var entries = await _entryService.GetAllEntries(new EntriesFilter() {From = from,To = to});
+            return View("List",_mapper.Map<IEnumerable<EntryViewModel>>(entries));
         }
+
         [Authorize]
         public async Task<IActionResult> Edit(Guid id)
         {
