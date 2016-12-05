@@ -49,6 +49,7 @@
                         <li class="categories"><a asp-area="" asp-controller="Categories" asp-action="List"><i class="icon-list"></i><span>Categories</span></a></li>
                         <li class="budgets"><a asp-area="" asp-controller="Budgets" asp-action="List"><i class="icon-list-alt"></i><span>Budgets</span></a></li>
                         <li class="groups"><a asp-area="" asp-controller="Groups" asp-action="List"><i class="icon-group"></i><span>Groups</span></a></li>
+                        <li class="profile"><a asp-area="" asp-controller="Accounts" asp-action="Manage"><i class="icon-user"></i><span>Profile</span></a></li>
                     </ul>
                 </div>
                 <!-- /container -->
@@ -130,6 +131,10 @@
         } else 
         if (/Groups/i.test(url)) {
             $('.groups').addClass('active');
+            return;
+        }
+        if (/Accounts/i.test(url)) {
+            $('.profile').addClass('active');
             return;
         }
         
