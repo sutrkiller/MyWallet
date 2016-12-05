@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyWallet.Models.Entries;
@@ -15,6 +16,7 @@ using MyWallet.Services.Services.Interfaces;
 
 namespace MyWallet.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly IEntryService _entryService;
@@ -31,16 +33,19 @@ namespace MyWallet.Controllers
             _userService = userService;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var dashmodel = new DashboardModel();
-            
+
             var newEntry = new CreateEntryViewModel();
             await FillSelectLists(newEntry);
             newEntry.EntryTime = DateTime.Now;
             dashmodel.Entry = newEntry;
+
             return View(dashmodel);
         }
+
         private async Task FillSelectLists(CreateEntryViewModel newEntry)
         {
             var categories = await _budgetService.GetAllCategories();
@@ -54,10 +59,13 @@ namespace MyWallet.Controllers
             var currenciesList2 = currencies.Select(g => new { g.Id, Value = g.Code });
             newEntry.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
             newEntry.CustomCurrenciesList = new SelectList(currenciesList2, "Id", "Value");
-            var prefCurrency = (await _userService.EnsureUserExists(User.Identity as ClaimsIdentity)).PreferredCurrency.Id;
+            var prefCurrency =(await _userService.EnsureUserExists(User.Identity as ClaimsIdentity)).PreferredCurrency.Id;
             newEntry.CurrencyId = prefCurrency;
 
+
         }
+
+        [Authorize]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
@@ -65,18 +73,27 @@ namespace MyWallet.Controllers
             return View();
         }
 
+        [Authorize]
         public IActionResult EasterEgg()
         {
             return View();
         }
+
+        [Authorize]
         public IActionResult Graphs()
         {
             return View();
         }
+
+        [Authorize]
         public IActionResult Stats()
         {
             return View();
         }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateEntryViewModel entry)
         {
             if (ModelState.IsValid)
@@ -85,10 +102,10 @@ namespace MyWallet.Controllers
                 {
                     var email = User.FindFirst(ClaimTypes.Email)?.Value;
                     entry.Amount = entry.IsIncome == true ? entry.Amount : -1 * entry.Amount;
-                    var conratios =await  _entryService.GetConversionRatiosForCurrency(entry.CurrencyId);
+                    var conratios = await _entryService.GetConversionRatiosForCurrency(entry.CurrencyId);
                     var date = conratios.Max(cr => cr.Date);
                     entry.ConversionRatioId = conratios.FirstOrDefault(x => x.Date == date).Id;
-                        
+
                     entry.EntryTime = DateTime.Now;
                     entry.CategoryIds = new List<Guid>();
                     await _entryService.AddEntry(_mapper.Map<EntryDTO>(entry), email, entry.ConversionRatioId, entry.CategoryIds, entry.BudgetIds);
@@ -104,13 +121,17 @@ namespace MyWallet.Controllers
 
             var dashboard = new DashboardModel();
             dashboard.Entry = entry;
-     
-            return View("Index",dashboard);
+
+            return View("Index", dashboard);
         }
+
+        [Authorize]
         public IActionResult AddRatio()
         {
             return View();
         }
+
+        [Authorize]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
