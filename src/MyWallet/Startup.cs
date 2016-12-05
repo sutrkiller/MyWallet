@@ -40,6 +40,7 @@ namespace MyWallet
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSession();
             services.Configure<ConnectionOptions>(
                     options => options.ConnectionString = Configuration.GetConnectionString("MyWalletConnection"))
 
@@ -48,6 +49,8 @@ namespace MyWallet
                 AddScoped<IGroupService, GroupService>().
                 AddScoped<IEntryService, EntryService>().
                 AddScoped<IUserService, UserService>();
+
+            
             // Add framework services.
             services.AddMvc();
 
@@ -76,6 +79,7 @@ namespace MyWallet
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+           
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -117,7 +121,7 @@ namespace MyWallet
                     }
                 }
             });
-
+            app.UseSession();
             app.UseMvc(routes =>
             {
                 routes.MapRoute("GetConversionRatiosByCurrencyId",

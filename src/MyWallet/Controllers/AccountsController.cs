@@ -41,7 +41,7 @@ namespace MyWallet.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Manage()
+        public async Task<IActionResult> Manage(string message = null)
         {
             var user = await _userService.EnsureUserExists(User.Identity as ClaimsIdentity);
             if (user == null)
@@ -52,7 +52,6 @@ namespace MyWallet.Controllers
             var currencies = await _entryService.GetAllCurrencies();
             var currenciesList = currencies.Select(x => new {x.Id, Value = x.Code});
             model.CurrenciesList = new SelectList(currenciesList,"Id","Value");
-
             return View("Manage",model);
         }
 
@@ -62,6 +61,7 @@ namespace MyWallet.Controllers
         public async Task<IActionResult> Edit(ManageUserCreateViewModel model)
         {
             await _userService.EditCurrency(model.Email, model.CurrencyId);
+            TempData["Message"] = "Preferences changed";
             return RedirectToAction("Manage");
         }
     }

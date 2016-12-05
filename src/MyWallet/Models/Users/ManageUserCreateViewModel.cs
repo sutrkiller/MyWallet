@@ -19,6 +19,7 @@ namespace MyWallet.Models.Users
         public SelectList CurrenciesList { get; set; }
 
         public ICollection<GroupDTO> Groups { get; set; }
+
         
     }
 }
