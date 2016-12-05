@@ -34,10 +34,13 @@ namespace MyWallet.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string note)
         {
             var dashmodel = new DashboardModel();
-
+            if (!string.IsNullOrEmpty(note))
+            {
+                dashmodel.Note = note;
+            }
             var newEntry = new CreateEntryViewModel();
             await FillSelectLists(newEntry);
             newEntry.EntryTime = DateTime.Now;
@@ -94,22 +97,32 @@ namespace MyWallet.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
+        
         public async Task<IActionResult> Create(CreateEntryViewModel entry)
         {
+            var dashboard = new DashboardModel();
+            await FillSelectLists(entry);
+            dashboard.Entry = entry;
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     var email = User.FindFirst(ClaimTypes.Email)?.Value;
-                    entry.Amount = entry.IsIncome == true ? entry.Amount : -1 * entry.Amount;
+                    entry.Amount = entry.IsIncome == true ? entry.Amount : -1*entry.Amount;
                     var conratios = await _entryService.GetConversionRatiosForCurrency(entry.CurrencyId);
                     var date = conratios.Max(cr => cr.Date);
                     entry.ConversionRatioId = conratios.FirstOrDefault(x => x.Date == date).Id;
 
                     entry.EntryTime = DateTime.Now;
                     entry.CategoryIds = new List<Guid>();
-                    await _entryService.AddEntry(_mapper.Map<EntryDTO>(entry), email, entry.ConversionRatioId, entry.CategoryIds, entry.BudgetIds);
-                    return RedirectToAction("Index");
+                    await
+                        _entryService.AddEntry(_mapper.Map<EntryDTO>(entry), email, entry.ConversionRatioId,
+                            entry.CategoryIds, entry.BudgetIds);
+                    var currencyCode = entry.CurrenciesList.FirstOrDefault(x => Guid.Parse(x.Value) == entry.CurrencyId).Text;
+                    var note = $"{entry.Description}: {entry.Amount} {currencyCode} from {entry.EntryTime} was added.";
+                  
+                    return RedirectToAction("Index", new { Note = note});
                 }
                 catch (NullReferenceException ex)
                 {
@@ -117,15 +130,10 @@ namespace MyWallet.Controllers
                 }
 
             }
-            await FillSelectLists(entry);
-
-            var dashboard = new DashboardModel();
-            dashboard.Entry = entry;
-
+    
             return View("Index", dashboard);
         }
 
-        [Authorize]
         public IActionResult AddRatio()
         {
             return View();
