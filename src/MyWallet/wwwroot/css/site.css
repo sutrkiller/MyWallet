@@ -87,3 +87,9 @@ a.brand:hover  {
 .marginHack {
     margin-top: 0px !important;
 }
+.subnavbar {
+    margin-bottom: 15px !important;
+}
+.navbar-right {
+    margin-right: 0px !important;
+}

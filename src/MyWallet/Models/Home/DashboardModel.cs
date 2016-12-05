@@ -9,5 +9,7 @@ namespace MyWallet.Models.Home
     public class DashboardModel
     {
         public CreateEntryViewModel Entry { get; set; }
+
+        public string Note { get; set; } = "";
     }
 }
