@@ -12,7 +12,9 @@ namespace MyWallet.Models.Mappings
     {
         public EntriesMappingProfile()
         {
-            CreateMap<EntryDTO, EntryViewModel>().ReverseMap();
+            CreateMap<EntryDTO, EntryViewModel>()
+                .ForMember(d=>d.Currency,opt=>opt.MapFrom(x=>x.ConversionRatio.CurrencyFrom.Code))
+                .ReverseMap();
 
             CreateMap<EntryDTO, EntryDetailsViewModel>()
                 .ForMember(d => d.Amount, opt => opt.MapFrom(m => $"{m.Amount:0.00} {m.ConversionRatio.CurrencyFrom.Code}"))

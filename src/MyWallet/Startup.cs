@@ -19,6 +19,7 @@ using MyWallet.Middlewares;
 using MyWallet.Services.Configuration;
 using MyWallet.Services.Services;
 using MyWallet.Services.Services.Interfaces;
+using Sakura.AspNetCore.Mvc;
 
 namespace MyWallet
 {
@@ -51,6 +52,10 @@ namespace MyWallet
                 AddScoped<IUserService, UserService>();
 
             
+            services.AddBootstrapPagerGenerator(options =>
+            {
+                options.ConfigureDefault();
+            });
             // Add framework services.
             services.AddMvc();
 

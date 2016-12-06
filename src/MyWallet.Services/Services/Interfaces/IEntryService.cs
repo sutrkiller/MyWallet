@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MyWallet.Services.DataTransferModels;
+using MyWallet.Services.Filters;
 
 namespace MyWallet.Services.Services.Interfaces
 {
@@ -13,7 +14,7 @@ namespace MyWallet.Services.Services.Interfaces
         Task<EntryDTO[]> GetEntriesByUser(Guid userId);
         Task<CurrencyDTO[]> GetAllCurrencies();
         Task<EntryDTO> GetEntry(Guid entryId);
-        Task<EntryDTO[]> GetAllEntries();
+        Task<EntryDTO[]> GetAllEntries(EntriesFilter filter = null);
         Task<ConversionRatioDTO[]> GetAllConversionRatios();
         Task<EntryDTO[]> GetAllEntriesForBudget(Guid budgetId);
         Task<ConversionRatioDTO[]> GetConversionRatiosForCurrency(Guid currencyId);
