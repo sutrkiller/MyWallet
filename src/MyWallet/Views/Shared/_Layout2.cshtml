@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using MyWallet.Controllers
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -11,7 +12,6 @@
         <link rel="stylesheet" href="~/lib/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" />
         <link rel="stylesheet" href="~/lib/bootstrap-multiselect/dist/css/bootstrap-multiselect.css" type="text/css" />
         <link rel="stylesheet" href="~/css/site.css" />
- 
 
         <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
         <link href="~/css/font-awesome.css" rel="stylesheet">
@@ -49,6 +49,7 @@
                         <li class="categories"><a asp-area="" asp-controller="Categories" asp-action="List"><i class="icon-list"></i><span>Categories</span></a></li>
                         <li class="budgets"><a asp-area="" asp-controller="Budgets" asp-action="List"><i class="icon-list-alt"></i><span>Budgets</span></a></li>
                         <li class="groups"><a asp-area="" asp-controller="Groups" asp-action="List"><i class="icon-group"></i><span>Groups</span></a></li>
+                        <li class="profile"><a asp-area="" asp-controller="Accounts" asp-action="Manage"><i class="icon-user"></i><span>Profile</span></a></li>
                     </ul>
                 </div>
                 <!-- /container -->
@@ -59,6 +60,13 @@
         <div class="main" style="border: none; min-height: 100%; position: relative; padding-bottom: 60px;">
             <div class="main-inner">
                 <div class="container" style="overflow: auto;">
+                    @if (TempData["Message"] != null)
+                    {
+                        <div class="alert alert-success">
+                            <button class="close" type="button" data-dismiss="alert">×</button>
+                            <strong>@TempData["MessageTitle"]</strong>&nbsp;@TempData["Message"]
+                        </div>
+                    }
                     @RenderBody()
 
                 </div>
@@ -130,6 +138,10 @@
         } else 
         if (/Groups/i.test(url)) {
             $('.groups').addClass('active');
+            return;
+        }
+        if (/Accounts/i.test(url)) {
+            $('.profile').addClass('active');
             return;
         }
         

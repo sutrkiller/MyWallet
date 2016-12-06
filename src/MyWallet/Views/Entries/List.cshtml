@@ -1,76 +1,190 @@
 ﻿@using System.Security.Claims
 @using System.Threading.Tasks
-@model IEnumerable<EntryViewModel>
+@using MyWallet.Helpers
+@model Sakura.AspNetCore.IPagedList<EntryViewModel>
 
 @{
     ViewData["Title"] = "Entries";
 }
 
-<h2>Entries</h2>
+<form>
+    <div class="form-group col-md-4 row" >
+        <br/>
+        <a href="@Url.Action("Create", "Entries")" class="btn btn-success">
+            <span class="glyphicon glyphicon-plus"></span> 
+            Create new
+        </a>
+    </div>
+    
+    <div class="form-group col-md-2 col-md-offset-3">
+        <label class="control-label">From:</label>
+        <div class="input-group date" id="datetimepickerFrom">
+            <input type="text" value="@(ViewData["from"])" class="form-control" style="max-width: none;"/>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+    </div>
+    <div class="form-group  col-md-2">
+        <label class="control-label">To:</label>
+        <div class="input-group date" id="datetimepickerTo">
+            <input type="text" value="@(ViewData["to"])" class="form-control" style="max-width: none"/>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+    </div>
+    <div class="form-group col-md-1" style="margin-top: 5px;">
+        <br/>
+        <a href="@Url.Action("List", "Entries")" class="btn btn-default">
+            <span class="glyphicon glyphicon-remove"></span>
+            Clear
+        </a>
+    </div>
+</form>
+<div class="widget widget-table action-table">
+    <div class="widget-header" >
+        <i class="icon-th-list"></i>
+        <h3 class="marginHack">Entries list</h3>
+    </div>
+    <div class="widget-content">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().Amount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().EntryTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().User)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FirstOrDefault().Categories)
+                    </th>
+                    <th class="td-actions"> </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="text-align: right;">
+                            <span> @item.Amount.FormatCurrency(item.Currency)</span>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            <span>@item.EntryTime.ToString("MM/dd/yyyy hh:mm:ss tt")</span>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.User.Name)
+                        </td>
+                        <td>
+                            @string.Join(", ", @item.Categories.Select(x => x.Name))
+                        </td>
+                        <td class="td-actions" style="width: 120px;">
+                            @if (item.User.Email == User.FindFirst(ClaimTypes.Email)?.Value)
+                            {
+                                using (Html.BeginForm("Delete", "Entries", new { id = item.Id }, FormMethod.Post, true, null))
+                                {
+                                    <a href="@Url.Action("Details", "Entries", new {id = item.Id})" class="btn btn-small btn-default">
+                                        <i class="btn-icon-only icon-list"></i>
+                                    </a><a href="@Url.Action("Edit", "Entries", new {id = item.Id})" class="btn btn-small btn-success">
+                                        <i class="btn-icon-only icon-pencil"></i>
+                                    </a><a href="#/" onclick="$(this).closest('form').submit();" id="deleteItem" class="btn btn-small btn-danger">
+                                        <i class="btn-icon-only icon-minus"></i>
+                                    </a>
+                                    @*                                    <input type="button" style="border: 0; padding: 0; padding-right: 5px" class="btn-link" value="Details" onclick="location.href = '@Url.Action("Details", "Entries", new {id = item.Id})'" />*@
+                                    @*                                    <span> |</span>*@
+                                    @*                                    <input type="button" style="border: 0; padding: 0; padding-right: 5px" class="btn-link" value="Edit" onclick="location.href = '@Url.Action("Edit", "Entries", new {id = item.Id})'" />*@
+                                    @*                                    <span> |</span>*@
+                                    @*                                    <input type="submit" style="border: 0; padding: 0; padding-left: 5px;" class="btn-link" value="Delete" />*@
+                                }
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Details", "Entries", new {id = item.Id})" class="btn btn-small btn-default">
+                                    <i class="btn-icon-only icon-list"></i>
+                                </a>
+                                @*                                <a asp-action="Details" asp-route-id="@item.Id">Details</a>*@
+                            }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Amount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EntryTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Categories)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Amount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EntryTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.User.Name)
-                </td>
-                <td>
-                    @string.Join(", ", @item.Categories.Select(x => x.Name))
-                </td>
-                <td>
-                    @if (item.User.Email == User.FindFirst(ClaimTypes.Email)?.Value)
-                    {
-                        using (Html.BeginForm("Delete", "Entries", new {id = item.Id}, FormMethod.Post, true, null))
-                        {
-                            <input type="button" style="border: 0; padding: 0; padding-right: 5px" class="btn-link" value="Details" onclick="location.href = '@Url.Action("Details", "Entries", new {id = item.Id})'"/>
-                            <span> |</span>
-                            <input type="button" style="border: 0; padding: 0; padding-right: 5px" class="btn-link" value="Edit" onclick="location.href = '@Url.Action("Edit", "Entries", new {id = item.Id})'" />
-                            <span> |</span>
-                            <input type="submit" style="border: 0; padding: 0; padding-left: 5px;" class="btn-link" value="Delete"/>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<br />
+<pager />
+
+@section scripts {
+    <script type="text/javascript" src="~/lib/moment/min/moment.min.js"></script>
+    <script type="text/javascript" src="~/lib/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="~/lib/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            $('#datetimepickerFrom')
+                .datetimepicker({
+                    useCurrent: false,
+                    format: 'MM/DD/YYYY',
+                    showClear: true
+                });
+            $('#datetimepickerTo')
+                .datetimepicker({
+                    useCurrent: false, //Important! See issue #1075
+                    format: 'MM/DD/YYYY',
+                    showClear: true
+                });
+            $("#datetimepickerFrom")
+                .on("dp.change",
+                    function(e) {
+                        $('#datetimepickerTo').data("DateTimePicker").minDate(e.date);
+
+                        if (e.oldDate == null) return;
+                        var link = '@Html.Raw(Url.Action("List", new {from = "fRep", to = "tRep"}))';
+                        if (e.date != null) {
+                            link = link.replace("fRep", e.date.format('MM/DD/YYYY'));
+                        } else {
+                            link = link.replace("fRep", null);
                         }
-                    }
-                    else
-                    {
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    }
+                        if ($('#datetimepickerTo').data("DateTimePicker").date() != null) {
+                            link = link.replace("tRep",
+                                $('#datetimepickerTo').data("DateTimePicker").date().format('MM/DD/YYYY'));
+                        } else {
+                            link = link.replace("tRep", null);
+                        }
+                        window.location.href = link;
+                    });
+            $("#datetimepickerTo")
+                .on("dp.change",
+                    function(e) {
+                        $('#datetimepickerFrom').data("DateTimePicker").maxDate(e.date);
 
-                </td>
+                        var link = '@Html.Raw(Url.Action("List", new {from = "fRep", to = "tRep"}))';
+                        if (e.date != null) {
+                            link = link.replace("tRep", e.date.format('MM/DD/YYYY'));
+                        } else {
+                            link = link.replace("tRep", null);
+                        }
+                        if ($('#datetimepickerFrom').data("DateTimePicker").date() != null) {
+                            link = link.replace("fRep",
+                                $('#datetimepickerFrom').data("DateTimePicker").date().format('MM/DD/YYYY'));
+                        } else {
+                            link = link.replace("fRep", null);
+                        }
+                        window.location.href = link;
 
-            </tr>
-        }
-    </tbody>
-</table>
+                    });
+        });
+    </script>
+}
