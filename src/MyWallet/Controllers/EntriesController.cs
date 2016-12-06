@@ -12,6 +12,7 @@ using MyWallet.Models.Entries;
 using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Filters;
 using MyWallet.Services.Services.Interfaces;
+using Sakura.AspNetCore;
 
 namespace MyWallet.Controllers
 {
@@ -30,12 +31,17 @@ namespace MyWallet.Controllers
             _budgetService = budgetService;
             _userService = userService;
         }
+
+        private const int PageSize = 10;
         // GET: Budgets
         [Authorize]
-        public async Task<IActionResult> List(DateTime? from = null, DateTime? to =null)
+        public async Task<IActionResult> List(DateTime? from = null, DateTime? to =null,int? page=null)
         {
             var entries = await _entryService.GetAllEntries(new EntriesFilter() {From = from,To = to});
-            return View("List",_mapper.Map<IEnumerable<EntryViewModel>>(entries));
+            ViewData["from"] = from;
+            ViewData["to"] = to;
+            int pageNumber = page ?? 1;
+            return View("List",_mapper.Map<IEnumerable<EntryViewModel>>(entries).ToPagedList(PageSize,pageNumber));
         }
 
         [Authorize]
