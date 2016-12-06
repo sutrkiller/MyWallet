@@ -68,6 +68,49 @@ namespace MyWallet.Entities.Repositories
             return addedEntry;
         }
 
+        public async Task EditEntry(Entry entry)
+        {
+            if (entry == null)
+            {
+                throw new ArgumentNullException(nameof(entry));
+            }
+            if (entry.Categories == null)
+            {
+                throw new ArgumentNullException(nameof(Entry.Categories));
+            }
+            if (entry.User == null)
+            {
+                throw new ArgumentNullException(nameof(Entry.User));
+            }
+            if (entry.Budgets == null)
+            {
+                throw new ArgumentNullException(nameof(Entry.Budgets));
+            }
+            if (entry.ConversionRatio == null)
+            {
+                throw new ArgumentNullException(nameof(Entry.ConversionRatio));
+            }
+
+            var local = await _context.Entries.FindAsync(entry.Id);
+            _context.Entry(local).CurrentValues.SetValues(entry);
+            local.User = _context.Users.Find(entry.User.Id);
+            local.ConversionRatio = _context.ConversionRatios.Find(entry.ConversionRatio.Id);
+            foreach (var category in local.Categories)
+            {
+                category.Entries = category.Entries.Where(x => x.Id != local.Id).ToList();
+            }
+            var categories = entry.Categories.Select(x => _context.Categories.Find(x.Id)).ToList();
+            local.Categories = new HashSet<Category>(categories);
+            foreach (var budget in local.Budgets)
+            {
+                budget.Entries = budget.Entries.Where(x => x.Id != local.Id).ToList();
+            }
+            var budgets = entry.Budgets.Select(x => _context.Budgets.Find(x.Id)).ToList();
+            local.Budgets = new HashSet<Budget>(budgets);
+            
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<Entry> GetSingleEntry(Guid id)
           => await _context
                 .Entries

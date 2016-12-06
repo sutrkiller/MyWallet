@@ -49,12 +49,6 @@
             @Html.DisplayFor(model => model.Group.Name)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Categories)
-        </dt>
-        <dd>
-            @string.Join(", ", Model.Categories.Select(x=>x.Name))
-        </dd>
-        <dt>
             @Html.DisplayNameFor(model => model.Entries)
         </dt>
         @foreach (var entry in Model.Entries)

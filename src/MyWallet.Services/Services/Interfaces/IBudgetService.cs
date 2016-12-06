@@ -10,6 +10,7 @@ namespace MyWallet.Services.Services.Interfaces
     public interface IBudgetService
     {
         Task<BudgetDTO> AddBudget(BudgetDTO budget, Guid groupId, Guid currencyId, ICollection<Guid> categoryIds);
+        Task EditBudget(BudgetDTO budget, Guid groupId, Guid currencyId, ICollection<Guid> categoryIds);
         Task<BudgetDTO[]> GetAllBudgets();
         Task<BudgetDTO> GetBudget(Guid id);
         Task<CategoryDTO[]> GetAllCategories();

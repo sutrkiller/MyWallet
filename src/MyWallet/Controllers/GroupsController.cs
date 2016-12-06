@@ -54,27 +54,72 @@ namespace MyWallet.Controllers
         public async Task<IActionResult> Create()
         {
             var newEntry = new CreateGroupViewModel();
-            var users = await _userService.GetAllUsers();
-            var userssList = users.Select(d => new { Id = d.Id, Value = d.Name });
-            newEntry.UsersList = new SelectList(userssList, "Id", "Value");
+            await FillSellectLists(newEntry);
             return View(newEntry);
                         
         }
 
-        
+        private async Task FillSellectLists(CreateGroupViewModel newEntry)
+        {
+            var users = await _userService.GetAllUsers();
+            var userssList = users.Select(d => new {Id = d.Id, Value = d.Name});
+            newEntry.UsersList = new SelectList(userssList, "Id", "Value");
+        }
+
+
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateGroupViewModel group)
         {
+            if (!group.UserIds.Any())
+            {
+                ModelState.AddModelError("UserIds", "Select at least one user.");
+            }
             if (ModelState.IsValid)
             {
                 await _groupService.AddGroup(_mapper.Map<GroupDTO>(group), group.UserIds);
                 return RedirectToAction("List");
             }
+            await FillSellectLists(group);
             return View(group);
         }
 
-        
+        [Authorize]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var group = await _groupService.GetGroup(id);
+            var createModel = _mapper.Map<CreateGroupViewModel>(group); //TODO: not sure whether mapping works
+            await FillSellectLists(createModel);
+            return View("Edit", createModel);
         }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(CreateGroupViewModel group)
+        {
+            if (!group.UserIds.Any())
+            {
+                ModelState.AddModelError("UserIds", "Select at least one user.");
+            }
+            if (ModelState.IsValid)
+            {
+                await _groupService.EditGroup(_mapper.Map<GroupDTO>(group), group.UserIds);
+                return RedirectToAction("List");
+            }
+            await FillSellectLists(group);
+            return View(group);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _groupService.DeleteGroup(id);
+            return RedirectToAction("List");
+        }
+
+    }
 }

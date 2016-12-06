@@ -6,7 +6,7 @@
     ViewData["Title"] = "Groups";
 }
 
-<h2>Index</h2>
+<h2>Groups</h2>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -35,7 +35,14 @@
                 </td>
                 <td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    @using (Html.BeginForm("Delete", "Groups", new { id = item.Id }, FormMethod.Post, true, null))
+                    {
+                        <input type="button" style="border: 0; padding: 0; padding-right: 5px" class="btn-link" value="Details" onclick="location.href = '@Url.Action("Details", "Groups", new { id = item.Id })'" />
+                        <span> |</span>
+                        <input type="button" style="border: 0; padding: 0; padding-left: 5px;" class="btn-link" value="Edit" onclick="location.href = '@Url.Action("Edit", "Groups", new { id = item.Id })'" />
+                        <span> |</span>
+                        <input type="submit" style="border: 0; padding: 0; padding-left: 5px;" class="btn-link" value="Delete" />
+                    }
                 </td>
             </tr>
         }

@@ -19,6 +19,7 @@ using MyWallet.Middlewares;
 using MyWallet.Services.Configuration;
 using MyWallet.Services.Services;
 using MyWallet.Services.Services.Interfaces;
+using Sakura.AspNetCore.Mvc;
 
 namespace MyWallet
 {
@@ -40,6 +41,7 @@ namespace MyWallet
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSession();
             services.Configure<ConnectionOptions>(
                     options => options.ConnectionString = Configuration.GetConnectionString("MyWalletConnection"))
 
@@ -48,6 +50,12 @@ namespace MyWallet
                 AddScoped<IGroupService, GroupService>().
                 AddScoped<IEntryService, EntryService>().
                 AddScoped<IUserService, UserService>();
+
+            
+            services.AddBootstrapPagerGenerator(options =>
+            {
+                options.ConfigureDefault();
+            });
             // Add framework services.
             services.AddMvc();
 
@@ -76,6 +84,7 @@ namespace MyWallet
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+           
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -117,12 +126,15 @@ namespace MyWallet
                     }
                 }
             });
-
+            app.UseSession();
             app.UseMvc(routes =>
             {
+                routes.MapRoute("GetConversionRatiosByCurrencyId",
+                                "entries/GetConversionRatiosByCurrencyId/",
+                                new { controller = "Entries", action = "GetConversionRatiosByCurrencyId" });
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");                
             });
         }
     }

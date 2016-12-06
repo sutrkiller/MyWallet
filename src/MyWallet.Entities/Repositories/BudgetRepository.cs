@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -63,6 +64,37 @@ namespace MyWallet.Entities.Repositories
             await _context.SaveChangesAsync();
 
             return addedBudget;
+        }
+
+        public async Task EditBudget(Budget budget)
+        {
+            if (budget == null)
+            {
+                throw new ArgumentNullException(nameof(budget));
+            }
+            if (budget.Categories == null)
+            {
+                throw new ArgumentNullException(nameof(Budget.Categories));
+            }
+            if (budget.Group == null)
+            {
+                throw new ArgumentNullException(nameof(Budget.Group));
+            }
+            if (budget.ConversionRatio == null)
+            {
+                throw new ArgumentNullException(nameof(Budget.ConversionRatio));
+            }
+            var local = await _context.Budgets.FindAsync(budget.Id);
+            _context.Entry(local).CurrentValues.SetValues(budget);
+            local.Group = await _context.Groups.FindAsync(budget.Group.Id);
+            local.ConversionRatio = await _context.ConversionRatios.FindAsync(budget.ConversionRatio.Id);
+            foreach (var category in local.Categories)
+            {
+                category.Budgets = category.Budgets.Where(x => x.Id != local.Id).ToList();
+            }
+            var categories = budget.Categories.Select(x => _context.Categories.Find(x.Id)).ToList();
+            local.Categories = new HashSet<Category>(categories);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Budget> GetSingleBudget(Guid id)
