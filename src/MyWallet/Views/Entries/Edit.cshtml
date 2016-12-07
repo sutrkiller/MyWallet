@@ -68,7 +68,7 @@
                 <div class="form-group">
                     <label asp-for="EntryTime" class="col-md-2 control-label"></label>
                     <div class="col-md-10">
-                        <input asp-for="EntryTime" class="form-control" id="datetimepicker4" value="@Model.EntryTime" />
+                        <input asp-for="EntryTime" class="form-control" id="datetimepicker4" value="@Model.EntryTime.ToString("MM/dd/yyyy HH:mm")" />
                         <span asp-validation-for="EntryTime" class="text-danger"></span>
 
                     </div>
@@ -116,7 +116,7 @@
     <script type="text/javascript">
         $('#IsIncome').bootstrapToggle();
         $('#datetimepicker4').datetimepicker({
-            format: 'DD-MM-YYYY HH:mm'
+            format: 'MM/DD/YYYY HH:mm'
         });
         $('.multiselectBudgets').multiselect();
         $('.multiselectCategories').multiselect();
