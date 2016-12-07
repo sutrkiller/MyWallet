@@ -83,18 +83,25 @@ namespace MyWallet.Services.Services
             return _mapper.Map<CategoryDTO[]>(categories);
         }
 
-        public async Task<Group[]> GetAllGroups()
+        public async Task<GroupDTO[]> GetAllGroups()
         {
-            //TODO: change this later
-            await Task.Delay(0);
-            var groups = _groupRepository.GetAllGroups().ToArray();
-            return _mapper.Map<Group[]>(groups);
+            var groups = await _groupRepository.GetAllGroups().ToArrayAsync();
+            return _mapper.Map<GroupDTO[]>(groups);
         }
 
         public async Task DeleteBudget(Guid id)
         {
             var budget = await _budgetRepository.GetSingleBudget(id);
             await _budgetRepository.DeleteBudget(budget);
+        }
+
+        public async Task<BudgetDTO> GetLastUsedBudget()
+        {
+            var budget = await 
+                _budgetRepository.GetAllBudgets()
+                    .OrderByDescending(x => x.Entries.Max(e => e.EntryTime))
+                    .FirstOrDefaultAsync();
+            return _mapper.Map<BudgetDTO>(budget);
         }
     }
 }

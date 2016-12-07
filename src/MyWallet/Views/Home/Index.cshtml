@@ -7,7 +7,7 @@
 <p></p>
 <div class="col-md-6">
     @Html.Partial("_quickActions")
-    @Html.Partial("_dashboardGraph")
+    @Html.Partial("_dashboardGraph", Model.BudgetGraph)
 </div>
 <div class="col-md-6">
     @Html.Partial("_quickEntry", Model.Entry)
