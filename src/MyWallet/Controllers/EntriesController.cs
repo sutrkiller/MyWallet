@@ -22,7 +22,7 @@ namespace MyWallet.Controllers
         private readonly IBudgetService _budgetService;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-
+        private const string MaxGuid = "ffffffff-ffff-ffff-ffff-ffffffffffff";
         public EntriesController(IEntryService entryService, IMapper mapper, IBudgetService budgetService,
             IUserService userService)
         {
@@ -38,8 +38,8 @@ namespace MyWallet.Controllers
         public async Task<IActionResult> List(DateTime? from = null, DateTime? to =null,int? page=null)
         {
             var entries = await _entryService.GetAllEntries(new EntriesFilter() {From = from,To = to});
-            ViewData["from"] = from;
-            ViewData["to"] = to;
+            ViewData["from"] = from?.ToString("MM/dd/yyyy");
+            ViewData["to"] = to?.ToString("MM/dd/yyyy");
             int pageNumber = page ?? 1;
             return View("List",_mapper.Map<IEnumerable<EntryViewModel>>(entries).ToPagedList(PageSize,pageNumber));
         }
@@ -129,7 +129,7 @@ namespace MyWallet.Controllers
                 {
                     var email = User.FindFirst(ClaimTypes.Email)?.Value;
                     entry.Amount = entry.IsIncome == true ? entry.Amount : -1*entry.Amount;
-                    if(entry.ConversionRatioId.ToString() == "ffffffff-ffff-ffff-ffff-ffffffffffff")
+                    if(entry.ConversionRatioId.ToString() == MaxGuid)
                     { 
                         var customRatio = await _entryService.AddConversionRatio(entry.CurrencyId,entry.CustomRatioAmount,entry.CustomRatioCurrencyId);
                         entry.ConversionRatioId = customRatio.Id;
@@ -156,7 +156,7 @@ namespace MyWallet.Controllers
             {
                 var email = User.FindFirst(ClaimTypes.Email)?.Value;
                 entry.Amount = entry.IsIncome == true ? entry.Amount : -1 * entry.Amount;
-                if (entry.ConversionRatioId.ToString() == "ffffffff-ffff-ffff-ffff-ffffffffffff")
+                if (entry.ConversionRatioId.ToString() == MaxGuid)
                 {
                     var customRatio = await _entryService.AddConversionRatio(entry.CurrencyId, entry.CustomRatioAmount, entry.CustomRatioCurrencyId);
                     entry.ConversionRatioId = customRatio.Id;
@@ -190,7 +190,7 @@ namespace MyWallet.Controllers
         {
             var result = conversionRatios.Select(
                 g => new {g.Id, Value = g.CurrencyFrom.Code + " - " + g.CurrencyTo.Code + " - " + g.Ratio});
-            return  new SelectList(result, "Id", "Value").Add("Custom", "ffffffff-ffff-ffff-ffff-ffffffffffff",SelectListHelper.ListPosition.Last);
+            return  new SelectList(result, "Id", "Value").Add("Custom", MaxGuid, SelectListHelper.ListPosition.Last);
         }
 
         [HttpPost]
