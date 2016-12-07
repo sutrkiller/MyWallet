@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MyWallet.Models.Budgets;
 using MyWallet.Models.Entries;
+using MyWallet.Models.Graphs;
 
 namespace MyWallet.Models.Home
 {

@@ -1,0 +1,22 @@
+﻿@model GraphsViewModel
+
+@{
+    ViewBag.Title = "Graphs";
+    Layout = "_Layout2";
+}
+
+<div class="col-md-6">
+    @Html.Partial("_budgetGraph", Model.BudgetGraphModel)
+    
+</div>
+
+<div class="col-md-6">
+    @Html.Partial("_budgetCategoriesGraph", Model.BudgetGraphCategoriesModel)
+</div>
+
+
+<div class="col-md-6">
+    
+</div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>

@@ -1,0 +1,71 @@
+﻿@model GraphViewModel
+
+<div class="widget">
+    <div class="widget-header">
+        <div>
+            <i class="icon-signal"></i>
+            <h3 class="marginHack">Budget by categories</h3>
+            <select id="budgetSelectDonut" asp-for="BudgetId" asp-items="@Model.Budgets" class="backArrow form-control" style="width: 200px; height: 28px; padding: 0; padding-left: 10px;"></select>
+        </div>
+    </div>
+    <div class="widget-content">
+        <div id="donut-chart"></div>
+        <div id="donut-chart-incomes"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="~/lib/moment/moment.js"></script>
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChartDonut);
+
+    $('#budgetSelectDonut')
+        .change(function () {
+            drawChartDonut(this.value);
+        });
+
+    function drawChartDonut(id) {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', '@Model.ColumnTitles[0]');
+        data.addColumn('number', '@Model.ColumnTitles[1]');
+
+        var data2 = new google.visualization.DataTable();
+        data2.addColumn('string', '@Model.ColumnTitles[0]');
+        data2.addColumn('number', '@Model.ColumnTitles[1]');
+
+        var link = '@Url.Action("GetDonutChartData","Graphs")\\'+id;
+
+        $.ajax({
+            cache: false,
+            type: 'Get',
+            url: link,
+            success: function (chartData) {
+                $.each(chartData.data,
+                    function (i, item) {
+                        data.addRow([item.label, Math.abs(item.expense)]);
+                        data2.addRow([item.label, Math.abs(item.income)]);
+                    });
+
+                var options = {
+                    title: $('#budgetSelectDonut option:selected').text() + ' in ' + chartData.currency + ' ' + '(expenses)',
+                    width: 540,
+                    height: 250
+                };
+                var options2 = {
+                    title: $('#budgetSelectDonut option:selected').text() + ' in ' + chartData.currency + ' ' + '(incomes)',
+                    width: 540,
+                    height: 250
+                };
+
+
+                var chart = new google.visualization.PieChart(document.getElementById('donut-chart'));
+                var chart2 = new google.visualization.PieChart(document.getElementById('donut-chart-incomes'));
+
+                chart.draw(data, options);
+                chart2.draw(data2, options2);
+            }
+        });
+    };
+</script>

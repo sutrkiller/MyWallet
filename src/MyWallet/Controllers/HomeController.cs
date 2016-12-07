@@ -9,12 +9,11 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyWallet.Models.Entries;
+using MyWallet.Models.Graphs;
 using MyWallet.Models.Home;
 using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Services.Interfaces;
-using Newtonsoft.Json;
 using Controller = Microsoft.AspNetCore.Mvc.Controller;
-using JsonResult = System.Web.Mvc.JsonResult;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 
 
@@ -49,7 +48,7 @@ namespace MyWallet.Controllers
             await FillSelectLists(newEntry);
             newEntry.EntryTime = DateTime.Now;
             dashmodel.Entry = newEntry;
-            dashmodel.BudgetGraph = await PrepareGraphViewModel();
+            dashmodel.BudgetGraph = await new GraphsController(_entryService, _budgetService).PrepareLastBudgetGraphViewModel();
             return View(dashmodel);
         }
 
@@ -108,7 +107,7 @@ namespace MyWallet.Controllers
             await FillSelectLists(entry);
             dashboard.Entry = entry;
 
-            dashboard.BudgetGraph = await PrepareGraphViewModel();
+            dashboard.BudgetGraph = await new GraphsController(_entryService,_budgetService).PrepareLastBudgetGraphViewModel();
 
             if (ModelState.IsValid)
             {
@@ -142,17 +141,16 @@ namespace MyWallet.Controllers
             return View("Index", dashboard);
         }
 
-        private async Task<GraphViewModel> PrepareGraphViewModel()
-        {
-            var budget = await _budgetService.GetLastUsedBudget();
-            return  new GraphViewModel()
-            {
-                GraphTitle = budget.Name,
-                BudgetTitle = "Budget",
-                DateTitle = "Dates",
-                EntriesTitle = "Remaining budget"
-            };
-        }
+//        private async Task<GraphViewModel> PrepareGraphViewModel()
+//        {
+//            var budget = await _budgetService.GetLastUsedBudget();
+//
+//            return new GraphViewModel()
+//            {
+//                GraphTitle = $"{budget.Name} in {budget.ConversionRatio.CurrencyFrom.Code}",
+//                ColumnTitles = new List<string> { "Dates", "Incomes", "Expenses", "Remaining budget" }
+//            };
+//        }
 
         public IActionResult AddRatio()
         {
@@ -172,64 +170,7 @@ namespace MyWallet.Controllers
             return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetChart()
-        {
-            var budget = await _budgetService.GetLastUsedBudget();
-
-            var incomes = budget.Entries.Where(x => x.Amount > 0 && x.EntryTime <= budget.EndDate && x.EntryTime >= budget.StartDate).GroupBy(x => x.EntryTime.Date).OrderBy(x => x.Key);
-            var expenses = budget.Entries.Where(x => x.Amount < 0 && x.EntryTime <= budget.EndDate && x.EntryTime >= budget.StartDate).GroupBy(x => x.EntryTime.Date).OrderBy(x => x.Key);
-
-            var labels = Enumerable.Range(0, budget.EndDate.Subtract(budget.StartDate).Days + 1)
-                .Select(d => budget.StartDate.AddDays(d).Date.ToString("O")).ToList();
-
-            var tmpIncomes = incomes.Select(
-                    x => new {
-                        Sum = x.Sum(e =>
-                   decimal.Divide(decimal.Multiply(e.Amount, e.ConversionRatio.Ratio),
-                       budget.ConversionRatio.Ratio)),
-                        Date = x.Key
-                    }).ToList();
-
-            var tmpExpenses = expenses.Select(
-                   x => new {
-                       Sum = x.Sum(e =>
-                  decimal.Divide(decimal.Multiply(e.Amount, e.ConversionRatio.Ratio),
-                      budget.ConversionRatio.Ratio)),
-                       Date = x.Key
-                   }).ToList();
-
-            List<decimal> values = new List<decimal>();
-            List<decimal> valuesIn = new List<decimal>();
-            List<decimal> valuesEx = new List<decimal>();
-            foreach (var label in labels)
-            {
-
-                valuesIn.Add(tmpIncomes.FirstOrDefault(e => e.Date.Date.ToString("O") == label)?.Sum ?? 0m);
-                valuesEx.Add(tmpExpenses.FirstOrDefault(e => e.Date.Date.ToString("O") == label)?.Sum ?? 0m);
-                values.Add(budget.Amount + valuesIn.Sum() + valuesEx.Sum());
-            }
-
-            return Json(Enumerable.Range(0, values.Count)
-                .Select(x => new {Label = labels[x], Income = valuesIn[x], Expense = valuesEx[x], Value = values[x]}));
-
-
-
-
-
-            var lastBudgetId = await _budgetService.GetLastUsedBudget();
-            var data = lastBudgetId.Entries.Select(e => new
-            {
-                Date = e.EntryTime.ToShortDateString(),
-                Budget = lastBudgetId.Amount,
-                Entry =
-                decimal.Divide(decimal.Multiply(e.Amount, e.ConversionRatio.Ratio), lastBudgetId.ConversionRatio.Ratio)
-                    .ToString("F2")
-            });
-            var tmp =Enumerable.Range(1, 20).Select(e => new {Date = e, Budget = 100, Entry = e});
-            //return Content(JsonConvert.SerializeObject(tmp), "application/json");
-            return Json(tmp);
-        }
+        
     }
 
 }

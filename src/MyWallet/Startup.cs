@@ -121,6 +121,8 @@ namespace MyWallet
                 LoginPath = new PathString("/Accounts/AccessDenied"),
                 AutomaticChallenge = true,
                 AutomaticAuthenticate = true,
+                SlidingExpiration = true,
+                ExpireTimeSpan = TimeSpan.FromMinutes(30)
             });
 
             app.UseGoogleAuthentication(new GoogleOptions
