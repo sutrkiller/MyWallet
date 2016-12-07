@@ -5,13 +5,9 @@
         <i class="icon-signal"></i>
         <h3 class="marginHack"> Last used budget chart</h3>
     </div>
-    <!-- /widget-header -->
     <div class="widget-content">
         <div id="area-chart" style="width: 538px; height: 250px;"></div>
-        @*        <canvas id="area-chart" class="chart-holder" height="250" width="538"> </canvas>*@
-        <!-- /area-chart -->
     </div>
-    <!-- /widget-content -->
 </div>
 
 
@@ -24,74 +20,36 @@
     function drawChart() {
         var data = new google.visualization.DataTable();
         data.addColumn('date', '@Model.DateTitle');
-        //data.addColumn('number', '@Model.BudgetTitle');
         data.addColumn('number', 'Incomes');
         data.addColumn('number', 'Expenses');
         data.addColumn('number', '@Model.EntriesTitle');
 
+        $.ajax({
+            cache: false,
+            type: 'Get',
+            url: '@Url.Action("GetChart")',
+            success: function(chartData) {
+                $.each(chartData,
+                    function(i, item)
+                    {
+                        data.addRow([moment(item.label).toDate(),item.income,Math.abs(item.expense), item.value]);
+                    });
 
-        var labels = @Html.Raw(Json.Serialize(Model.Labels));
-        var entries = @Html.Raw(Json.Serialize(Model.Entries));
-        var incomes = @Html.Raw(Json.Serialize(Model.Incomes));
-        var expenses = @Html.Raw(Json.Serialize(Model.Expenses));
-        var budget = @Model.Budget;
+                var options = {
+                    title: '@Model.GraphTitle',
+                    curveType: 'function',
+                    legend: { position: 'bottom' },
+                    vAxis: {minValue: 0},
+                    seriesType: 'bars',
+                    isStacked: true,
+                    series: {2:{type: 'area', lineWidth: 3}},
+                    colors: ['#009900','#cc0000','#660066']
+                };
 
-        for (var i = 0; i < entries.length; i++) {
-            //alert(labels[i] + ' ' + entries[i] + ' ' + budget);
-            data.addRow([moment(labels[i]).toDate(),incomes[i],-expenses[i], budget + entries[i]]);
-        }
+                var chart = new google.visualization.ComboChart(document.getElementById('area-chart'));
 
-        var options = {
-            title: '@Model.GraphTitle',
-            curveType: 'function',
-            legend: { position: 'bottom' },
-            vAxis: {minValue: 0},
-            seriesType: 'bars',
-            isStacked: true,
-            series: {2:{type: 'line', lineWidth: 3}},
-            colors: ['#009900','#cc0000','#660066']
-        };
-
-        var chart = new google.visualization.ComboChart(document.getElementById('area-chart'));
-
-        chart.draw(data, options);
-
-        //        $.ajax({
-        //            cache: false,
-        //            type: "GET",
-        //            data: {},
-        //            contentType: "application/json; charset=utf-8",
-        //            url: "@(Url.Action("GetChart"))",
-        //            success: function (data) {
-        //                alert(data[0].Entry);
-        //                for (let item of data) {
-        //                }
-        //            },
-        //            error: function (xhr, ajaxOptions, thrownError) {
-        //                console.log('Failed to retrieve conversionRatios.');
-        //            }
-        //        });
-
-        //                    $.getJSON("@Url.Action("GetChart")",
-        //                        null,
-        //                        function (chartData) {
-        //                            var parse = JSON.parse(chartData.d);
-        //                            alert(parse);
-        //                            $.each(chartData,
-        //                                function (i, item) {
-        //                                    //alert(item);
-        //                                    data.addRow([item.Date, item.Budget, item.Entry]);
-        //                                });
-        //
-        //                            var options = {
-        //                                title: 'Budget @Model.GraphTitle',
-        //                                curveType: 'function',
-        //                                legend: { position: 'bottom' }
-        //                            };
-        //
-        //                            var chart = new google.visualization.LineChart(document.getElementById('area-chart'));
-        //
-        //                            chart.draw(data, options);
-        //                        });
+                chart.draw(data, options);
+            }
+        });
     };
 </script>

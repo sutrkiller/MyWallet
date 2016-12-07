@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyWallet.Models.Entries;
 using MyWallet.Models.Home;
@@ -19,7 +20,7 @@ using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 
 namespace MyWallet.Controllers
 {
-    [Microsoft.AspNetCore.Authorization.Authorize]
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly IEntryService _entryService;
@@ -36,9 +37,13 @@ namespace MyWallet.Controllers
             _userService = userService;
         }
 
-        [Microsoft.AspNetCore.Authorization.Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return View("_landingPage");
+            }
             var dashmodel = new DashboardModel();
             var newEntry = new CreateEntryViewModel();
             await FillSelectLists(newEntry);
@@ -67,7 +72,7 @@ namespace MyWallet.Controllers
 
         }
 
-        [Microsoft.AspNetCore.Authorization.Authorize]
+        [Authorize]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
@@ -75,27 +80,27 @@ namespace MyWallet.Controllers
             return View();
         }
 
-        [Microsoft.AspNetCore.Authorization.Authorize]
+        [Authorize]
         public IActionResult EasterEgg()
         {
             return View();
         }
 
-        [Microsoft.AspNetCore.Authorization.Authorize]
+        [Authorize]
         public IActionResult Graphs()
         {
             return View();
         }
 
-        [Microsoft.AspNetCore.Authorization.Authorize]
+        [Authorize]
         public IActionResult Stats()
         {
             return View();
         }
 
-        [Microsoft.AspNetCore.Mvc.HttpPost]
-        [Microsoft.AspNetCore.Authorization.Authorize]
-        [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
         
         public async Task<IActionResult> Create(CreateEntryViewModel entry)
         {
@@ -140,32 +145,43 @@ namespace MyWallet.Controllers
         private async Task<GraphViewModel> PrepareGraphViewModel()
         {
             var budget = await _budgetService.GetLastUsedBudget();
-
-            var incomes = budget.Entries.Where(x=>x.Amount > 0 && x.EntryTime <= budget.EndDate && x.EntryTime >= budget.StartDate).GroupBy(x => x.EntryTime.Date).OrderBy(x => x.Key);
-            var expenses = budget.Entries.Where(x=>x.Amount < 0 && x.EntryTime <= budget.EndDate && x.EntryTime >= budget.StartDate).GroupBy(x => x.EntryTime.Date).OrderBy(x => x.Key);
-
-            var entries = budget.Entries.Where(x=>x.EntryTime<= budget.EndDate && x.EntryTime >= budget.StartDate).GroupBy(x => x.EntryTime.Date).OrderBy(x=>x.Key);
-            var model =  new GraphViewModel()
+            return  new GraphViewModel()
             {
                 GraphTitle = budget.Name,
                 BudgetTitle = "Budget",
                 DateTitle = "Dates",
                 EntriesTitle = "Remaining budget"
             };
+        }
 
-            model.Budget = budget.Amount;
-            
-            model.Labels = Enumerable.Range(0, budget.EndDate.Subtract(budget.StartDate).Days + 1)
-                     .Select(d => budget.StartDate.AddDays(d).Date.ToString("O")).ToList();
+        public IActionResult AddRatio()
+        {
+            return View();
+        }
 
-            var tmpEntries =
-                entries.Select(
-                    x => new {
-                        Sum = x.Sum(e =>
-                   decimal.Divide(decimal.Multiply(e.Amount, e.ConversionRatio.Ratio),
-                       budget.ConversionRatio.Ratio)),
-                        Date = x.Key
-                    }).ToList();
+        [Authorize]
+        public IActionResult Contact()
+        {
+            ViewData["Message"] = "Your contact page.";
+
+            return View();
+        }
+
+        public IActionResult Error()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetChart()
+        {
+            var budget = await _budgetService.GetLastUsedBudget();
+
+            var incomes = budget.Entries.Where(x => x.Amount > 0 && x.EntryTime <= budget.EndDate && x.EntryTime >= budget.StartDate).GroupBy(x => x.EntryTime.Date).OrderBy(x => x.Key);
+            var expenses = budget.Entries.Where(x => x.Amount < 0 && x.EntryTime <= budget.EndDate && x.EntryTime >= budget.StartDate).GroupBy(x => x.EntryTime.Date).OrderBy(x => x.Key);
+
+            var labels = Enumerable.Range(0, budget.EndDate.Subtract(budget.StartDate).Days + 1)
+                .Select(d => budget.StartDate.AddDays(d).Date.ToString("O")).ToList();
 
             var tmpIncomes = incomes.Select(
                     x => new {
@@ -186,42 +202,21 @@ namespace MyWallet.Controllers
             List<decimal> values = new List<decimal>();
             List<decimal> valuesIn = new List<decimal>();
             List<decimal> valuesEx = new List<decimal>();
-            foreach (var label in model.Labels)
+            foreach (var label in labels)
             {
 
-                valuesIn.Add(tmpIncomes.FirstOrDefault(e => e.Date.Date.ToString("O") == label)?.Sum ??  0m);
-                valuesEx.Add(tmpExpenses.FirstOrDefault(e => e.Date.Date.ToString("O") == label)?.Sum ??  0m);
-                values.Add(valuesIn.Sum() + valuesEx.Sum());
-                //values.Add(tmpEntries.FirstOrDefault(e => e.Date.Date.ToString("O") == label)?.Sum + values.Sum() ?? (values.Any() ? values.Last() : 0m));
+                valuesIn.Add(tmpIncomes.FirstOrDefault(e => e.Date.Date.ToString("O") == label)?.Sum ?? 0m);
+                valuesEx.Add(tmpExpenses.FirstOrDefault(e => e.Date.Date.ToString("O") == label)?.Sum ?? 0m);
+                values.Add(budget.Amount + valuesIn.Sum() + valuesEx.Sum());
             }
-            model.Entries = values;
-            model.Incomes = valuesIn;
-            model.Expenses = valuesEx;
 
-            return model;
-        }
+            return Json(Enumerable.Range(0, values.Count)
+                .Select(x => new {Label = labels[x], Income = valuesIn[x], Expense = valuesEx[x], Value = values[x]}));
 
-        public IActionResult AddRatio()
-        {
-            return View();
-        }
 
-        [Microsoft.AspNetCore.Authorization.Authorize]
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
 
-            return View();
-        }
 
-        public IActionResult Error()
-        {
-            return View();
-        }
 
-        [HttpGet]
-        public async Task<IActionResult> GetChart()
-        {
             var lastBudgetId = await _budgetService.GetLastUsedBudget();
             var data = lastBudgetId.Entries.Select(e => new
             {

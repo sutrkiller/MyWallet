@@ -45,7 +45,7 @@
         <div class="form-group">
             <label asp-for="StartDate" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="StartDate" class="form-control" id="datetimepicker4" value="@Model.StartDate" />
+                <input asp-for="StartDate" class="form-control" id="datetimepicker4" value="@Model.StartDate.ToString("MM/dd/yyyy")" />
                 <span asp-validation-for="StartDate" class="text-danger"></span>
 
             </div>
@@ -54,7 +54,7 @@
         <div class="form-group">
             <label asp-for="EndDate" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="EndDate" class="form-control" id="datetimepicker5" value="@Model.EndDate" />
+                <input asp-for="EndDate" class="form-control" id="datetimepicker5" value="@Model.EndDate.ToString("MM/dd/yyyy")" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
 
             </div>
@@ -85,10 +85,10 @@
     <script type="text/javascript" src="~/lib/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
     <script type="text/javascript">
             $('#datetimepicker4').datetimepicker({
-                format: 'DD-MM-YYYY HH:mm'
+                format: 'MM/DD/YYYY'
             });
             $('#datetimepicker5').datetimepicker({
-                format: 'DD-MM-YYYY HH:mm'
+                format: 'MM/DD/YYYY'
             });
             $('.multiselectCategories').multiselect();
 

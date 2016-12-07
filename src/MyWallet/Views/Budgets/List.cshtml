@@ -46,10 +46,10 @@
                     @Html.DisplayFor(modelItem => item.Amount)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.StartDate)
+                    <span>@item.StartDate.ToString("MM/dd/yyyy")</span>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.EndDate)
+                    <span>@item.EndDate.ToString("MM/dd/yyyy")</span>
                 </td>
                 <td>
                     @using (Html.BeginForm("Delete", "Budgets", new { id = item.Id }, FormMethod.Post, true, null))
