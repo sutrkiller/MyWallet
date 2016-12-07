@@ -48,7 +48,7 @@ namespace MyWallet.Controllers
             await FillSelectLists(newEntry);
             newEntry.EntryTime = DateTime.Now;
             dashmodel.Entry = newEntry;
-            dashmodel.BudgetGraph = await new GraphsController(_entryService, _budgetService).PrepareLastBudgetGraphViewModel();
+            dashmodel.BudgetGraph = await new GraphsController(_entryService, _budgetService,_userService).PrepareLastBudgetGraphViewModel();
             return View(dashmodel);
         }
 
@@ -107,7 +107,7 @@ namespace MyWallet.Controllers
             await FillSelectLists(entry);
             dashboard.Entry = entry;
 
-            dashboard.BudgetGraph = await new GraphsController(_entryService,_budgetService).PrepareLastBudgetGraphViewModel();
+            dashboard.BudgetGraph = await new GraphsController(_entryService,_budgetService,_userService).PrepareLastBudgetGraphViewModel();
 
             if (ModelState.IsValid)
             {

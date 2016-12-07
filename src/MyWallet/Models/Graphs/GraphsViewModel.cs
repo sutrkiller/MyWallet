@@ -10,5 +10,6 @@ namespace MyWallet.Models.Graphs
     {
         public GraphViewModel BudgetGraphModel { get; set; }
         public GraphViewModel BudgetGraphCategoriesModel { get; set; }
+        public GraphViewModel EntriesGraphModel { get; set; }
     }
 }

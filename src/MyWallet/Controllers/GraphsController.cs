@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,11 +20,13 @@ namespace MyWallet.Controllers
     {
         private readonly IEntryService _entryService;
         private readonly IBudgetService _budgetService;
+        private readonly IUserService _userService;
 
-        public GraphsController(IEntryService entryService, IBudgetService budgetService)
+        public GraphsController(IEntryService entryService, IBudgetService budgetService, IUserService userService)
         {
             _entryService = entryService;
             _budgetService = budgetService;
+            _userService = userService;
         }
 
         [Authorize]
@@ -32,8 +35,17 @@ namespace MyWallet.Controllers
             var model = new GraphsViewModel();
             model.BudgetGraphModel = await PrepareLastBudgetGraphViewModel();
             model.BudgetGraphCategoriesModel = await PrepareLastBudgetByCategoriesGraphViewModel();
+            model.EntriesGraphModel = PrepareEntriesGraphViewModel();
 
             return View(model);
+        }
+
+        private GraphViewModel PrepareEntriesGraphViewModel()
+        {
+            return new GraphViewModel
+            {
+                ColumnTitles = new List<string> { "Dates","Incomes","Expenses","Total"}
+            };
         }
 
         internal async Task<GraphViewModel> PrepareLastBudgetGraphViewModel()
@@ -160,6 +172,20 @@ namespace MyWallet.Controllers
                 Data = Enumerable.Range(0, values.Count)
                     .Select(x => new { Label = labels[x], Income = valuesIn[x], Expense = valuesEx[x], Value = values[x] })
             });
+        }
+
+        public async Task<IActionResult> GetEntriesChartData()
+        {
+            var entries = await _entryService.GetAllEntries();
+            var user = await _userService.EnsureUserExists(User.Identity as ClaimsIdentity);
+            var crs = await _entryService.GetConversionRatiosForCurrency(user.PreferredCurrency.Id);
+            var prefCr = crs.OrderByDescending(x => x.Date).FirstOrDefault();
+
+//            entries.GroupBy(x => x.EntryTime.Date).OrderBy(x => x.Key).Select(x=>new
+//            {
+//                Date
+//            })
+            return Json(null);
         }
     }
 }
