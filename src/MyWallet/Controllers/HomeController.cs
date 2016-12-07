@@ -33,9 +33,14 @@ namespace MyWallet.Controllers
             _userService = userService;
         }
 
-        [Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return View("_landingPage");
+            }
+
             var dashmodel = new DashboardModel();
             var newEntry = new CreateEntryViewModel();
             await FillSelectLists(newEntry);
