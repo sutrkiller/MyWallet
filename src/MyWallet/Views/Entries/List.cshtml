@@ -6,29 +6,28 @@
 @{
     ViewData["Title"] = "Entries";
 }
-
 <form>
-    <div class="form-group col-md-4 row" >
-        <br/>
-        <a href="@Url.Action("Create", "Entries")" class="btn btn-success">
-            <span class="glyphicon glyphicon-plus"></span> 
+    <div class="form-group col-md-3" style="margin-right: 15px; margin-left: -15px;">
+        <br />
+        <a asp-action="Create" class="btn btn-success">
+            <span class="icon-plus"></span>
             Create new
         </a>
     </div>
-    
-    <div class="form-group col-md-2 col-md-offset-3">
+    <div class="form-group col-md-2" style="margin-top: 5px;"></div>
+    <div class="form-group col-md-3">
         <label class="control-label">From:</label>
         <div class="input-group date" id="datetimepickerFrom">
-            <input type="text" value="@(ViewData["from"])" class="form-control" style="max-width: none;"/>
+            <input type="text" value="@(ViewData["from"])" class="form-control" style="max-width: none;" />
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
             </span>
         </div>
     </div>
-    <div class="form-group  col-md-2">
+    <div class="form-group col-md-3">
         <label class="control-label">To:</label>
         <div class="input-group date" id="datetimepickerTo">
-            <input type="text" value="@(ViewData["to"])" class="form-control" style="max-width: none"/>
+            <input type="text" value="@(ViewData["to"])" class="form-control" style="max-width: none" />
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
             </span>
@@ -71,7 +70,7 @@
             </thead>
             <tbody>
                 @foreach (var item in Model)
-                {
+            {
                     <tr>
                         <td style="text-align: right;">
                             <span> @item.Amount.FormatCurrency(item.Currency)</span>
@@ -94,25 +93,25 @@
                                 using (Html.BeginForm("Delete", "Entries", new { id = item.Id }, FormMethod.Post, true, null))
                                 {
                                     <a href="@Url.Action("Details", "Entries", new {id = item.Id})" class="btn btn-small btn-default">
-                                        <i class="btn-icon-only icon-list"></i>
+                                        <i class="btn-icon-only icon-tasks"></i>
                                     </a><a href="@Url.Action("Edit", "Entries", new {id = item.Id})" class="btn btn-small btn-success">
                                         <i class="btn-icon-only icon-pencil"></i>
                                     </a><a href="#/" onclick="$(this).closest('form').submit();" id="deleteItem" class="btn btn-small btn-danger">
                                         <i class="btn-icon-only icon-minus"></i>
                                     </a>
-                                    @*                                    <input type="button" style="border: 0; padding: 0; padding-right: 5px" class="btn-link" value="Details" onclick="location.href = '@Url.Action("Details", "Entries", new {id = item.Id})'" />*@
-                                    @*                                    <span> |</span>*@
-                                    @*                                    <input type="button" style="border: 0; padding: 0; padding-right: 5px" class="btn-link" value="Edit" onclick="location.href = '@Url.Action("Edit", "Entries", new {id = item.Id})'" />*@
-                                    @*                                    <span> |</span>*@
-                                    @*                                    <input type="submit" style="border: 0; padding: 0; padding-left: 5px;" class="btn-link" value="Delete" />*@
+                                        @*                                    <input type="button" style="border: 0; padding: 0; padding-right: 5px" class="btn-link" value="Details" onclick="location.href = '@Url.Action("Details", "Entries", new {id = item.Id})'" />*@
+                                        @*                                    <span> |</span>*@
+                                        @*                                    <input type="button" style="border: 0; padding: 0; padding-right: 5px" class="btn-link" value="Edit" onclick="location.href = '@Url.Action("Edit", "Entries", new {id = item.Id})'" />*@
+                                        @*                                    <span> |</span>*@
+                                        @*                                    <input type="submit" style="border: 0; padding: 0; padding-left: 5px;" class="btn-link" value="Delete" />*@
                                 }
                             }
                             else
                             {
                                 <a href="@Url.Action("Details", "Entries", new {id = item.Id})" class="btn btn-small btn-default">
-                                    <i class="btn-icon-only icon-list"></i>
+                                    <i class="btn-icon-only  icon-tasks"></i>
                                 </a>
-                                @*                                <a asp-action="Details" asp-route-id="@item.Id">Details</a>*@
+                                    @*                                <a asp-action="Details" asp-route-id="@item.Id">Details</a>*@
                             }
 
                         </td>
@@ -123,7 +122,6 @@
         </table>
     </div>
 </div>
-<br />
 <pager />
 
 @section scripts {
@@ -150,7 +148,6 @@
                     function(e) {
                         $('#datetimepickerTo').data("DateTimePicker").minDate(e.date);
 
-                        if (e.oldDate == null) return;
                         var link = '@Html.Raw(Url.Action("List", new {from = "fRep", to = "tRep"}))';
                         if (e.date != null) {
                             link = link.replace("fRep", e.date.format('MM/DD/YYYY'));
