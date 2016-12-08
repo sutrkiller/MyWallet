@@ -107,10 +107,10 @@ namespace MyWallet.Controllers
                     {
                         Label = x.Key,
                         Income = x.Value.Where(v => v.Amount >= 0)
-                            .Select(v => v.ToBudgetCurrency(budget.ConversionRatio.Ratio))
+                            .Select(v => Math.Round(v.ToBudgetCurrency(budget.ConversionRatio.Ratio),2))
                             .Sum(),
                         Expense = x.Value.Where(v => v.Amount < 0)
-                            .Select(v => v.ToBudgetCurrency(budget.ConversionRatio.Ratio))
+                            .Select(v => Math.Round(v.ToBudgetCurrency(budget.ConversionRatio.Ratio),2))
                             .Sum()
                     })
             });
@@ -174,12 +174,14 @@ namespace MyWallet.Controllers
             {
                 Currency = budget.ConversionRatio.CurrencyFrom.Code,
                 Data = Enumerable.Range(0, values.Count)
-                    .Select(x => new { Label = labels[x], Income = valuesIn[x], Expense = valuesEx[x], Value = values[x] })
+                    .Select(x => new { Label = labels[x], Income = Math.Round(valuesIn[x],2), Expense = Math.Round(valuesEx[x],2), Value = Math.Round(values[x],2) })
             });
         }
 
         public async Task<IActionResult> GetEntriesChartData()
         {
+            DateTime dateFrom;
+            DateTime dateTo = DateTime.Today;
             var user = await _userService.EnsureUserExists(User.Identity as ClaimsIdentity);
             var entries = (await _entryService.GetAllEntries(new EntriesFilter() {UserId = user.Id})).GroupBy(x=>x.EntryTime.Date).OrderBy(x=>x.Key);
             var crs = await _entryService.GetConversionRatiosForCurrency(user.PreferredCurrency.Id);
@@ -187,9 +189,10 @@ namespace MyWallet.Controllers
             //if (!entries.Any()) return Json(null);
 
             var first = entries.FirstOrDefault();
+            dateFrom = first.Key;
             if (first != null)
             {
-                var labels = Enumerable.Range(0, DateTime.Today.Subtract(first.Key).Days + 1)
+                var labels = Enumerable.Range(0, DateTime.Today.Subtract(dateFrom).Days + 1)
                     .Select(d => first.Key.AddDays(d).Date.ToString("O")).ToList();
 
                // var datedEntries = new Dictionary<string, List<EntryDTO>>();
@@ -201,6 +204,7 @@ namespace MyWallet.Controllers
                 return Json(new
                 {
                     Currency = user.PreferredCurrency.Code,
+                    DateRange = $"{dateFrom:MM/dd/yyyy} - {dateTo:MM/dd/yyyy}",
                     Data =
                     datedEntries.Select(
                         (x,i) =>
@@ -208,10 +212,10 @@ namespace MyWallet.Controllers
                             {
                                 x.Label,
                                 Income =
-                                x.Entries.Where(e => e.Amount > 0).Sum(e => e.ToBudgetCurrency(prefCr?.Ratio ?? 1m)),
+                                Math.Round(x.Entries.Where(e => e.Amount > 0).Sum(e => e.ToBudgetCurrency(prefCr?.Ratio ?? 1m)),2),
                                 Expense =
-                                x.Entries.Where(e => e.Amount < 0).Sum(e => e.ToBudgetCurrency(prefCr?.Ratio ?? 1m)),
-                                Balance = datedEntries.Take(i+1).SelectMany(e=>e.Entries).Sum(e=>e.ToBudgetCurrency(prefCr?.Ratio ?? 1m))
+                                Math.Round(x.Entries.Where(e => e.Amount < 0).Sum(e => e.ToBudgetCurrency(prefCr?.Ratio ?? 1m)),2),
+                                Balance = Math.Round(datedEntries.Take(i+1).SelectMany(e=>e.Entries).Sum(e=>e.ToBudgetCurrency(prefCr?.Ratio ?? 1m)),2)
                             })
                 });
             }

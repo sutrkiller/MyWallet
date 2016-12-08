@@ -35,32 +35,35 @@
         $.ajax({
             cache: false,
             type: 'Get',
-            url: '@Url.Action("GetBudgetChartData","Graphs")\\'+id,
-            success: function(chartData) {
+            url: '@Url.Action("GetBudgetChartData","Graphs")\\' + id,
+            success: function (chartData) {
                 $.each(chartData.data,
-                    function(i, item)
-                    {
-                        data.addRow([moment(item.label).toDate(),item.income,Math.abs(item.expense), item.value]);
+                    function (i, item) {
+                        data.addRow([moment(item.label).toDate(), item.income, Math.abs(item.expense), item.value]);
                     });
 
                 var options = {
                     title: $('#budgetSelectCombo option:selected').text() + ' in ' + chartData.currency,
                     curveType: 'function',
                     legend: { position: 'bottom' },
-                    vAxis: {minValue: 0},
+                    vAxis: { minValue: 0 },
                     seriesType: 'bars',
                     isStacked: true,
-                    series: {2:{type: 'area', lineWidth: 3}},
+                    series: { 2: { type: 'area', lineWidth: 3 } },
                     colors: ['#009900', '#cc0000', '#660066'],
                     width: 540,
                     height: 250
                 };
 
                 var chart = new google.visualization.ComboChart(document.getElementById('area-chart'));
+                var formatter = new google.visualization.NumberFormat({negativeColor: 'red'});
+                formatter.format(data, 1);
+                formatter.format(data, 2);
+                formatter.format(data, 3);
 
                 chart.draw(data, options);
             }
         });
     };
-</script>    
+</script>
 

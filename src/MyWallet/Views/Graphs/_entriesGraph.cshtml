@@ -4,7 +4,7 @@
     <div class="widget-header">
         <div>
             <i class="icon-signal"></i>
-            <h3 class="marginHack">All entries</h3>
+            <h3 id="entries-chart-header" class="marginHack">All entries</h3>
         </div>
     </div>
     <div class="widget-content">
@@ -37,6 +37,8 @@
                         data.addRow([moment(item.label).toDate(),item.income,Math.abs(item.expense), item.balance]);
                     });
 
+                $('#entries-chart-header').text('Entries (' + chartData.dateRange + ')');
+
                 var options = {
                     title: 'Numbers in '+chartData.currency,
                     curveType: 'function',
@@ -46,11 +48,16 @@
                     isStacked: true,
                     series: {2:{type: 'area', lineWidth: 3}},
                     colors: ['#009900', '#cc0000', '#660066'],
-                    width: 540,
-                    height: 250
+//                    width: 1080,
+//                    height: 250
                 };
 
                 var chart = new google.visualization.ComboChart(document.getElementById('entries-chart'));
+
+                var formatter = new google.visualization.NumberFormat({ negativeColor: 'red' });
+                formatter.format(data, 1);
+                formatter.format(data, 2);
+                formatter.format(data, 3);
 
                 chart.draw(data, options);
             }
