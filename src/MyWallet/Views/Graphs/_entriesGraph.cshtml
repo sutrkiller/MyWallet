@@ -8,12 +8,10 @@
         </div>
     </div>
     <div class="widget-content">
-        <div id="area-chart"></div>
+        <div id="entries-chart"></div>
     </div>
 </div>
 
-
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript" src="~/lib/moment/moment.js"></script>
 <script type="text/javascript" src="~/lib/jquery/dist/jquery.js"></script>
 <script type="text/javascript">
@@ -31,15 +29,16 @@
             cache: false,
             type: 'Get',
             url: '@Url.Action("GetEntriesChartData","Graphs")',
-            success: function(chartData) {
+            success: function(chartData) 
+            {
                 $.each(chartData.data,
                     function(i, item)
                     {
-                        data.addRow([moment(item.label).toDate(),item.income,Math.abs(item.expense), item.value]);
+                        data.addRow([moment(item.label).toDate(),item.income,Math.abs(item.expense), item.balance]);
                     });
 
                 var options = {
-                    title: $('#budgetSelectCombo option:selected').text() + ' in ' + chartData.currency,
+                    title: 'Numbers in '+chartData.currency,
                     curveType: 'function',
                     legend: { position: 'bottom' },
                     vAxis: {minValue: 0},
@@ -51,7 +50,7 @@
                     height: 250
                 };
 
-                var chart = new google.visualization.ComboChart(document.getElementById('area-chart'));
+                var chart = new google.visualization.ComboChart(document.getElementById('entries-chart'));
 
                 chart.draw(data, options);
             }

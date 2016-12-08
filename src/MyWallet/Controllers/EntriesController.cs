@@ -41,7 +41,7 @@ namespace MyWallet.Controllers
             ViewData["from"] = from?.ToString("MM/dd/yyyy");
             ViewData["to"] = to?.ToString("MM/dd/yyyy");
             int pageNumber = page ?? 1;
-            return View("List",_mapper.Map<IEnumerable<EntryViewModel>>(entries).ToPagedList(PageSize,pageNumber));
+            return View("List",_mapper.Map<IEnumerable<EntryViewModel>>(entries.OrderByDescending(x=>x.EntryTime)).ToPagedList(PageSize,pageNumber));
         }
 
         [Authorize]

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +13,7 @@ using MyWallet.Helpers;
 using MyWallet.Models.Graphs;
 using MyWallet.Models.Home;
 using MyWallet.Services.DataTransferModels;
+using MyWallet.Services.Filters;
 using MyWallet.Services.Services.Interfaces;
 
 namespace MyWallet.Controllers
@@ -44,6 +47,7 @@ namespace MyWallet.Controllers
         {
             return new GraphViewModel
             {
+                GraphTitle = "Entries",
                 ColumnTitles = new List<string> { "Dates","Incomes","Expenses","Total"}
             };
         }
@@ -176,16 +180,48 @@ namespace MyWallet.Controllers
 
         public async Task<IActionResult> GetEntriesChartData()
         {
-            var entries = await _entryService.GetAllEntries();
             var user = await _userService.EnsureUserExists(User.Identity as ClaimsIdentity);
+            var entries = (await _entryService.GetAllEntries(new EntriesFilter() {UserId = user.Id})).GroupBy(x=>x.EntryTime.Date).OrderBy(x=>x.Key);
             var crs = await _entryService.GetConversionRatiosForCurrency(user.PreferredCurrency.Id);
             var prefCr = crs.OrderByDescending(x => x.Date).FirstOrDefault();
+            //if (!entries.Any()) return Json(null);
 
-//            entries.GroupBy(x => x.EntryTime.Date).OrderBy(x => x.Key).Select(x=>new
-//            {
-//                Date
-//            })
-            return Json(null);
+            var first = entries.FirstOrDefault();
+            if (first != null)
+            {
+                var labels = Enumerable.Range(0, DateTime.Today.Subtract(first.Key).Days + 1)
+                    .Select(d => first.Key.AddDays(d).Date.ToString("O")).ToList();
+
+               // var datedEntries = new Dictionary<string, List<EntryDTO>>();
+
+
+
+                var datedEntries = labels.Select(x => new {Label = x, Entries = entries.SingleOrDefault(e => e.Key.Date.ToString("O") == x)?.ToList() ?? new List<EntryDTO>()}).ToList();
+
+                return Json(new
+                {
+                    Currency = user.PreferredCurrency.Code,
+                    Data =
+                    datedEntries.Select(
+                        (x,i) =>
+                            new
+                            {
+                                x.Label,
+                                Income =
+                                x.Entries.Where(e => e.Amount > 0).Sum(e => e.ToBudgetCurrency(prefCr?.Ratio ?? 1m)),
+                                Expense =
+                                x.Entries.Where(e => e.Amount < 0).Sum(e => e.ToBudgetCurrency(prefCr?.Ratio ?? 1m)),
+                                Balance = datedEntries.Take(i+1).SelectMany(e=>e.Entries).Sum(e=>e.ToBudgetCurrency(prefCr?.Ratio ?? 1m))
+                            })
+                });
+            }
+
+            return Json(new
+            {
+                Currency = user.PreferredCurrency.Code,
+                Data = new List<object>()
+            });
         }
+
     }
 }

@@ -5,9 +5,11 @@
     Layout = "_Layout2";
 }
 
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 <div class="col-md-6">
     @Html.Partial("_budgetGraph", Model.BudgetGraphModel)
-    
+    @Html.Partial("_entriesGraph",Model.EntriesGraphModel)
 </div>
 
 <div class="col-md-6">
@@ -19,4 +21,3 @@
     
 </div>
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
