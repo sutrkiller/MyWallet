@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyWallet.Models.Entries;
 using MyWallet.Models.Graphs;
 using MyWallet.Models.Home;
@@ -137,7 +138,11 @@ namespace MyWallet.Controllers
                 }
 
             }
-    
+            var errorValues = from m in ModelState.Keys
+                where ModelState[m].ValidationState == ModelValidationState.Invalid
+                select m;
+            TempData["ErrorMessageTitle"] = "Values not correct: ";
+            TempData["ErrorMessage"] = string.Join(", ", errorValues);
             return View("Index", dashboard);
         }
 

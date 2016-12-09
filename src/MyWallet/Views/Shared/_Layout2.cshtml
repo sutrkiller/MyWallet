@@ -69,6 +69,13 @@
                             <strong>@TempData["MessageTitle"]</strong>&nbsp;@TempData["Message"]
                         </div>
                     }
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissable">
+                            <button class="close" type="button" data-dismiss="alert">×</button>
+                            <strong>@TempData["ErrorMessageTitle"]</strong>&nbsp;@TempData["ErrorMessage"]
+                        </div>
+                    }
                     @RenderBody()
 
                 </div>
