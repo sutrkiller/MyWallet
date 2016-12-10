@@ -5,17 +5,23 @@
     ViewData["Edit"] = "Edit";
 }
 
-<div class="widget widget-table action-table" style="margin-bottom: 0px;">
+<div class="widget widget-table action-table" style="margin-bottom: 0px; padding-top: 10px;">
+
     <div class="widget-header">
-        <i class="icon-pencil"></i>
+        <i class="icon-tasks"></i>
         <h3 class="marginHack">Edit entry</h3>
+        <a asp-action="List" class="btn btn-small btn-default backArrow">
+            <i class="btn-icon-only icon-arrow-left marginHackArrows"></i>
+        </a>
+
+
     </div>
     <div class="widget-content">
         <br />
 
         <form asp-action="Edit">
             <div class="form-horizontal">
-       
+
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <div class="form-group">

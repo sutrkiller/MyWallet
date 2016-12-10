@@ -6,95 +6,106 @@
     ViewData["Title"] = "Create";
 }
 
-<h2>Create</h2>
+<div class="widget widget-table action-table" style="margin-bottom: 0px; padding-top: 10px;">
 
-<form asp-action="Create">
-    <div class="form-horizontal">
-        <h4>Budget</h4>
-        <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="Name" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Description" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Amount" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Amount" class="form-control" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="CurrencyId" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="CurrencyId" asp-items="@Model.CurrenciesList" class="form-control"></select>
-                <span asp-validation-for="CurrencyId" class="text-danger"></span>
-            </div>
+    <div class="widget-header">
+        <i class="icon-tasks"></i>
+        <h3 class="marginHack">Create budget</h3>
+        <a asp-action="List" class="btn btn-small btn-default backArrow">
+            <i class="btn-icon-only icon-arrow-left marginHackArrows"></i>
+        </a>
 
-        </div>
 
-        <div class="form-group">
-            <label asp-for="StartDate" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="StartDate" class="form-control" id="datetimepicker4" value="@Model.StartDate.ToString("MM/dd/yyyy")" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+    <div class="widget-content">
+        <br />
+        <form asp-action="Create">
+            <div class="form-horizontal">
 
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Amount" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Amount" class="form-control" />
+                        <span asp-validation-for="Amount" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CurrencyId" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <select asp-for="CurrencyId" asp-items="@Model.CurrenciesList" class="form-control"></select>
+                        <span asp-validation-for="CurrencyId" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="StartDate" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="StartDate" class="form-control" id="datetimepicker4" value="@Model.StartDate.ToString("MM/dd/yyyy")" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label asp-for="EndDate" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="EndDate" class="form-control" id="datetimepicker5" value="@Model.EndDate.ToString("MM/dd/yyyy")" />
+                        <span asp-validation-for="EndDate" class="text-danger"></span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+                    <label asp-for="GroupId" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <select asp-for="GroupId" asp-items="@Model.GroupsList" class="form-control"></select>
+                        <span asp-validation-for="GroupId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create entry" class="btn btn-success" />
+
+                    </div>
+
+                </div>
             </div>
-
-        </div>
-        <div class="form-group">
-            <label asp-for="EndDate" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="EndDate" class="form-control" id="datetimepicker5" value="@Model.EndDate.ToString("MM/dd/yyyy")" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-
-            </div>
-
-        </div>
-
-        
-        <div class="form-group">
-            <label asp-for="GroupId" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="GroupId" asp-items="@Model.GroupsList" class="form-control"></select>
-                <span asp-validation-for="GroupId" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
+        </form>
     </div>
 
-</form>
-
-<div>
-    <a asp-action="List">Back to List</a>
 </div>
 
-@section scripts {
-    <script type="text/javascript" src="~/lib/moment/min/moment.min.js"></script>
-    <script type="text/javascript" src="~/lib/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-    <script type="text/javascript" src="~/lib/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
-    <script type="text/javascript">
-            $('#datetimepicker4').datetimepicker({
-                format: 'MM/DD/YYYY'
-            });
-            $('#datetimepicker5').datetimepicker({
-                format: 'MM/DD/YYYY'
-            });
-            $('.multiselectCategories').multiselect();
 
-    </script>
-}
+        @section scripts {
+            <script type="text/javascript" src="~/lib/moment/min/moment.min.js"></script>
+            <script type="text/javascript" src="~/lib/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+            <script type="text/javascript" src="~/lib/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
+            <script type="text/javascript">
+                $('#datetimepicker4').datetimepicker({
+                    format: 'MM/DD/YYYY'
+                });
+                $('#datetimepicker5').datetimepicker({
+                    format: 'MM/DD/YYYY'
+                });
+                $('.multiselectCategories').multiselect();
+
+            </script>
+        }
