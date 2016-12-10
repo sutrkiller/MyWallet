@@ -105,3 +105,13 @@ a.brand:hover  {
     margin-right: 3px !important;
     margin-left: 0px !important;
 }
+
+.selectHeaderRight {
+    float: right;
+    margin-top: 6px;
+    margin-right: 20px;
+    width: 150px; 
+    height: 28px; 
+    padding: 0; 
+    padding-left: 10px;
+}

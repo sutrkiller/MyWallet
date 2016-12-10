@@ -104,6 +104,10 @@ namespace MyWallet.Services.Services
                 {
                     entries = entries.Where(x => x.EntryTime <= filter.To.Value);
                 }
+                if (filter.UserId.HasValue)
+                {
+                    entries = entries.Where(x => x.User.Id == filter.UserId.Value);
+                }
             }
 
             //.ToArrayAsync();
