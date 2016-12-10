@@ -66,5 +66,18 @@ namespace MyWallet.Entities.Repositories
 
         public IQueryable<User> GetUsersFromIds(ICollection<Guid> userIds)
         => _context.Users.Where(r => userIds.Contains(r.Id));
+
+        public async Task<User> EditUser(User user)
+        {
+            var local = await _context.Users.FirstOrDefaultAsync(x=>x.Id  == user.Id);
+            var localCur = await _context.Currencies.FirstOrDefaultAsync(x=>x.Id == user.PreferredCurrency.Id);
+
+            if (local == null) throw new ArgumentException("User with this id not found.");
+            if (localCur == null) throw new ArgumentException("Currency with this id not found.");
+
+            local.PreferredCurrency = localCur;
+             await _context.SaveChangesAsync();
+            return local;
+        }
     }
 }

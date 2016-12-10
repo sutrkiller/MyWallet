@@ -46,7 +46,7 @@
         <div class="form-group">
             <label asp-for="StartDate" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="StartDate" class="form-control" id="datetimepicker4" value="@Model.StartDate" />
+                <input asp-for="StartDate" class="form-control" id="datetimepicker4" value="@Model.StartDate.ToString("MM/dd/yyyy")" />
                 <span asp-validation-for="StartDate" class="text-danger"></span>
 
             </div>
@@ -55,7 +55,7 @@
         <div class="form-group">
             <label asp-for="EndDate" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="EndDate" class="form-control" id="datetimepicker5" value="@Model.EndDate" />
+                <input asp-for="EndDate" class="form-control" id="datetimepicker5" value="@Model.EndDate.ToString("MM/dd/yyyy")" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
 
             </div>
@@ -69,15 +69,6 @@
                 <select asp-for="GroupId" asp-items="@Model.GroupsList" class="form-control"></select>
                 <span asp-validation-for="GroupId" class="text-danger"></span>
             </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="CategoryIds" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="CategoryIds" asp-items="@Model.CategoriesList" class="form-control multiselectCategories"></select>
-                <span asp-validation-for="CategoryIds" class="text-danger"></span>
-
-            </div>
-
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -98,10 +89,10 @@
     <script type="text/javascript" src="~/lib/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
     <script type="text/javascript">
             $('#datetimepicker4').datetimepicker({
-                format: 'DD-MM-YYYY HH:mm'
+                format: 'MM/DD/YYYY'
             });
             $('#datetimepicker5').datetimepicker({
-                format: 'DD-MM-YYYY HH:mm'
+                format: 'MM/DD/YYYY'
             });
             $('.multiselectCategories').multiselect();
 

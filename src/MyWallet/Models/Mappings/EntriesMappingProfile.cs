@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using MyWallet.Helpers;
 using MyWallet.Models.Entries;
 using MyWallet.Services.DataTransferModels;
 
@@ -12,13 +13,16 @@ namespace MyWallet.Models.Mappings
     {
         public EntriesMappingProfile()
         {
-            CreateMap<EntryDTO, EntryViewModel>().ReverseMap();
+            CreateMap<EntryDTO, EntryViewModel>()
+                .ForMember(d=>d.Currency,opt=>opt.MapFrom(x=>x.ConversionRatio.CurrencyFrom.Code))
+                .ReverseMap();
 
             CreateMap<EntryDTO, EntryDetailsViewModel>()
-                .ForMember(d => d.Amount, opt => opt.MapFrom(m => $"{m.Amount:0.00} {m.ConversionRatio.CurrencyFrom.Code}"))
-                .ForMember(d => d.AmountInMain, opt => opt.MapFrom(m => $"{decimal.Multiply(m.Amount, m.ConversionRatio.Ratio):0.00} {m.ConversionRatio.CurrencyTo.Code}"))
+                .ForMember(d => d.Amount, opt => opt.MapFrom(m => m.Amount.FormatCurrency(m.ConversionRatio.CurrencyFrom.Code)))
+                .ForMember(d => d.AmountInMain, opt => opt.MapFrom(m => decimal.Multiply(m.Amount, m.ConversionRatio.Ratio).FormatCurrency(m.ConversionRatio.CurrencyTo.Code)))
                 .ForMember(d => d.UserName, opt => opt.MapFrom(m => m.User.Name))
-                .ForMember(d => d.CategoryNames, opt => opt.MapFrom(m => string.Join(", ", m.Categories.Select(x => x.Name))));
+                .ForMember(d => d.CategoryNames, opt => opt.MapFrom(m => string.Join(", ", m.Categories.Select(x => x.Name))))
+                .ForMember(d => d.BudgetsNames, opt => opt.MapFrom(m => string.Join(", ", m.Budgets.Select(x => x.Name))));
 
             CreateMap<CreateEntryViewModel, EntryDTO>()
                 .ForMember(d => d.User, opt => opt.Ignore())

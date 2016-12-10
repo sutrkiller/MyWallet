@@ -34,25 +34,19 @@
             @Html.DisplayNameFor(model => model.StartDate)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.StartDate)
+            <span>@Model.StartDate.ToString("MM/dd/yyyy")</span>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.EndDate)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.EndDate)
+            <span>@Model.EndDate.ToString("MM/dd/yyyy")</span>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Group)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Group.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Categories)
-        </dt>
-        <dd>
-            @string.Join(", ", Model.Categories.Select(x=>x.Name))
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Entries)

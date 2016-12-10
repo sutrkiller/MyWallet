@@ -9,6 +9,8 @@ using MyWallet.Entities.Repositories.Interfaces;
 using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Services.Interfaces;
 using System.Data.Entity;
+using AutoMapper.QueryableExtensions;
+using MyWallet.Services.Filters;
 
 namespace MyWallet.Services.Services
 {
@@ -86,11 +88,30 @@ namespace MyWallet.Services.Services
             return _mapper.Map<EntryDTO>(entry);
         }
 
-        public async Task<EntryDTO[]> GetAllEntries()
+        public async Task<EntryDTO[]> GetAllEntries(EntriesFilter filter = null)
         {
             //TODO: change this to filter entries
-            var entryDb = await _entryRepository.GetAllEntries().ToArrayAsync();
-            return _mapper.Map<EntryDTO[]>(entryDb);
+            var entries = _entryRepository.GetAllEntries();
+
+            if (filter != null)
+            {
+                if (filter.From.HasValue)
+                {
+                    entries = entries.Where(x => x.EntryTime >= filter.From.Value);
+                }
+
+                if (filter.To.HasValue)
+                {
+                    entries = entries.Where(x => x.EntryTime <= filter.To.Value);
+                }
+                if (filter.UserId.HasValue)
+                {
+                    entries = entries.Where(x => x.User.Id == filter.UserId.Value);
+                }
+            }
+
+            //.ToArrayAsync();
+            return _mapper.Map<EntryDTO[]>(await entries.ToArrayAsync());
         }
 
         public async Task<ConversionRatioDTO[]> GetAllConversionRatios()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
@@ -15,16 +16,18 @@ namespace MyWallet.Services.Services
     {
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
+        private readonly IGroupRepository _groupRepository;
         private readonly ICurrencyRepository _currencyRepository;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, ICurrencyRepository currencyRepository)
+        public UserService(IUserRepository userRepository, IMapper mapper, ICurrencyRepository currencyRepository, IGroupRepository groupRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _currencyRepository = currencyRepository;
+            _groupRepository = groupRepository;
         }
 
-        public async Task<User> EnsureUserExists(ClaimsIdentity userClaims)
+        public async Task<UserDTO> EnsureUserExists(ClaimsIdentity userClaims)
         {
             if (userClaims == null)
             {
@@ -36,21 +39,39 @@ namespace MyWallet.Services.Services
             var user = await _userRepository.GetUserByEmail(userClaims.FindFirst(ClaimTypes.Email)?.Value);
             if (user == null)
             {
-                await _userRepository.AddUser(new User
+                user = await _userRepository.AddUser(new User
                 {
                     Email = userClaims.FindFirst(ClaimTypes.Email)?.Value,
                     Name = userClaims.Name,
                     PreferredCurrency = currency
                 });
+                var group = new Group() {Name = user.Name,Users = new HashSet<User>() {user} };
+                group = await _groupRepository.AddGroup(group);
             }
 
-            return user;
+            return _mapper.Map<UserDTO>(user);
         }
 
         public async Task<UserDTO[]> GetAllUsers()
         {
             var users = await _userRepository.GetAllUsers().ToArrayAsync();
             return _mapper.Map<UserDTO[]>(users);
+        }
+
+        public async Task<UserDTO> EditCurrency(string userEmail, Guid currencyId)
+        {
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                throw new ArgumentNullException(nameof(userEmail));
+            }
+            var user = await _userRepository.GetUserByEmail(userEmail);
+            if (user == null) throw new ArgumentException("User with this email not found.");
+            var currency = await _currencyRepository.GetSingleCurrency(currencyId);
+            if (currency == null) throw new ArgumentException("Currency not found.");
+            user.PreferredCurrency = currency;
+
+            var result = await _userRepository.EditUser(user);
+            return _mapper.Map<UserDTO>(result);
         }
     }
 }

@@ -41,5 +41,7 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// <param name="userIds">Collection of ids of users</param>
         /// <returns>Users specified by groupIds</returns>
         IQueryable<User> GetUsersFromIds(ICollection<Guid> userIds);
+
+        Task<User> EditUser(User user);
     }
 }
