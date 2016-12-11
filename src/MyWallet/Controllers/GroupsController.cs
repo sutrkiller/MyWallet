@@ -93,7 +93,7 @@ namespace MyWallet.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
             var group = await _groupService.GetGroup(id);
-            var createModel = _mapper.Map<CreateGroupViewModel>(group); //TODO: not sure whether mapping works
+            var createModel = _mapper.Map<CreateGroupViewModel>(group);
             await FillSellectLists(createModel);
             return View("Edit", createModel);
         }
