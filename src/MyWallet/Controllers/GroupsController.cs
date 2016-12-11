@@ -10,6 +10,7 @@ using MyWallet.Models.Entries;
 using MyWallet.Models.Groups;
 using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Services.Interfaces;
+using Sakura.AspNetCore;
 
 namespace MyWallet.Controllers
 {
@@ -26,12 +27,15 @@ namespace MyWallet.Controllers
             _userService = userService;
         }
 
+        private const int PageSize = 10;
+
         // GET: Groups
         [Authorize]
-        public async Task<IActionResult> List()
+        public async Task<IActionResult> List(int? page = null)
         {
             var groupsDto = await _groupService.GetAllGroups();
-            return View(_mapper.Map<IEnumerable<GroupViewModel>>(groupsDto));
+            int pageNumber = page ?? 1;
+            return View("List", _mapper.Map<IEnumerable<GroupViewModel>>(groupsDto.OrderBy(x => x.Name)).ToPagedList(PageSize, pageNumber));
         }
 
         // GET: Groups/Details/[id]

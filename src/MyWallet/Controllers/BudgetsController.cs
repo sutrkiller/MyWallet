@@ -33,7 +33,7 @@ namespace MyWallet.Controllers
         {
             var budgetsDTO = await _budgetService.GetAllBudgets();
             int pageNumber = page ?? 1;
-            return View("List", _mapper.Map<IEnumerable<BudgetViewModel>>(budgetsDTO.OrderByDescending(x => x.Name)).ToPagedList(PageSize, pageNumber));
+            return View("List", _mapper.Map<IEnumerable<BudgetViewModel>>(budgetsDTO.OrderBy(x => x.Name)).ToPagedList(PageSize, pageNumber));
 
             
         }
