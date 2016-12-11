@@ -59,16 +59,11 @@
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.Entries, new { @class = "control-label col-md-3" })
-                    @foreach (var entry in Model.Entries)
-                    {
-
-                        <div class="col-md-8">
-                        @Html.TextBoxFor(model => entry.Description, new { readOnly = "readOnly", @class = "form-control col-md-2", style = "possition-relative: center;" })
+                    <div class="col-md-8">
+                        @Html.TextAreaFor(model => Model.Entries, Model.NumberOfEntries, 1, new { readOnly = "readOnly", @class = "form-control col-md-2", style = "possition-relative: center;" })
                     </div>
-                    @*<dd>@entry.Description - @entry.Amount @entry.ConversionRatio.CurrencyFrom.Code</dd>*@
 
-                        }
-                    </div>
+                </div>
                 </div>
             </div>
         </div>
