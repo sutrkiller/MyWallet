@@ -93,3 +93,25 @@ a.brand:hover  {
 .navbar-right {
     margin-right: 0px !important;
 }
+.pagination {
+    margin-top: 0px !important;
+}
+.backArrow {
+    float: right;
+    margin-top: 6px;
+    margin-right: 20px;
+}
+.marginHackArrows {
+    margin-right: 3px !important;
+    margin-left: 0px !important;
+}
+
+.selectHeaderRight {
+    float: right;
+    margin-top: 6px;
+    margin-right: 20px;
+    width: 150px; 
+    height: 28px; 
+    padding: 0; 
+    padding-left: 10px;
+}

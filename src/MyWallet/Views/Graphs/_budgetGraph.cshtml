@@ -1,0 +1,69 @@
+﻿@model GraphViewModel
+
+<div class="widget">
+    <div class="widget-header">
+        <div>
+            <i class="icon-signal"></i>
+            <h3 class="marginHack">Remaining budget</h3>
+            <select id="budgetSelectCombo" asp-for="BudgetId" asp-items="@Model.Budgets" class="form-control selectHeaderRight"></select>
+        </div>
+    </div>
+    <div class="widget-content">
+        <div id="area-chart"></div>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="~/lib/moment/moment.js"></script>
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChartCombo);
+
+    $('#budgetSelectCombo')
+       .change(function () {
+           drawChartCombo(this.value);
+       });
+
+    function drawChartCombo(id) {
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', '@Model.ColumnTitles[0]');
+        data.addColumn('number', '@Model.ColumnTitles[1]');
+        data.addColumn('number', '@Model.ColumnTitles[2]');
+        data.addColumn('number', '@Model.ColumnTitles[3]');
+
+        $.ajax({
+            cache: false,
+            type: 'Get',
+            url: '@Url.Action("GetBudgetChartData","Graphs")\\' + id,
+            success: function (chartData) {
+                $.each(chartData.data,
+                    function (i, item) {
+                        data.addRow([moment(item.label).toDate(), item.income, Math.abs(item.expense), item.value]);
+                    });
+
+                var options = {
+                    title: $('#budgetSelectCombo option:selected').text() + ' in ' + chartData.currency,
+                    curveType: 'function',
+                    legend: { position: 'bottom' },
+                    vAxis: { minValue: 0 },
+                    seriesType: 'bars',
+                    isStacked: true,
+                    series: { 2: { type: 'area', lineWidth: 3 } },
+                    colors: ['#009900', '#cc0000', '#660066'],
+                    width: 540,
+                    height: 250
+                };
+
+                var chart = new google.visualization.ComboChart(document.getElementById('area-chart'));
+                var formatter = new google.visualization.NumberFormat({negativeColor: 'red'});
+                formatter.format(data, 1);
+                formatter.format(data, 2);
+                formatter.format(data, 3);
+
+                chart.draw(data, options);
+            }
+        });
+    };
+</script>
+

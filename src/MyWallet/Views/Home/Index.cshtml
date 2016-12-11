@@ -3,11 +3,11 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <p></p>
 <div class="col-md-6">
     @Html.Partial("_quickActions")
-    @Html.Partial("_dashboardGraph")
+    @Html.Partial("~/Views/Graphs/_budgetGraph.cshtml", Model.BudgetGraph)
 </div>
 <div class="col-md-6">
     @Html.Partial("_quickEntry", Model.Entry)
@@ -15,7 +15,6 @@
 </div>
 @section scripts {
     <script src="~/lib/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
-
     <script type="text/javascript" src="~/lib/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
     <script type="text/javascript">
         $('#IsIncome').bootstrapToggle();

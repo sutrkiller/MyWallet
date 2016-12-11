@@ -13,8 +13,8 @@ namespace MyWallet.Models.Entries
     {
         public Guid Id { get; set; }
         public decimal Amount { get; set; }
+        [Display(Name = "Custom conversion ratio")]
         public string CustomRatioAmount { get; set; }
-        [Display(Name = "Custom conversion ratios")]
         public Guid CustomRatioCurrencyId { get; set; }
         public SelectList CustomCurrenciesList { get; set; }
         [Required]
