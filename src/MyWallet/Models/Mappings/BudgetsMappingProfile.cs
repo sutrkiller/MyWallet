@@ -16,7 +16,10 @@ namespace MyWallet.Models.Mappings
                 .ForMember(d => d.Entries, opt => opt.Ignore())
                 .ForMember(d => d.ConversionRatio, opt => opt.Ignore());
             CreateMap<BudgetDTO, BudgetDetailsViewModel>()
-                .ForMember(d=>d.Categories,opt=>opt.MapFrom(m=>m.Categories)).ReverseMap();
+                .ForMember(d=>d.Categories,opt=>opt.MapFrom(m=>m.Categories))
+                .ForMember(d => d.NumberOfEntries, opt => opt.MapFrom(m => m.Entries.Count))
+                .ForMember(d => d.Entries, opt => opt.MapFrom(m => string.Join("\n", m.Entries.Select(x => x.Description+" - "+x.Amount+" "+ x.ConversionRatio.CurrencyFrom.Code))));
+
             CreateMap<EditBudgetViewModel, BudgetDTO>()
                 .ForMember(d => d.Categories, opt => opt.Ignore())
                 .ForMember(d => d.Group, opt => opt.Ignore())

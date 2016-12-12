@@ -3,49 +3,55 @@
 @model CategoryDetailsViewModel
 
 @{
-    ViewData["Title"] = Model.Name;
+    ViewData["Title"] = "Category - "+Model.Name;
 }
 
-<h2>Details</h2>
+<div class="widget widget-table action-table" style="margin-bottom: 0px; padding-top: 10px;">
 
-<div>
-    <h4>Category</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Income)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Income)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Expence)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Expence)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Balance)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Balance)
-        </dd>
-        
+    <div class="widget-header">
+        <i class="icon-tasks"></i>
+        <h3 class="marginHack">Category detail</h3>
+        <a asp-action="List" class="btn btn-small btn-default backArrow">
+            <i class="btn-icon-only icon-arrow-left marginHackArrows"></i>
+        </a>
 
-    </dl>
-</div>
-<div>
-    <a asp-action="List">Back to List</a>
+
+    </div>
+    <div class="widget-content">
+        <div class="form-horizontal">
+            <div>
+                <br />
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.Name, new { readOnly = "readOnly", @class = "form-control col-md-2", style = "possition-relative: center;" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.Description, new { readOnly = "readOnly", @class = "form-control col-md-2", style = "possition-relative: center;" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Income, new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.Income, new { readOnly = "readOnly", @class = "form-control col-md-2", style = "possition-relative: center;" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Expence, new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.Expence, new { readOnly = "readOnly", @class = "form-control col-md-2", style = "possition-relative: center;" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Balance, new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.Balance, new { readOnly = "readOnly", @class = "form-control col-md-2", style = "possition-relative: center;" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
