@@ -41,7 +41,7 @@ namespace MyWallet.Controllers
             ViewData["from"] = from?.ToString("MM/dd/yyyy");
             ViewData["to"] = to?.ToString("MM/dd/yyyy");
             int pageNumber = page ?? 1;
-            return View("List",_mapper.Map<IEnumerable<EntryViewModel>>(entries).ToPagedList(PageSize,pageNumber));
+            return View("List",_mapper.Map<IEnumerable<EntryViewModel>>(entries.OrderByDescending(x=>x.EntryTime)).ToPagedList(PageSize,pageNumber));
         }
 
         [Authorize]
@@ -186,9 +186,9 @@ namespace MyWallet.Controllers
             return Json(result);
         }
 
-        private static SelectList FormatConversionRatioForSelectList(ConversionRatioDTO[] conversionRatios)
+        private static SelectList FormatConversionRatioForSelectList(IEnumerable<ConversionRatioDTO> conversionRatios)
         {
-            var result = conversionRatios.Select(
+            var result = conversionRatios.OrderByDescending(x=>x.Date).Select(
                 g => new {g.Id, Value = g.CurrencyFrom.Code + " - " + g.CurrencyTo.Code + " - " + g.Ratio});
             return  new SelectList(result, "Id", "Value").Add("Custom", MaxGuid, SelectListHelper.ListPosition.Last);
         }

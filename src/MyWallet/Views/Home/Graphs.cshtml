@@ -1,7 +1,9 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
+@model DashboardModel
 @{
 }
 
-<h1> Graphs here :P </h1>
+<div class="col-md-6">
+    @Html.Partial("_quickActions")
+    @Html.Partial("_dashboardGraph", Model.BudgetGraph)
+</div>

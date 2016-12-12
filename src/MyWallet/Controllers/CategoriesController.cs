@@ -11,6 +11,7 @@ using MyWallet.Models.Budgets;
 using MyWallet.Models.Categories;
 using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Services.Interfaces;
+using Sakura.AspNetCore;
 
 namespace MyWallet.Controllers
 {
@@ -27,12 +28,15 @@ namespace MyWallet.Controllers
             _entryService = entryService;
         }
 
+        private const int PageSize = 10;
+
         // GET: Categoreis
         [Authorize]
-        public async Task<IActionResult> List()
+        public async Task<IActionResult> List(int? page = null)
         {
             var categoriesDTO = await _categoryService.GetAllCategories();
-            return View(_mapper.Map<IEnumerable<CategoryViewModel>>(categoriesDTO));
+            int pageNumber = page ?? 1;
+            return View("List", _mapper.Map<IEnumerable<CategoryViewModel>>(categoriesDTO.OrderBy(x => x.Name)).ToPagedList(PageSize, pageNumber));
         }
 
         // GET: Categoreis/Details/[id]

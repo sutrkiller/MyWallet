@@ -4,14 +4,18 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MyWallet.Models.Entries;
+using MyWallet.Models.Graphs;
 using MyWallet.Models.Home;
 using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Services.Interfaces;
+using Controller = Microsoft.AspNetCore.Mvc.Controller;
+using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 
 
 namespace MyWallet.Controllers
@@ -33,15 +37,19 @@ namespace MyWallet.Controllers
             _userService = userService;
         }
 
-        [Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return View("_landingPage");
+            }
             var dashmodel = new DashboardModel();
             var newEntry = new CreateEntryViewModel();
             await FillSelectLists(newEntry);
             newEntry.EntryTime = DateTime.Now;
             dashmodel.Entry = newEntry;
-
+            dashmodel.BudgetGraph = await new GraphsController(_entryService, _budgetService,_userService).PrepareLastBudgetGraphViewModel();
             return View(dashmodel);
         }
 
@@ -100,6 +108,8 @@ namespace MyWallet.Controllers
             await FillSelectLists(entry);
             dashboard.Entry = entry;
 
+            dashboard.BudgetGraph = await new GraphsController(_entryService,_budgetService,_userService).PrepareLastBudgetGraphViewModel();
+
             if (ModelState.IsValid)
             {
                 try
@@ -128,9 +138,24 @@ namespace MyWallet.Controllers
                 }
 
             }
-    
+            var errorValues = from m in ModelState.Keys
+                where ModelState[m].ValidationState == ModelValidationState.Invalid
+                select m;
+            TempData["ErrorMessageTitle"] = "Values not correct: ";
+            TempData["ErrorMessage"] = string.Join(", ", errorValues);
             return View("Index", dashboard);
         }
+
+//        private async Task<GraphViewModel> PrepareGraphViewModel()
+//        {
+//            var budget = await _budgetService.GetLastUsedBudget();
+//
+//            return new GraphViewModel()
+//            {
+//                GraphTitle = $"{budget.Name} in {budget.ConversionRatio.CurrencyFrom.Code}",
+//                ColumnTitles = new List<string> { "Dates", "Incomes", "Expenses", "Remaining budget" }
+//            };
+//        }
 
         public IActionResult AddRatio()
         {
@@ -149,6 +174,8 @@ namespace MyWallet.Controllers
         {
             return View();
         }
+
+        
     }
 
 }

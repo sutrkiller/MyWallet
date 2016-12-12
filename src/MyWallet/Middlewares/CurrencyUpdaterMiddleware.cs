@@ -99,7 +99,7 @@ namespace MyWallet.Middlewares
                     var currency = splitted[3];
                     decimal ratio;
                     decimal baseR;
-                    if (!decimal.TryParse(splitted[4], out ratio) || !decimal.TryParse(splitted[2], NumberStyles.Currency,CultureInfo.InvariantCulture,out baseR))
+                    if (!decimal.TryParse(splitted[4], NumberStyles.Currency,CultureInfo.GetCultureInfo("cs-CZ"),out ratio) || !decimal.TryParse(splitted[2], NumberStyles.Currency,CultureInfo.GetCultureInfo("cs-CZ"),out baseR))
                     {
                         return null;
                     }

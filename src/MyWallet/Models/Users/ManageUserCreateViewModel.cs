@@ -18,8 +18,10 @@ namespace MyWallet.Models.Users
         public Guid CurrencyId { get; set; }
         public SelectList CurrenciesList { get; set; }
 
-        public ICollection<GroupDTO> Groups { get; set; }
+        public string Groups { get; set; }
 
-        
+        public int NumberGroups { get; set; }
+
+
     }
 }
