@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using MyWallet.Models.Budgets;
 using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Services.Interfaces;
+using Sakura.AspNetCore;
 
 namespace MyWallet.Controllers
 {
@@ -25,12 +26,16 @@ namespace MyWallet.Controllers
             _entryService = entryService;
         }
 
+        private const int PageSize = 10;
         // GET: Budgets
         [Authorize]
-        public async Task<IActionResult> List()
+        public async Task<IActionResult> List(int? page = null)
         {
             var budgetsDTO = await _budgetService.GetAllBudgets();
-            return View(_mapper.Map<IEnumerable<BudgetViewModel>>(budgetsDTO));
+            int pageNumber = page ?? 1;
+            return View("List", _mapper.Map<IEnumerable<BudgetViewModel>>(budgetsDTO.OrderBy(x => x.Name)).ToPagedList(PageSize, pageNumber));
+
+            
         }
 
         // GET: Budgets/Details/[id]

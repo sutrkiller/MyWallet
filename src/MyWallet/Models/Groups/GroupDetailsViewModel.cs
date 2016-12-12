@@ -12,6 +12,6 @@ namespace MyWallet.Models.Groups
         public string Name { get; set; }
         [Display(Name = "Users")]
         public string UserNames { get; set; }
-        public ICollection<BudgetDTO> Budgets { get; set; } = new HashSet<BudgetDTO>();
+        public string Budgets { get; set; }
     }
 }

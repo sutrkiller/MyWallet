@@ -6,35 +6,44 @@
     ViewData["Title"] = "Edit";
 }
 
-<h2>Create</h2>
+<div class="widget widget-table action-table" style="margin-bottom: 0px; padding-top: 10px;">
 
-<form asp-action="Edit">
-    <div class="form-horizontal">
-        <h4>Category</h4>
-        <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="Name" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Description" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
+    <div class="widget-header">
+        <i class="icon-tasks"></i>
+        <h3 class="marginHack">Edit category</h3>
+        <a asp-action="List" class="btn btn-small btn-default backArrow">
+            <i class="btn-icon-only icon-arrow-left marginHackArrows"></i>
+        </a>
+
+
     </div>
-</form>
+    <div class="widget-content">
+        <br />
 
-<div>
-    <a asp-action="List">Back to List</a>
+        <form asp-action="Edit">
+            <div class="form-horizontal">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
 </div>
