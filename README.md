@@ -1,6 +1,9 @@
 # MyWallet #
 =============
+Available at: http://mywalletapp.azurewebsites.net/
+
 Expense manager web application. 
+
 
 Part of a project for the course PV247 - Agile Web Project in .NET at Faculty of Informatics, Masaryk University, Brno - Czech Republic.
 
