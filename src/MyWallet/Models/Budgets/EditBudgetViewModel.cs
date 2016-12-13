@@ -18,9 +18,9 @@ namespace MyWallet.Models.Budgets
         public string Description { get; set; }
 
         public decimal Amount { get; set; }
-        [Display(Name = "Start Date")]
+        [Display(Name = "Start Date"), DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
-        [Display(Name = "End Date")]
+        [Display(Name = "End Date"), DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; }
         [Display(Name = "Categories")]
         public ICollection<Guid> CategoryIds { get; set; } = new List<Guid>();

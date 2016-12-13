@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MyWallet.Helpers;
 using MyWallet.Models.Budgets;
 using MyWallet.Services.DataTransferModels;
+using MyWallet.Services.Filters;
 using MyWallet.Services.Services.Interfaces;
 using Sakura.AspNetCore;
 
@@ -17,13 +20,17 @@ namespace MyWallet.Controllers
     {
         private readonly IBudgetService _budgetService;
         private readonly IEntryService _entryService;
+        private readonly IUserService _userService;
+        private readonly IGroupService _groupService;
         private readonly IMapper _mapper;
 
-        public BudgetsController(IBudgetService budgetService, IMapper mapper, IEntryService entryService)
+        public BudgetsController(IBudgetService budgetService, IMapper mapper, IEntryService entryService, IUserService userService, IGroupService groupService)
         {
             _budgetService = budgetService;
             _mapper = mapper;
             _entryService = entryService;
+            _userService = userService;
+            _groupService = groupService;
         }
 
         private const int PageSize = 10;
@@ -31,9 +38,15 @@ namespace MyWallet.Controllers
         [Authorize]
         public async Task<IActionResult> List(int? page = null)
         {
-            var budgetsDTO = await _budgetService.GetAllBudgets();
+            var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
+            var budgets = new BudgetDTO[0];
+            if (userId != null)
+            {
+                budgets = await _budgetService.GetAllBudgets(new BudgetFilter {UserId = userId});
+            }
+            
             int pageNumber = page ?? 1;
-            return View("List", _mapper.Map<IEnumerable<BudgetViewModel>>(budgetsDTO.OrderBy(x => x.Name)).ToPagedList(PageSize, pageNumber));
+            return View("List", _mapper.Map<IEnumerable<BudgetViewModel>>(budgets.OrderBy(x => x.Name)).ToPagedList(PageSize, pageNumber));
 
             
         }
@@ -43,12 +56,15 @@ namespace MyWallet.Controllers
         public async Task<IActionResult> Details(Guid id)
         {
 
-            var budgetDTO = await _budgetService.GetBudget(id);
-            if (budgetDTO == null)
+            var budget = await _budgetService.GetBudget(id);
+            if (budget == null)
             {
                 return NotFound();
             }
-            var model = _mapper.Map<BudgetDetailsViewModel>(budgetDTO);
+            var model = _mapper.Map<BudgetDetailsViewModel>(budget);
+
+            var entries = budget.Entries;
+            model.Entries = string.Join("\n", entries.Select(x => x.Description + " - " + x.Amount.FormatCurrency(x.ConversionRatio.CurrencyFrom.Code)));
             return View(model);
         }
 
@@ -90,7 +106,15 @@ namespace MyWallet.Controllers
             var currencies = await _entryService.GetAllCurrencies();
             var currenciesList = currencies.Select(g => new {g.Id, Value = g.Code});
             newBudget.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
-            var groups = await _budgetService.GetAllGroups();
+
+            var groups = new GroupDTO[0];
+            var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
+            if (userId != null)
+            {
+                groups = await _groupService.GetAllGroups(new GroupFilter {UserId = userId});
+                var user = await _userService.GetUser(userId.Value);
+                newBudget.CurrencyId = user.PreferredCurrency.Id;
+            }
             var groupsList = groups.Select(g => new {g.Id, Value = g.Name});
             newBudget.GroupsList = new SelectList(groupsList, "Id", "Value");
         }
@@ -102,7 +126,13 @@ namespace MyWallet.Controllers
             var currencies = await _entryService.GetAllCurrencies();
             var currenciesList = currencies.Select(g => new { g.Id, Value = g.Code });
             newBudget.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
-            var groups = await _budgetService.GetAllGroups();
+
+            var groups = new GroupDTO[0];
+            var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
+            if (userId != null)
+            {
+                groups = await _groupService.GetAllGroups(new GroupFilter { UserId = userId });
+            }
             var groupsList = groups.Select(g => new { g.Id, Value = g.Name });
             newBudget.GroupsList = new SelectList(groupsList, "Id", "Value");
         }

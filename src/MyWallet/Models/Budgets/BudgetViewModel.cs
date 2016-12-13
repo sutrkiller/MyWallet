@@ -11,7 +11,7 @@ namespace MyWallet.Models.Budgets
         public Guid Id { get; set; }
 
         public decimal Amount { get; set; }
-
+        public string CurrencyCode { get; set; }
         public string Description { get; set; }
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }

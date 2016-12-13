@@ -11,7 +11,7 @@
 </div>
 <div class="col-md-6">
     @Html.Partial("_quickEntry", Model.Entry)
-    @Html.Partial("_dashboardStats")
+    @Html.Partial("~/Views/Statistics/_incomeExpenseStatistics.cshtml", Model.Expense)
 </div>
 @section scripts {
     <script src="~/lib/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>

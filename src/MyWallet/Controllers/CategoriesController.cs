@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyWallet.Entities.Models;
+using MyWallet.Helpers;
 using MyWallet.Models.Budgets;
 using MyWallet.Models.Categories;
 using MyWallet.Services.DataTransferModels;
+using MyWallet.Services.Filters;
 using MyWallet.Services.Services.Interfaces;
 using Sakura.AspNetCore;
 
@@ -19,13 +22,15 @@ namespace MyWallet.Controllers
     {
         private readonly ICategoryService _categoryService;
         private readonly IEntryService _entryService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public CategoriesController(ICategoryService categoryService, IMapper mapper, IEntryService entryService)
+        public CategoriesController(ICategoryService categoryService, IMapper mapper, IEntryService entryService, IUserService userService)
         {
             _categoryService  = categoryService;
             _mapper = mapper;
             _entryService = entryService;
+            _userService = userService;
         }
 
         private const int PageSize = 10;
@@ -50,6 +55,25 @@ namespace MyWallet.Controllers
                 return NotFound();
             }
             var model = _mapper.Map<CategoryDetailsViewModel>(categoryDTO);
+
+            var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
+            if (userId == null) return View(model);
+            
+            var user = await _userService.GetUser(userId.Value);
+            if (user == null) return View(model);
+
+            var entries = await _entryService.GetAllEntries(new EntriesFilter {UserId = userId,CategoryId = id});
+            var crs = await _entryService.GetConversionRatiosForCurrency(user.PreferredCurrency.Id);
+            var ratio = crs.OrderByDescending(c => c.Date).FirstOrDefault()?.Ratio ?? 0m;
+            var exp = entries.Where(x => x.Amount < 0)
+                .Select(x => x.ToCurrency(ratio))
+                .Sum();
+            var inc = entries.Where(x => x.Amount > 0)
+                .Select(x => x.ToCurrency(ratio))
+                .Sum();
+            model.Expense = exp.FormatCurrency(user.PreferredCurrency.Code);
+            model.Income = inc.FormatCurrency(user.PreferredCurrency.Code);
+            model.Balance = (inc + exp).FormatCurrency(user.PreferredCurrency.Code);
             return View(model);
             
         }
@@ -117,6 +141,12 @@ namespace MyWallet.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(Guid id)
         {
+            var category = await _categoryService.GetCategory(id);
+            if (category.Entries.Any())
+            {
+                TempData["ErrorMessage"] = "Category still contains some entries.";
+                return RedirectToAction("List");
+            }
             await _categoryService.DeleteCategory(id);
             return RedirectToAction("List");
         }

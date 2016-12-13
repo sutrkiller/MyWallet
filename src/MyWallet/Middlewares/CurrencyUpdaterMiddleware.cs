@@ -53,6 +53,10 @@ namespace MyWallet.Middlewares
         private async Task<bool> NewConversionRatiosNeeded()
         {
             var ratios = await _entryService.GetAllConversionRatios();
+            if (!ratios.Any())
+            {
+                return true;
+            }
             var newest = ratios.Max(x => x.Date);
             return newest.Date != DateTime.Today; //will shifted by day because CNB releases new info only on working days after 14:30
         }

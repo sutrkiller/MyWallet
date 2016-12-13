@@ -1,4 +1,5 @@
 ﻿@using System.Threading.Tasks
+@using MyWallet.Helpers
 @using MyWallet.Models.Budgets
 @model Sakura.AspNetCore.IPagedList<BudgetViewModel>
 
@@ -51,7 +52,7 @@
                             @Html.DisplayFor(modelItem => item.Description)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Amount)
+                            @item.Amount.FormatCurrency(item.CurrencyCode)
                         </td>
                         <td>
                             <span>@item.StartDate.ToString("MM/dd/yyyy")</span>

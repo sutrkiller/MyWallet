@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using AutoMapper;
+using MyWallet.Helpers;
 using MyWallet.Models.Budgets;
 using MyWallet.Services.DataTransferModels;
 
@@ -9,16 +10,19 @@ namespace MyWallet.Models.Mappings
     {
         public BudgetsMappingProfile()
         {
-            CreateMap<BudgetDTO, BudgetViewModel>().ReverseMap();
+            CreateMap<BudgetDTO, BudgetViewModel>()
+                .ForMember(d=>d.CurrencyCode,opt=>opt.MapFrom(m=>m.ConversionRatio.CurrencyFrom.Code))
+                .ReverseMap();
             CreateMap<CreateBudgetViewModel, BudgetDTO>()
                 .ForMember(d=>d.Categories,opt=>opt.Ignore())
                 .ForMember(d => d.Group, opt => opt.Ignore())
                 .ForMember(d => d.Entries, opt => opt.Ignore())
                 .ForMember(d => d.ConversionRatio, opt => opt.Ignore());
             CreateMap<BudgetDTO, BudgetDetailsViewModel>()
-                .ForMember(d=>d.Categories,opt=>opt.MapFrom(m=>m.Categories))
+                .ForMember(d => d.Categories, opt => opt.MapFrom(m => m.Categories))
                 .ForMember(d => d.NumberOfEntries, opt => opt.MapFrom(m => m.Entries.Count))
-                .ForMember(d => d.Entries, opt => opt.MapFrom(m => string.Join("\n", m.Entries.Select(x => x.Description+" - "+x.Amount+" "+ x.ConversionRatio.CurrencyFrom.Code))));
+                .ForMember(d => d.Currency, opt => opt.MapFrom(m => m.ConversionRatio.CurrencyFrom.Code))
+                .ForMember(d => d.Entries, opt => opt.Ignore());
 
             CreateMap<EditBudgetViewModel, BudgetDTO>()
                 .ForMember(d => d.Categories, opt => opt.Ignore())

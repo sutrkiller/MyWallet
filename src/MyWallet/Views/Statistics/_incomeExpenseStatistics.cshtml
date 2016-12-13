@@ -1,0 +1,38 @@
+﻿@using MyWallet.Helpers
+@model MyWallet.Models.Statistics.IncomeExpenseViewModel
+
+<div class="widget">
+    <div class="widget-header">
+        <div>
+            <i class="icon-table"></i>
+            <h3 id="@Model.ViewName+Stats" class="marginHack">@Model.ViewName</h3>
+        </div>
+    </div>
+    <div class="widget-content">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td><b>@Model.Header</b></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Today:</td>
+                    <td>@Model.Today.Amount.FormatCurrency(@Model.Today.CurrencyCode)</td>
+                </tr>
+                <tr>
+                    <td>Last Week:</td>
+                    <td>@Model.LastWeek.Amount.FormatCurrency(@Model.LastWeek.CurrencyCode)</td>
+                </tr>
+                <tr>
+                    <td>Last Month:</td>
+                    <td>@Model.LastMonth.Amount.FormatCurrency(@Model.LastMonth.CurrencyCode)</td>
+                </tr>
+                <tr>
+                    <td>Last Year:</td>
+                    <td>@Model.LastYear.Amount.FormatCurrency(@Model.LastMonth.CurrencyCode)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

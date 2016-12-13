@@ -12,7 +12,7 @@ namespace MyWallet.Models.Categories
         public string Name { get; set; }
         public string Description { get; set; }
         public string Income { get; set; }
-        public string Expence { get; set; }
+        public string Expense { get; set; }
         public string Balance { get; set; }
     }
 }

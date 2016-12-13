@@ -22,9 +22,11 @@ namespace MyWallet.Helpers
             return culture == null ? amount.ToString("0.00") : string.Format(culture, "{0:C}", amount);
         }
 
-        public static decimal ToBudgetCurrency(this EntryDTO source, decimal budgetRatio)
+        public static decimal ToCurrency(this EntryDTO source, decimal ratio)
         {
-            return decimal.Divide(decimal.Multiply(source.Amount, source.ConversionRatio.Ratio), budgetRatio);
+            if (source == null) return 0m;
+            if (ratio == 0) return 0m;
+            return decimal.Divide(decimal.Multiply(source.Amount, source.ConversionRatio.Ratio), ratio);
         }
     }
 }

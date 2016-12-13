@@ -50,6 +50,7 @@ namespace MyWallet.Controllers
             newEntry.EntryTime = DateTime.Now;
             dashmodel.Entry = newEntry;
             dashmodel.BudgetGraph = await new GraphsController(_entryService, _budgetService,_userService).PrepareLastBudgetGraphViewModel();
+            dashmodel.Expense = await new StatisticsController(_entryService, _userService).GetExpenses(User.Identity as ClaimsIdentity);
             return View(dashmodel);
         }
 

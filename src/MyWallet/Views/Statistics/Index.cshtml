@@ -1,0 +1,14 @@
+﻿@model MyWallet.Models.Statistics.StatsViewModel
+
+@{
+    ViewBag.Title = "Stats";
+    Layout = "_Layout2";
+}
+
+<div class="col-md-6">
+    @Html.Partial("_incomeExpenseStatistics", Model.Expenses)
+</div>
+
+<div class="col-md-6">
+    @Html.Partial("_incomeExpenseStatistics", Model.Income)
+</div>
