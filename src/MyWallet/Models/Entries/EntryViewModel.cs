@@ -15,7 +15,7 @@ namespace MyWallet.Models.Entries
         public string Description { get; set; }
         [Display(Name = "Entry Time")]
         public DateTime EntryTime { get; set; }
-        public UserDTO User { get; set; }
-        public ICollection<CategoryDTO> Categories { get; set; }
+        public User User { get; set; }
+        public ICollection<Category> Categories { get; set; }
     }
 }

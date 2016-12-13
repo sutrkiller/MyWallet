@@ -78,13 +78,13 @@ namespace MyWallet.Middlewares
 
         }
 
-        private async void SaveToDatabase(IEnumerable<ConversionRatioDTO> result)
+        private async void SaveToDatabase(IEnumerable<ConversionRatio> result)
         {
             if (result==null) return;
             await _entryService.AddConversionRatios(result);
         }
 
-        private async Task<IEnumerable<ConversionRatioDTO>> ParseResponseFile(Stream stream)
+        private async Task<IEnumerable<ConversionRatio>> ParseResponseFile(Stream stream)
         {
             if (stream == null) return null;
             using (var reader = new StreamReader(stream))
@@ -112,11 +112,11 @@ namespace MyWallet.Middlewares
                 });
 
                 var currencies = await _entryService.GetAllCurrencies();
-                var czk = currencies.SingleOrDefault(x => x.Code == "CZK") ?? new CurrencyDTO() {Code = "CZK"};
+                var czk = currencies.SingleOrDefault(x => x.Code == "CZK") ?? new Currency() {Code = "CZK"};
 
                 var result = (from cur in currencies
                     join rat in ratios on cur.Code equals rat.Item1
-                    select new ConversionRatioDTO()
+                    select new ConversionRatio()
                     {
                         CurrencyFrom = cur,
                         CurrencyTo = czk,
@@ -124,7 +124,7 @@ namespace MyWallet.Middlewares
                         Date = DateTime.Today,
                         Type = "CNB"
                     }).ToList();
-                result.Add(new ConversionRatioDTO()
+                result.Add(new ConversionRatio()
                 {
                     CurrencyFrom = czk,
                     CurrencyTo = czk,

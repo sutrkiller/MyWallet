@@ -7,7 +7,7 @@ namespace MyWallet.Services.DataTransferModels.Mapping
     {
         public UserMappingProfile()
         {
-            CreateMap<User, UserDTO>()
+            CreateMap<Entities.Models.User, User>()
                 .MaxDepth(1)
                 .ReverseMap();
         }

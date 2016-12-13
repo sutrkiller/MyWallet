@@ -8,6 +8,12 @@ using MyWallet.Entities.Models;
 using MyWallet.Services.Configuration;
 using MyWallet.Services.DataTransferModels;
 using Xunit;
+using Budget = MyWallet.Services.DataTransferModels.Budget;
+using Category = MyWallet.Services.DataTransferModels.Category;
+using Currency = MyWallet.Services.DataTransferModels.Currency;
+using Entry = MyWallet.Services.DataTransferModels.Entry;
+using Group = MyWallet.Services.DataTransferModels.Group;
+using User = MyWallet.Services.DataTransferModels.User;
 
 namespace MyWallet.Services.UnitTests.MappingsTests
 {
@@ -24,8 +30,8 @@ namespace MyWallet.Services.UnitTests.MappingsTests
         {
             var date1 = new DateTime(2016, 11, 16);
             var date2 = new DateTime(2016, 11, 17);
-            Category cat = new Category() {Name = "Category1"};
-            var budget = new Budget()
+            Entities.Models.Category cat = new Entities.Models.Category() {Name = "Category1"};
+            var budget = new Entities.Models.Budget()
             {
                 Amount = 50m,
                 Description = "desc",
@@ -34,7 +40,7 @@ namespace MyWallet.Services.UnitTests.MappingsTests
                 Name = "Budget",
                 Categories = new []{cat}
             };
-            var expected = new BudgetDTO()
+            var expected = new Budget()
             {
                 Amount = 50m,
                 Description = "desc",
@@ -42,7 +48,7 @@ namespace MyWallet.Services.UnitTests.MappingsTests
                 EndDate = date2,
                 Name = "Budget"
             };
-            var actual = GetMapper().Map<BudgetDTO>(budget);
+            var actual = GetMapper().Map<Budget>(budget);
             AssertPropertyEquals(expected, actual);
             Assert.NotEmpty(actual.Categories);
         }
@@ -52,8 +58,8 @@ namespace MyWallet.Services.UnitTests.MappingsTests
         {
             var date1 = new DateTime(2016, 11, 16);
             var date2 = new DateTime(2016, 11, 17);
-            CategoryDTO cat = new CategoryDTO() { Name = "Category1" };
-            var budget = new BudgetDTO()
+            Category cat = new Category() { Name = "Category1" };
+            var budget = new Budget()
             {
                 Amount = 50m,
                 Description = "desc",
@@ -62,7 +68,7 @@ namespace MyWallet.Services.UnitTests.MappingsTests
                 Name = "Budget",
                 Categories = new[] { cat }
             };
-            var expected = new Budget()
+            var expected = new Entities.Models.Budget()
             {
                 Amount = 50m,
                 Description = "desc",
@@ -72,7 +78,7 @@ namespace MyWallet.Services.UnitTests.MappingsTests
                 
             };
             
-            var actual = GetMapper().Map<Budget>(budget);
+            var actual = GetMapper().Map<Entities.Models.Budget>(budget);
             AssertPropertyEquals(expected, actual);
             Assert.NotEmpty(actual.Categories);
         }
@@ -80,83 +86,64 @@ namespace MyWallet.Services.UnitTests.MappingsTests
         [Fact]
         public void Map_Category_CategoryDTO()
         {
-            var category = new Category()
+            var category = new Entities.Models.Category()
             {
                 Name = "Cat1",
                 Description = "Description",
             };
-            var expected = new CategoryDTO()
+            var expected = new Category()
             {
                 Name = "Cat1",
                 Description = "Description"
             };
-            var actual = GetMapper().Map<CategoryDTO>(category);
+            var actual = GetMapper().Map<Category>(category);
             AssertPropertyEquals(expected,actual);
         }
 
         [Fact]
         public void Map_CategoryDTO_Category()
         {
-            var categoryDTO = new CategoryDTO()
+            var categoryDTO = new Category()
             {
                 Name = "Cat1",
                 Description = "Description"
             };
-            var expected = new Category()
+            var expected = new Entities.Models.Category()
             {
                 Name = "Cat1",
                 Description = "Description",
             };
             
-            var actual = GetMapper().Map<Category>(categoryDTO);
+            var actual = GetMapper().Map<Entities.Models.Category>(categoryDTO);
             AssertPropertyEquals(expected, actual);
         }
 
         [Fact]
         public void Map_Currency_CurrencyDTO()
         {
-            var currency = new Currency() {Code = "CZK"};
-            var expected = new CurrencyDTO() {Code = "CZK"};
-            var actual = GetMapper().Map<CurrencyDTO>(currency);
+            var currency = new Entities.Models.Currency() {Code = "CZK"};
+            var expected = new Currency() {Code = "CZK"};
+            var actual = GetMapper().Map<Currency>(currency);
             AssertPropertyEquals(expected,actual);
         }
 
         [Fact]
         public void Map_CurrencyDTO_Currency()
         {
-            var currencyDTO = new CurrencyDTO() { Code = "CZK" };
-            var expected = new Currency() { Code = "CZK" };
-            var actual = GetMapper().Map<Currency>(currencyDTO);
+            var currencyDTO = new Currency() { Code = "CZK" };
+            var expected = new Entities.Models.Currency() { Code = "CZK" };
+            var actual = GetMapper().Map<Entities.Models.Currency>(currencyDTO);
             AssertPropertyEquals(expected, actual);
         }
 
         [Fact]
         public void Map_Entry_EntryDTO()
         {
-            var entry = new Entry()
+            var entry = new Entities.Models.Entry()
             {
                 Amount = 50m,
                 Description = "Entry",
                 EntryTime = new DateTime(2016,11,16)
-            };
-            var expected = new EntryDTO()
-            {
-                Amount = 50m,
-                Description = "Entry",
-                EntryTime = new DateTime(2016, 11, 16)
-            };
-            var actual = GetMapper().Map<EntryDTO>(entry);
-            AssertPropertyEquals(expected,actual);
-        }
-
-        [Fact]
-        public void Map_EntryDTO_Entry()
-        {
-            var entryDto = new EntryDTO()
-            {
-                Amount = 50m,
-                Description = "Entry",
-                EntryTime = new DateTime(2016, 11, 16)
             };
             var expected = new Entry()
             {
@@ -164,16 +151,35 @@ namespace MyWallet.Services.UnitTests.MappingsTests
                 Description = "Entry",
                 EntryTime = new DateTime(2016, 11, 16)
             };
-            var actual = GetMapper().Map<Entry>(entryDto);
+            var actual = GetMapper().Map<Entry>(entry);
+            AssertPropertyEquals(expected,actual);
+        }
+
+        [Fact]
+        public void Map_EntryDTO_Entry()
+        {
+            var entryDto = new Entry()
+            {
+                Amount = 50m,
+                Description = "Entry",
+                EntryTime = new DateTime(2016, 11, 16)
+            };
+            var expected = new Entities.Models.Entry()
+            {
+                Amount = 50m,
+                Description = "Entry",
+                EntryTime = new DateTime(2016, 11, 16)
+            };
+            var actual = GetMapper().Map<Entities.Models.Entry>(entryDto);
             AssertPropertyEquals(expected, actual);
         }
 
         [Fact]
         public void Map_Group_GroupDTO()
         {
-            var group = new Group() {Name = "Group"};
-            var expected = new GroupDTO() {Name = "Group"};
-            var actual = GetMapper().Map<GroupDTO>(group);
+            var group = new Entities.Models.Group() {Name = "Group"};
+            var expected = new Group() {Name = "Group"};
+            var actual = GetMapper().Map<Group>(group);
 
             AssertPropertyEquals(expected,actual);
         }
@@ -181,9 +187,9 @@ namespace MyWallet.Services.UnitTests.MappingsTests
         [Fact]
         public void Map_GroupDTO_Group()
         {
-            var groupDTO = new GroupDTO() { Name = "Group" };
-            var expected = new Group() { Name = "Group" };
-            var actual = GetMapper().Map<Group>(groupDTO);
+            var groupDTO = new Group() { Name = "Group" };
+            var expected = new Entities.Models.Group() { Name = "Group" };
+            var actual = GetMapper().Map<Entities.Models.Group>(groupDTO);
 
             AssertPropertyEquals(expected, actual);
         }
@@ -191,9 +197,9 @@ namespace MyWallet.Services.UnitTests.MappingsTests
         [Fact]
         public void Map_User_UserDTO()
         {
-            var user = new User() {Name = "Someone", Email = "email@provider.com"};
-            var expected = new UserDTO() {Name = "Someone", Email = "email@provider.com"};
-            var actual = GetMapper().Map<UserDTO>(user);
+            var user = new Entities.Models.User() {Name = "Someone", Email = "email@provider.com"};
+            var expected = new User() {Name = "Someone", Email = "email@provider.com"};
+            var actual = GetMapper().Map<User>(user);
 
             AssertPropertyEquals(expected,actual);
         }
@@ -201,9 +207,9 @@ namespace MyWallet.Services.UnitTests.MappingsTests
         [Fact]
         public void Map_UserDTO_User()
         {
-            var userDTO = new UserDTO() { Name = "Someone", Email = "email@provider.com" };
-            var expected = new User() { Name = "Someone", Email = "email@provider.com" };
-            var actual = GetMapper().Map<User>(userDTO);
+            var userDTO = new User() { Name = "Someone", Email = "email@provider.com" };
+            var expected = new Entities.Models.User() { Name = "Someone", Email = "email@provider.com" };
+            var actual = GetMapper().Map<Entities.Models.User>(userDTO);
 
             AssertPropertyEquals(expected, actual);
         }

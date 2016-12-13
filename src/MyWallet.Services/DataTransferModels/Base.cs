@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MyWallet.Services.DataTransferModels
 {
-    public class BaseDTO
+    public class Base
     {
         public Guid Id { get; set; }
     }

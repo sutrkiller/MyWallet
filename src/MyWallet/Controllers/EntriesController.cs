@@ -87,7 +87,7 @@ namespace MyWallet.Controllers
         private async Task FillSelectLists(CreateEntryViewModel newEntry)
         {
             var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
-            var budgets = new BudgetDTO[0];
+            var budgets = new Budget[0];
             if (userId != null)
             {
                 budgets = await _budgetService.GetAllBudgets(new BudgetFilter { UserId = userId });
@@ -111,7 +111,7 @@ namespace MyWallet.Controllers
         private async Task FillSelectLists(EditEntryViewModel newEntry)
         {
             var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
-            var budgets = new BudgetDTO[0];
+            var budgets = new Budget[0];
             if (userId != null)
             {
                 budgets = await _budgetService.GetAllBudgets(new BudgetFilter { UserId = userId });
@@ -147,7 +147,7 @@ namespace MyWallet.Controllers
                         var customRatio = await _entryService.AddConversionRatio(entry.CurrencyId,entry.CustomRatioAmount,entry.CustomRatioCurrencyId);
                         entry.ConversionRatioId = customRatio.Id;
                     }
-                    await _entryService.AddEntry(_mapper.Map<EntryDTO>(entry), email, entry.ConversionRatioId, entry.CategoryIds, entry.BudgetIds);
+                    await _entryService.AddEntry(_mapper.Map<Entry>(entry), email, entry.ConversionRatioId, entry.CategoryIds, entry.BudgetIds);
                     return RedirectToAction("List");
                 }
                 catch (NullReferenceException ex)
@@ -175,7 +175,7 @@ namespace MyWallet.Controllers
                     var customRatio = await _entryService.AddConversionRatio(entry.CurrencyId, entry.CustomRatioAmount, entry.CustomRatioCurrencyId);
                     entry.ConversionRatioId = customRatio.Id;
                 }
-                await _entryService.EditEntry(_mapper.Map<EntryDTO>(entry), email, entry.ConversionRatioId, entry.CategoryIds, entry.BudgetIds);
+                await _entryService.EditEntry(_mapper.Map<Entry>(entry), email, entry.ConversionRatioId, entry.CategoryIds, entry.BudgetIds);
                 return RedirectToAction("List");
             }
             await FillSelectLists(entry);
@@ -200,7 +200,7 @@ namespace MyWallet.Controllers
             return Json(result);
         }
 
-        private static SelectList FormatConversionRatioForSelectList(IEnumerable<ConversionRatioDTO> conversionRatios)
+        private static SelectList FormatConversionRatioForSelectList(IEnumerable<ConversionRatio> conversionRatios)
         {
             var result = conversionRatios.OrderByDescending(x=>x.Date).Select(
                 g => new {g.Id, Value = g.CurrencyFrom.Code + " - " + g.CurrencyTo.Code + " - " + g.Ratio});

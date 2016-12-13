@@ -9,6 +9,9 @@ using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Services.Interfaces;
 using System.Data.Entity;
 using MyWallet.Services.Filters;
+using ConversionRatio = MyWallet.Services.DataTransferModels.ConversionRatio;
+using Currency = MyWallet.Services.DataTransferModels.Currency;
+using Entry = MyWallet.Services.DataTransferModels.Entry;
 
 namespace MyWallet.Services.Services
 {
@@ -37,11 +40,11 @@ namespace MyWallet.Services.Services
             _conversionRatioRepository = conversionRatioRepository;
         }
 
-        public async Task<EntryDTO> AddEntry(EntryDTO entry, string userEmail, Guid conversionRatioId, ICollection<Guid> categoryIds, ICollection<Guid> budgetIds)
+        public async Task<Entry> AddEntry(Entry entry, string userEmail, Guid conversionRatioId, ICollection<Guid> categoryIds, ICollection<Guid> budgetIds)
         {
             if (userEmail == null) throw new NullReferenceException("User is not logged in.");
             //todo: download conversion from net
-            var dataAccessEntryModel = _mapper.Map<Entry>(entry);
+            var dataAccessEntryModel = _mapper.Map<Entities.Models.Entry>(entry);
 
             var user = dataAccessEntryModel.User = await _userRepository.GetUserByEmail(userEmail);
             dataAccessEntryModel.User = user;
@@ -50,14 +53,14 @@ namespace MyWallet.Services.Services
             dataAccessEntryModel.Budgets = await _budgetRepository.GetBudgetsFromIds(budgetIds).ToArrayAsync();
             dataAccessEntryModel.ConversionRatio = await _conversionRatioRepository.GetSingleConversionRatio(conversionRatioId);
             dataAccessEntryModel = await _entryRepository.AddEntry(dataAccessEntryModel);
-            return _mapper.Map<EntryDTO>(dataAccessEntryModel);
+            return _mapper.Map<Entry>(dataAccessEntryModel);
         }
 
-        public async Task EditEntry(EntryDTO entry, string userEmail, Guid conversionRatioId, ICollection<Guid> categoryIds, ICollection<Guid> budgetIds)
+        public async Task EditEntry(Entry entry, string userEmail, Guid conversionRatioId, ICollection<Guid> categoryIds, ICollection<Guid> budgetIds)
         {
             if (userEmail == null) throw new NullReferenceException("User is not logged in.");
             //todo: download conversion from net
-            var dataAccessEntryModel = _mapper.Map<Entry>(entry);
+            var dataAccessEntryModel = _mapper.Map<Entities.Models.Entry>(entry);
 
             var user = dataAccessEntryModel.User = await _userRepository.GetUserByEmail(userEmail);
             dataAccessEntryModel.User = user;
@@ -68,25 +71,25 @@ namespace MyWallet.Services.Services
             await _entryRepository.EditEntry(dataAccessEntryModel);
         }
 
-        public async Task<EntryDTO[]> GetEntriesByUser(Guid userId)
+        public async Task<Entry[]> GetEntriesByUser(Guid userId)
         {
             var entryDb = await _entryRepository.GetEntriesByUser(userId).ToArrayAsync();
-            return _mapper.Map<EntryDTO[]>(entryDb);
+            return _mapper.Map<Entry[]>(entryDb);
         }
 
-        public async Task<CurrencyDTO[]> GetAllCurrencies()
+        public async Task<Currency[]> GetAllCurrencies()
         {
             var entryDb = await _currencyRepository.GetAllCurrencies().ToArrayAsync();
-            return _mapper.Map<CurrencyDTO[]>(entryDb);
+            return _mapper.Map<Currency[]>(entryDb);
         }
 
-        public async Task<EntryDTO> GetEntry(Guid entryId)
+        public async Task<Entry> GetEntry(Guid entryId)
         {
             var entry = await _entryRepository.GetSingleEntry(entryId);
-            return _mapper.Map<EntryDTO>(entry);
+            return _mapper.Map<Entry>(entry);
         }
 
-        public async Task<EntryDTO[]> GetAllEntries(EntriesFilter filter = null)
+        public async Task<Entry[]> GetAllEntries(EntriesFilter filter = null)
         {
             var entries = _entryRepository.GetAllEntries();
 
@@ -115,36 +118,36 @@ namespace MyWallet.Services.Services
                 }
             }
 
-            return _mapper.Map<EntryDTO[]>(await entries.ToArrayAsync());
+            return _mapper.Map<Entry[]>(await entries.ToArrayAsync());
         }
 
-        public async Task<ConversionRatioDTO[]> GetAllConversionRatios()
+        public async Task<ConversionRatio[]> GetAllConversionRatios()
         {
             var conversionRatios = await _conversionRatioRepository.GetAllConversionRatios().ToArrayAsync();
-            return _mapper.Map<ConversionRatioDTO[]>(conversionRatios);
+            return _mapper.Map<ConversionRatio[]>(conversionRatios);
         }
 
-        public async Task<EntryDTO[]> GetAllEntriesForBudget(Guid budgetId)
+        public async Task<Entry[]> GetAllEntriesForBudget(Guid budgetId)
         {
             //TODO: change this later
             await Task.Delay(0);
             var entryDb = _budgetRepository.GetAllBudgets().SingleOrDefault(x => x.Id.Equals(budgetId))?.Entries;
-            return _mapper.Map<EntryDTO[]>(entryDb);
+            return _mapper.Map<Entry[]>(entryDb);
         }
 
-        public async Task AddConversionRatios(IEnumerable<ConversionRatioDTO> ratios)
+        public async Task AddConversionRatios(IEnumerable<ConversionRatio> ratios)
         {
             if (ratios == null) return;
-            var dbRatios = _mapper.Map<ConversionRatio[]>(ratios);
+            var dbRatios = _mapper.Map<Entities.Models.ConversionRatio[]>(ratios);
             foreach (var ratio in dbRatios)
             {
                 await _conversionRatioRepository.AddConversionRatio(ratio);
             }
         }
-        public async Task<ConversionRatioDTO[]> GetConversionRatiosForCurrency(Guid currencyId)
+        public async Task<ConversionRatio[]> GetConversionRatiosForCurrency(Guid currencyId)
         {
             var conversionRatios = await _conversionRatioRepository.GetAllConversionRatios().Where(cr => cr.CurrencyFrom.Id == currencyId).ToArrayAsync();
-            return _mapper.Map<ConversionRatioDTO[]>(conversionRatios);
+            return _mapper.Map<ConversionRatio[]>(conversionRatios);
         }
 
         public async Task DeleteEntry(Guid id)
@@ -153,9 +156,9 @@ namespace MyWallet.Services.Services
             await _entryRepository.DeleteEntry(entry);
         }
 
-        public async Task<ConversionRatioDTO> AddConversionRatio(Guid currencyId, string customRatioAmount, Guid customRatioCurrencyId)
+        public async Task<ConversionRatio> AddConversionRatio(Guid currencyId, string customRatioAmount, Guid customRatioCurrencyId)
         {
-            var customRatio = new ConversionRatio();
+            var customRatio = new Entities.Models.ConversionRatio();
             var currency = await _currencyRepository.GetSingleCurrency(currencyId);
             var currency2 = await _currencyRepository.GetSingleCurrency(customRatioCurrencyId);
             decimal amount = 0;
@@ -165,9 +168,9 @@ namespace MyWallet.Services.Services
             customRatio.CurrencyTo = currency2;
             customRatio.Type = "Custom";
             customRatio.Date = DateTime.Now;
-            var dataAccessRatioModel = _mapper.Map<ConversionRatio>(customRatio);
+            var dataAccessRatioModel = _mapper.Map<Entities.Models.ConversionRatio>(customRatio);
             dataAccessRatioModel = await _conversionRatioRepository.AddConversionRatio(customRatio);
-            return _mapper.Map<ConversionRatioDTO>(dataAccessRatioModel);
+            return _mapper.Map<ConversionRatio>(dataAccessRatioModel);
         }
     }
 }

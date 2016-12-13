@@ -9,6 +9,7 @@ using MyWallet.Entities.Models;
 using MyWallet.Entities.Repositories.Interfaces;
 using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Services.Interfaces;
+using Category = MyWallet.Services.DataTransferModels.Category;
 
 namespace MyWallet.Services.Services
 {
@@ -28,32 +29,32 @@ namespace MyWallet.Services.Services
             _mapper = mapper;
         }
 
-        public async Task<CategoryDTO> AddCategory(CategoryDTO category)
+        public async Task<Category> AddCategory(Category category)
         {
-            var dataAccessCategoryModel = _mapper.Map<Category>(category);
+            var dataAccessCategoryModel = _mapper.Map<Entities.Models.Category>(category);
             dataAccessCategoryModel = await _categoryRepository.AddCategory(dataAccessCategoryModel);
-            return _mapper.Map<CategoryDTO>(dataAccessCategoryModel);
+            return _mapper.Map<Category>(dataAccessCategoryModel);
         }
 
-        public async Task EditCategory(CategoryDTO category)
+        public async Task EditCategory(Category category)
         {
-            var dataAccessCategoryModel = _mapper.Map<Category>(category);
+            var dataAccessCategoryModel = _mapper.Map<Entities.Models.Category>(category);
             await _categoryRepository.EditCategory(dataAccessCategoryModel);
         }
 
-        public async Task<CategoryDTO[]> GetAllCategories()
+        public async Task<Category[]> GetAllCategories()
         {
             _logger.LogInformation("Starting Category service method");
 
             var categories = await _categoryRepository.GetAllCategories().ToArrayAsync();
-            return _mapper.Map<CategoryDTO[]>(categories);
+            return _mapper.Map<Category[]>(categories);
         }
 
-        public async Task<CategoryDTO> GetCategory(Guid id)
+        public async Task<Category> GetCategory(Guid id)
         {
             var category = await _categoryRepository.GetSingleCategory(id);
 
-            return _mapper.Map<CategoryDTO>(category);
+            return _mapper.Map<Category>(category);
         }
 
         public async Task DeleteCategory(Guid id)

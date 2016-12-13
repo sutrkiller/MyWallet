@@ -12,7 +12,7 @@ namespace MyWallet.Models.Mappings
     {
         public UsersMappingProfile()
         {
-            CreateMap<UserDTO, ManageUserCreateViewModel>()
+            CreateMap<User, ManageUserCreateViewModel>()
                 .ForMember(d => d.CurrencyId, opt => opt.MapFrom(m => m.PreferredCurrency.Id))
                 .ForMember(d => d.OriginalCurrencyId, opt => opt.MapFrom(m => m.PreferredCurrency.Id))
                 .ForMember(d => d.CurrenciesList, opt => opt.Ignore())

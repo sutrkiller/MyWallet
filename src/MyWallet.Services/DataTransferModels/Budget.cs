@@ -4,7 +4,7 @@ using MyWallet.Entities.Models;
 
 namespace MyWallet.Services.DataTransferModels
 {
-    public class BudgetDTO : BaseDTO
+    public class Budget : Base
     {
         public string Name { get; set; }
 
@@ -12,9 +12,9 @@ namespace MyWallet.Services.DataTransferModels
         public decimal Amount { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public GroupDTO Group { get; set; }
-        public ConversionRatio ConversionRatio { get; set; }
-        public ICollection<CategoryDTO> Categories { get; set; }
-        public ICollection<EntryDTO> Entries { get; set; }
+        public Group Group { get; set; }
+        public Entities.Models.ConversionRatio ConversionRatio { get; set; }
+        public ICollection<Category> Categories { get; set; }
+        public ICollection<Entry> Entries { get; set; }
     }
 }

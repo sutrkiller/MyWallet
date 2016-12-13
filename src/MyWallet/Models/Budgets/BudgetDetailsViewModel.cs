@@ -19,12 +19,12 @@ namespace MyWallet.Models.Budgets
         [Display(Name = "End Date")]
         public DateTime EndDate { get; set; }
 
-        public ICollection<CategoryDTO> Categories { get; set; } = new List<CategoryDTO>();
+        public ICollection<Category> Categories { get; set; } = new List<Category>();
 
         public string Entries { get; set; }
 
         public int NumberOfEntries { get; set; }
 
-        public GroupDTO Group { get; set; }
+        public Group Group { get; set; }
     }
 }

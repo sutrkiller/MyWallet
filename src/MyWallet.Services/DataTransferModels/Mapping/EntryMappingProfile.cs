@@ -11,7 +11,7 @@ namespace MyWallet.Services.DataTransferModels.Mapping
     {
         public EntryMappingProfile()
         {
-            CreateMap<Entry, EntryDTO>()
+            CreateMap<Entities.Models.Entry, Entry>()
                 .ReverseMap();
 
         }

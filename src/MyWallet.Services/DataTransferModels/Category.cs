@@ -6,12 +6,12 @@ using MyWallet.Entities.Models;
 
 namespace MyWallet.Services.DataTransferModels
 {
-    public class CategoryDTO : BaseDTO
+    public class Category : Base
     {
         public string Name { get; set; }
 
         public string Description { get; set; }
         
-        public ICollection<EntryDTO> Entries { get; set; }
+        public ICollection<Entry> Entries { get; set; }
     }
 }

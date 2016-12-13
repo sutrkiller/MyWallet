@@ -10,6 +10,8 @@ using MyWallet.Entities.Repositories.Interfaces;
 using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Filters;
 using MyWallet.Services.Services.Interfaces;
+using Budget = MyWallet.Services.DataTransferModels.Budget;
+using Category = MyWallet.Services.DataTransferModels.Category;
 
 namespace MyWallet.Services.Services
 {
@@ -40,21 +42,21 @@ namespace MyWallet.Services.Services
         }
 
 
-        public async Task<BudgetDTO> AddBudget(BudgetDTO budget, Guid groupId, Guid currencyId, ICollection<Guid> categoryIds)
+        public async Task<Budget> AddBudget(Budget budget, Guid groupId, Guid currencyId, ICollection<Guid> categoryIds)
         {
-            var dataAccessBudgetModel = _mapper.Map<Budget>(budget);
+            var dataAccessBudgetModel = _mapper.Map<Entities.Models.Budget>(budget);
             dataAccessBudgetModel.Group = await _groupRepository.GetSingleGroup(groupId);
             dataAccessBudgetModel.ConversionRatio =  _conversionRatioRepository.GetAllConversionRatios().OrderByDescending(x=>x.Date).FirstOrDefault(cr=>cr.CurrencyFrom.Id == currencyId);
             dataAccessBudgetModel.Categories = await _categoryRepository.GetCategoriesFromIds(categoryIds).ToArrayAsync();
 
             dataAccessBudgetModel = await _budgetRepository.AddBudget(dataAccessBudgetModel);
 
-            return _mapper.Map<BudgetDTO>(dataAccessBudgetModel);
+            return _mapper.Map<Budget>(dataAccessBudgetModel);
         }
 
-        public async Task EditBudget(BudgetDTO budget, Guid groupId, Guid currencyId, ICollection<Guid> categoryIds)
+        public async Task EditBudget(Budget budget, Guid groupId, Guid currencyId, ICollection<Guid> categoryIds)
         {
-            var dataAccessBudgetModel = _mapper.Map<Budget>(budget);
+            var dataAccessBudgetModel = _mapper.Map<Entities.Models.Budget>(budget);
             dataAccessBudgetModel.Group = await _groupRepository.GetSingleGroup(groupId);
             dataAccessBudgetModel.ConversionRatio = _conversionRatioRepository.GetAllConversionRatios().OrderByDescending(x => x.Date).FirstOrDefault(cr => cr.CurrencyFrom.Id == currencyId);
             dataAccessBudgetModel.Categories = await _categoryRepository.GetCategoriesFromIds(categoryIds).ToArrayAsync();
@@ -63,7 +65,7 @@ namespace MyWallet.Services.Services
             
         }
 
-        public async Task<BudgetDTO[]> GetAllBudgets(BudgetFilter filter = null)
+        public async Task<Budget[]> GetAllBudgets(BudgetFilter filter = null)
         {
             _logger.LogInformation("Starting Budget service method");
             var budgets = _budgetRepository.GetAllBudgets();
@@ -77,20 +79,20 @@ namespace MyWallet.Services.Services
             }
 
             var dataAccessBudgetsModel = await budgets.OrderBy(x=>x.Name).ToArrayAsync();
-            return _mapper.Map<BudgetDTO[]>(dataAccessBudgetsModel);
+            return _mapper.Map<Budget[]>(dataAccessBudgetsModel);
         }
 
-        public async Task<BudgetDTO> GetBudget(Guid id)
+        public async Task<Budget> GetBudget(Guid id)
         {
             var budget = await _budgetRepository.GetSingleBudget(id);
 
-            return _mapper.Map<BudgetDTO>(budget);
+            return _mapper.Map<Budget>(budget);
         }
 
-        public async Task<CategoryDTO[]> GetAllCategories()
+        public async Task<Category[]> GetAllCategories()
         {
             var categories = await _categoryRepository.GetAllCategories().OrderBy(x=>x.Name).ToArrayAsync();
-            return _mapper.Map<CategoryDTO[]>(categories);
+            return _mapper.Map<Category[]>(categories);
         }
 
         
@@ -101,14 +103,14 @@ namespace MyWallet.Services.Services
             await _budgetRepository.DeleteBudget(budget);
         }
 
-        public async Task<BudgetDTO> GetLastUsedBudget(Guid userId)
+        public async Task<Budget> GetLastUsedBudget(Guid userId)
         {
             var budget = await 
                 _budgetRepository.GetAllBudgets()
                     .Where(x=>x.Group.Users.Any(u=>u.Id == userId))
                     .OrderByDescending(x => x.Entries.Max(e => e.EntryTime))
                     .FirstOrDefaultAsync();
-            return _mapper.Map<BudgetDTO>(budget);
+            return _mapper.Map<Budget>(budget);
         }
     }
 }

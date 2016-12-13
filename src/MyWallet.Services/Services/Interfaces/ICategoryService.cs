@@ -8,10 +8,10 @@ namespace MyWallet.Services.Services.Interfaces
 {
     public interface ICategoryService
     {
-        Task<CategoryDTO> AddCategory(CategoryDTO category);
-        Task<CategoryDTO[]> GetAllCategories();
-        Task<CategoryDTO> GetCategory(Guid id);
-        Task EditCategory(CategoryDTO category);
+        Task<Category> AddCategory(Category category);
+        Task<Category[]> GetAllCategories();
+        Task<Category> GetCategory(Guid id);
+        Task EditCategory(Category category);
         Task DeleteCategory(Guid id);
     }
 }
