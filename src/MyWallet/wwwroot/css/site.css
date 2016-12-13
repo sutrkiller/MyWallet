@@ -115,3 +115,9 @@ a.brand:hover  {
     padding: 0; 
     padding-left: 10px;
 }
+.widget-table {
+    overflow: visible !important;
+}
+.widget {
+    overflow: visible !important;
+}
