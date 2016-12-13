@@ -118,3 +118,6 @@ a.brand:hover  {
 .widget-table {
     overflow: visible !important;
 }
+.widget {
+    overflow: visible !important;
+}
