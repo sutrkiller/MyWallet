@@ -9,6 +9,8 @@ using MyWallet.Entities.Models;
 using MyWallet.Entities.Repositories.Interfaces;
 using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Services.Interfaces;
+using Group = MyWallet.Entities.Models.Group;
+using User = MyWallet.Services.DataTransferModels.User;
 
 namespace MyWallet.Services.Services
 {
@@ -27,7 +29,7 @@ namespace MyWallet.Services.Services
             _groupRepository = groupRepository;
         }
 
-        public async Task<UserDTO> EnsureUserExists(ClaimsIdentity userClaims)
+        public async Task<User> EnsureUserExists(ClaimsIdentity userClaims)
         {
             if (userClaims == null)
             {
@@ -39,26 +41,26 @@ namespace MyWallet.Services.Services
             var user = await _userRepository.GetUserByEmail(userClaims.FindFirst(ClaimTypes.Email)?.Value);
             if (user == null)
             {
-                user = await _userRepository.AddUser(new User
+                user = await _userRepository.AddUser(new Entities.Models.User
                 {
                     Email = userClaims.FindFirst(ClaimTypes.Email)?.Value,
                     Name = userClaims.Name,
                     PreferredCurrency = currency
                 });
-                var group = new Group() {Name = user.Name,Users = new HashSet<User>() {user} };
+                var group = new Group() {Name = user.Name,Users = new HashSet<Entities.Models.User>() {user} };
                 group = await _groupRepository.AddGroup(group);
             }
 
-            return _mapper.Map<UserDTO>(user);
+            return _mapper.Map<User>(user);
         }
 
-        public async Task<UserDTO[]> GetAllUsers()
+        public async Task<User[]> GetAllUsers()
         {
             var users = await _userRepository.GetAllUsers().ToArrayAsync();
-            return _mapper.Map<UserDTO[]>(users);
+            return _mapper.Map<User[]>(users);
         }
 
-        public async Task<UserDTO> EditCurrency(string userEmail, Guid currencyId)
+        public async Task<User> EditCurrency(string userEmail, Guid currencyId)
         {
             if (string.IsNullOrEmpty(userEmail))
             {
@@ -71,7 +73,7 @@ namespace MyWallet.Services.Services
             user.PreferredCurrency = currency;
 
             var result = await _userRepository.EditUser(user);
-            return _mapper.Map<UserDTO>(result);
+            return _mapper.Map<User>(result);
         }
 
         public async Task<Guid?> GetUserId(ClaimsIdentity userClaims)
@@ -84,10 +86,10 @@ namespace MyWallet.Services.Services
             return (await _userRepository.GetUserByEmail(userClaims.FindFirst(ClaimTypes.Email)?.Value))?.Id;
         }
 
-        public async Task<UserDTO> GetUser(Guid userId)
+        public async Task<User> GetUser(Guid userId)
         {
             var user = await _userRepository.GetSingleUser(userId);
-            return user == null ? null : _mapper.Map<UserDTO>(user);
+            return user == null ? null : _mapper.Map<User>(user);
         }
     }
 }

@@ -56,7 +56,7 @@ namespace MyWallet.Controllers
         [Authorize]
         public async Task<GraphViewModel> PrepareLastBudgetGraphViewModel(IIdentity identity = null)
         {
-            var allBudgets = new BudgetDTO[0];
+            var allBudgets = new Budget[0];
             Guid? userId = null;
             if (User != null || identity != null)
             {
@@ -82,7 +82,7 @@ namespace MyWallet.Controllers
 
         private async Task<GraphViewModel> PrepareLastBudgetByCategoriesGraphViewModel()
         {
-            var allBudgets = new BudgetDTO[0];
+            var allBudgets = new Budget[0];
             var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
             if (userId != null)
             {
@@ -104,8 +104,8 @@ namespace MyWallet.Controllers
         [Authorize]
         public async Task<IActionResult> GetDonutChartData(Guid? id)
         {
-            BudgetDTO budget = null;
-            var groups = new Dictionary<string, List<EntryDTO>>();
+            Budget budget = null;
+            var groups = new Dictionary<string, List<Entry>>();
             try
             {
                 var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
@@ -160,7 +160,7 @@ namespace MyWallet.Controllers
         [Authorize]
         public async Task<IActionResult> GetBudgetChartData(Guid? id)
         {
-            BudgetDTO budget = null;
+            Budget budget = null;
             List<decimal> values = new List<decimal>();
             List<decimal> valuesIn = new List<decimal>();
             List<decimal> valuesEx = new List<decimal>();
@@ -253,7 +253,7 @@ namespace MyWallet.Controllers
 
 
 
-                var datedEntries = labels.Select(x => new { Label = x, Entries = entries.SingleOrDefault(e => e.Key.Date.ToString("O") == x)?.ToList() ?? new List<EntryDTO>() }).ToList();
+                var datedEntries = labels.Select(x => new { Label = x, Entries = entries.SingleOrDefault(e => e.Key.Date.ToString("O") == x)?.ToList() ?? new List<Entry>() }).ToList();
 
                 return Json(new
                 {

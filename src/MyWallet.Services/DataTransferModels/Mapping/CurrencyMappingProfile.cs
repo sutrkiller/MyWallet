@@ -11,7 +11,7 @@ namespace MyWallet.Services.DataTransferModels.Mapping
     {
         public CurrencyMappingProfile()
         {
-            CreateMap<Currency, CurrencyDTO>()
+            CreateMap<Entities.Models.Currency, Currency>()
                 .ReverseMap();
         }
     }

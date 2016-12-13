@@ -12,10 +12,10 @@ namespace MyWallet.Models.Mappings
     {
         public BudgetsMappingProfile()
         {
-            CreateMap<BudgetDTO, BudgetViewModel>()
+            CreateMap<Budget, BudgetViewModel>()
                 .ForMember(d=>d.CurrencyCode,opt=>opt.MapFrom(m=>m.ConversionRatio.CurrencyFrom.Code))
                 .ReverseMap();
-            CreateMap<CreateBudgetViewModel, BudgetDTO>()
+            CreateMap<CreateBudgetViewModel, Budget>()
                 .ForMember(d=>d.Categories,opt=>opt.Ignore())
                 .ForMember(d => d.Group, opt => opt.Ignore())
                 .ForMember(d => d.Entries, opt => opt.Ignore())
@@ -23,20 +23,20 @@ namespace MyWallet.Models.Mappings
                 .ForMember(d=>d.StartDate,opt=>opt.MapFrom(m=>DateTime.ParseExact(m.StartDate,"MM/dd/yyyy",new CultureInfo("en-US"))))
                 .ForMember(d => d.EndDate, opt => opt.MapFrom(m => DateTime.ParseExact(m.EndDate, "MM/dd/yyyy", new CultureInfo("en-US"))));
 
-            CreateMap<BudgetDTO, BudgetDetailsViewModel>()
+            CreateMap<Budget, BudgetDetailsViewModel>()
                 .ForMember(d => d.Categories, opt => opt.MapFrom(m => m.Categories))
                 .ForMember(d => d.NumberOfEntries, opt => opt.MapFrom(m => m.Entries.Count))
                 .ForMember(d => d.Currency, opt => opt.MapFrom(m => m.ConversionRatio.CurrencyFrom.Code))
                 .ForMember(d => d.Entries, opt => opt.Ignore());
 
-            CreateMap<EditBudgetViewModel, BudgetDTO>()
+            CreateMap<EditBudgetViewModel, Budget>()
                 .ForMember(d => d.Categories, opt => opt.Ignore())
                 .ForMember(d => d.Group, opt => opt.Ignore())
                 .ForMember(d => d.Entries, opt => opt.Ignore())
                 .ForMember(d => d.ConversionRatio, opt => opt.Ignore())
                 .ForMember(d => d.StartDate, opt => opt.MapFrom(m => DateTime.ParseExact(m.StartDate, "MM/dd/yyyy", new CultureInfo("en-US"))))
                 .ForMember(d => d.EndDate, opt => opt.MapFrom(m => DateTime.ParseExact(m.EndDate, "MM/dd/yyyy", new CultureInfo("en-US"))));
-            CreateMap<BudgetDTO, EditBudgetViewModel>()
+            CreateMap<Budget, EditBudgetViewModel>()
                 .ForMember(d => d.CurrencyId, opt => opt.MapFrom(m => m.ConversionRatio.CurrencyFrom.Id))
                 .ForMember(d => d.CurrenciesList, opt => opt.Ignore())
                 .ForMember(d => d.CategoryIds, opt => opt.MapFrom(m => m.Categories.Select(x => x.Id)))

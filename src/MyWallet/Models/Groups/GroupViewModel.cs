@@ -14,6 +14,6 @@ namespace MyWallet.Models.Groups
         [Display(Name = "Group name")]
         public string Name { get; set; }
 
-        public ICollection<UserDTO> Users { get; set; }
+        public ICollection<User> Users { get; set; }
     }
 }

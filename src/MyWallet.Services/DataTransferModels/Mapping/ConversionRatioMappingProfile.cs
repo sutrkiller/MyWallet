@@ -11,7 +11,7 @@ namespace MyWallet.Services.DataTransferModels.Mapping
     {
         public ConversionRatioMappingProfile()
        {
-           CreateMap<ConversionRatio, ConversionRatioDTO>()
+           CreateMap<Entities.Models.ConversionRatio, ConversionRatio>()
                .ForMember(d => d.Type, opt => opt.Ignore())
                .MaxDepth(1)
                .ReverseMap();

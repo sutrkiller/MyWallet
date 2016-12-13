@@ -11,6 +11,7 @@ using MyWallet.Entities.Repositories.Interfaces;
 using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Filters;
 using MyWallet.Services.Services.Interfaces;
+using Group = MyWallet.Services.DataTransferModels.Group;
 
 namespace MyWallet.Services.Services
 {
@@ -33,15 +34,15 @@ namespace MyWallet.Services.Services
             _mapper = mapper;
         }
 
-        public async Task<GroupDTO> AddGroup(GroupDTO group, ICollection<Guid> userIds)
+        public async Task<Group> AddGroup(Group group, ICollection<Guid> userIds)
         {
-            var dataAccessGroupModel = _mapper.Map<Group>(group);
+            var dataAccessGroupModel = _mapper.Map<Entities.Models.Group>(group);
             dataAccessGroupModel.Users = await _userRepository.GetUsersFromIds(userIds).ToArrayAsync();
             dataAccessGroupModel = await _groupRepository.AddGroup(dataAccessGroupModel);
-            return _mapper.Map<GroupDTO>(dataAccessGroupModel);
+            return _mapper.Map<Group>(dataAccessGroupModel);
         }
 
-        public async Task<GroupDTO[]> GetAllGroups(GroupFilter filter = null)
+        public async Task<Group[]> GetAllGroups(GroupFilter filter = null)
         {
             var tmpGroups = _groupRepository.GetAllGroups();
             if (filter != null)
@@ -53,14 +54,14 @@ namespace MyWallet.Services.Services
             }
 
             var groups = await tmpGroups.OrderBy(x => x.Name).ToArrayAsync();
-            return _mapper.Map<GroupDTO[]>(groups);
+            return _mapper.Map<Group[]>(groups);
         }
 
-        public async Task<GroupDTO> GetGroup(Guid id)
+        public async Task<Group> GetGroup(Guid id)
         {
             var group = await _groupRepository.GetSingleGroup(id);
 
-            return _mapper.Map<GroupDTO>(group);
+            return _mapper.Map<Group>(group);
         }
 
         public async Task DeleteGroup(Guid id)
@@ -69,12 +70,12 @@ namespace MyWallet.Services.Services
             await _groupRepository.DeleteGroup(group);
         }
 
-        public async Task<GroupDTO> EditGroup(GroupDTO groupDto, ICollection<Guid> userIds)
+        public async Task<Group> EditGroup(Group groupDto, ICollection<Guid> userIds)
         {
-            var model = _mapper.Map<Group>(groupDto);
+            var model = _mapper.Map<Entities.Models.Group>(groupDto);
             model.Users = await _userRepository.GetUsersFromIds(userIds).ToArrayAsync();
             model = await _groupRepository.EditGroup(model);
-            return _mapper.Map<GroupDTO>(model);
+            return _mapper.Map<Group>(model);
         }
     }
 }

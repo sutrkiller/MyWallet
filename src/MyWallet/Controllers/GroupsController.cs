@@ -35,7 +35,7 @@ namespace MyWallet.Controllers
         [Authorize]
         public async Task<IActionResult> List(int? page = null)
         {
-            var groups = new GroupDTO[0];
+            var groups = new Group[0];
             var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
             if (userId != null)
             {
@@ -89,7 +89,7 @@ namespace MyWallet.Controllers
             }
             if (ModelState.IsValid)
             {
-                await _groupService.AddGroup(_mapper.Map<GroupDTO>(group), group.UserIds);
+                await _groupService.AddGroup(_mapper.Map<Group>(group), group.UserIds);
                 return RedirectToAction("List");
             }
             await FillSellectLists(group);
@@ -116,7 +116,7 @@ namespace MyWallet.Controllers
             }
             if (ModelState.IsValid)
             {
-                await _groupService.EditGroup(_mapper.Map<GroupDTO>(group), group.UserIds);
+                await _groupService.EditGroup(_mapper.Map<Group>(group), group.UserIds);
                 return RedirectToAction("List");
             }
             await FillSellectLists(group);

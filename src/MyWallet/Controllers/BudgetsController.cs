@@ -40,7 +40,7 @@ namespace MyWallet.Controllers
         public async Task<IActionResult> List(int? page = null)
         {
             var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
-            var budgets = new BudgetDTO[0];
+            var budgets = new Budget[0];
             if (userId != null)
             {
                 budgets = await _budgetService.GetAllBudgets(new BudgetFilter {UserId = userId});
@@ -108,7 +108,7 @@ namespace MyWallet.Controllers
             var currenciesList = currencies.Select(g => new {g.Id, Value = g.Code});
             newBudget.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
 
-            var groups = new GroupDTO[0];
+            var groups = new Group[0];
             var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
             if (userId != null)
             {
@@ -128,7 +128,7 @@ namespace MyWallet.Controllers
             var currenciesList = currencies.Select(g => new { g.Id, Value = g.Code });
             newBudget.CurrenciesList = new SelectList(currenciesList, "Id", "Value");
 
-            var groups = new GroupDTO[0];
+            var groups = new Group[0];
             var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
             if (userId != null)
             {
@@ -167,7 +167,7 @@ namespace MyWallet.Controllers
             }
             if (ModelState.IsValid)
             {
-                await _budgetService.AddBudget(_mapper.Map<BudgetDTO>(budget), budget.GroupId, budget.CurrencyId, budget.CategoryIds);
+                await _budgetService.AddBudget(_mapper.Map<Budget>(budget), budget.GroupId, budget.CurrencyId, budget.CategoryIds);
                 return RedirectToAction("List");
             }
             await FillSelectionLists(budget);
@@ -200,7 +200,7 @@ namespace MyWallet.Controllers
             }
             if (ModelState.IsValid)
             {
-                await _budgetService.EditBudget(_mapper.Map<BudgetDTO>(budget), budget.GroupId, budget.CurrencyId, budget.CategoryIds);
+                await _budgetService.EditBudget(_mapper.Map<Budget>(budget), budget.GroupId, budget.CurrencyId, budget.CategoryIds);
                 return RedirectToAction("List");
             }
             await FillSelectionLists(budget);

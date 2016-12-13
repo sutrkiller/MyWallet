@@ -11,7 +11,7 @@ namespace MyWallet.Services.DataTransferModels.Mapping
     {
         public GroupMapping()
         {
-            CreateMap<Group, GroupDTO>()
+            CreateMap<Entities.Models.Group, Group>()
                 .ReverseMap();
         }
     }

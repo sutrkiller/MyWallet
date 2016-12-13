@@ -14,25 +14,25 @@ namespace MyWallet.Models.Mappings
     {
         public EntriesMappingProfile()
         {
-            CreateMap<EntryDTO, EntryViewModel>()
+            CreateMap<Entry, EntryViewModel>()
                 .ForMember(d=>d.Currency,opt=>opt.MapFrom(x=>x.ConversionRatio.CurrencyFrom.Code))
                 .ReverseMap();
 
-            CreateMap<EntryDTO, EntryDetailsViewModel>()
+            CreateMap<Entry, EntryDetailsViewModel>()
                 .ForMember(d => d.Amount, opt => opt.MapFrom(m => m.Amount.FormatCurrency(m.ConversionRatio.CurrencyFrom.Code)))
                 .ForMember(d => d.AmountInMain, opt => opt.MapFrom(m => decimal.Multiply(m.Amount, m.ConversionRatio.Ratio).FormatCurrency(m.ConversionRatio.CurrencyTo.Code)))
                 .ForMember(d => d.UserName, opt => opt.MapFrom(m => m.User.Name))
                 .ForMember(d => d.CategoryNames, opt => opt.MapFrom(m => string.Join(", ", m.Categories.Select(x => x.Name))))
                 .ForMember(d => d.BudgetsNames, opt => opt.MapFrom(m => string.Join(", ", m.Budgets.Select(x => x.Name))));
 
-            CreateMap<CreateEntryViewModel, EntryDTO>()
+            CreateMap<CreateEntryViewModel, Entry>()
                 .ForMember(d => d.User, opt => opt.Ignore())
                 .ForMember(d => d.Categories, opt => opt.Ignore())
                 .ForMember(d => d.ConversionRatio, opt => opt.Ignore())
                 .ForMember(d => d.Budgets, opt => opt.Ignore())
                 .ForMember(d => d.EntryTime, opt => opt.MapFrom(m => DateTime.ParseExact(m.EntryTime, "MM/dd/yyyy HH:mm", new CultureInfo("en-US"))));
 
-            CreateMap<EntryDTO, EditEntryViewModel>()
+            CreateMap<Entry, EditEntryViewModel>()
                 .ForMember(d => d.CurrencyId, opt => opt.MapFrom(m => m.ConversionRatio.CurrencyFrom.Id))
                 .ForMember(d => d.CurrenciesList, opt => opt.Ignore())
                 .ForMember(d => d.CategoryIds, opt => opt.MapFrom(m => m.Categories.Select(x => x.Id)))
@@ -48,7 +48,7 @@ namespace MyWallet.Models.Mappings
                 .ForMember(d=>d.EntryTime,opt=>opt.MapFrom(m=>m.EntryTime.ToString("MM/dd/yyyy HH:mm")));
 
 
-            CreateMap<EditEntryViewModel, EntryDTO>()
+            CreateMap<EditEntryViewModel, Entry>()
                 .ForMember(d => d.User, opt => opt.Ignore())
                 .ForMember(d => d.Categories, opt => opt.Ignore())
                 .ForMember(d => d.ConversionRatio, opt => opt.Ignore())

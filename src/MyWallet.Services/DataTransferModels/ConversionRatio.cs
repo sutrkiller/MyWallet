@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MyWallet.Services.DataTransferModels
 {
-    public class ConversionRatioDTO : BaseDTO
+    public class ConversionRatio : Base
     {
         public decimal Ratio { get; set; }
 
@@ -13,8 +13,8 @@ namespace MyWallet.Services.DataTransferModels
 
         public DateTime Date { get; set; }
 
-        public virtual CurrencyDTO CurrencyFrom { get; set; }
+        public virtual Currency CurrencyFrom { get; set; }
 
-        public virtual CurrencyDTO CurrencyTo { get; set; }
+        public virtual Currency CurrencyTo { get; set; }
     }
 }

@@ -15,6 +15,7 @@ using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Filters;
 using MyWallet.Services.Services.Interfaces;
 using Sakura.AspNetCore;
+using Category = MyWallet.Services.DataTransferModels.Category;
 
 namespace MyWallet.Controllers
 {
@@ -114,7 +115,7 @@ namespace MyWallet.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _categoryService.AddCategory(_mapper.Map<CategoryDTO>(category));
+                await _categoryService.AddCategory(_mapper.Map<Category>(category));
                 return RedirectToAction("List");
             }
             return View(category);
@@ -130,7 +131,7 @@ namespace MyWallet.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _categoryService.EditCategory(_mapper.Map<CategoryDTO>(category));
+                await _categoryService.EditCategory(_mapper.Map<Category>(category));
                 return RedirectToAction("List");
             }
             return View(category);

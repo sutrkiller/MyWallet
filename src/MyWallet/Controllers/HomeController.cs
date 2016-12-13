@@ -59,7 +59,7 @@ namespace MyWallet.Controllers
         {
 
             var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
-            var budgets = new BudgetDTO[0];
+            var budgets = new Budget[0];
             if (userId != null)
             {
                 budgets = await _budgetService.GetAllBudgets(new BudgetFilter { UserId = userId });
@@ -144,7 +144,7 @@ namespace MyWallet.Controllers
                     entry.EntryTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm");
                     entry.CategoryIds = new List<Guid>();
                     await
-                        _entryService.AddEntry(_mapper.Map<EntryDTO>(entry), email, entry.ConversionRatioId,
+                        _entryService.AddEntry(_mapper.Map<Entry>(entry), email, entry.ConversionRatioId,
                             entry.CategoryIds, entry.BudgetIds);
                     var currencyCode = entry.CurrenciesList.FirstOrDefault(x => Guid.Parse(x.Value) == entry.CurrencyId).Text;
 

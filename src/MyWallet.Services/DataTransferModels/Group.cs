@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace MyWallet.Services.DataTransferModels
 {
-    public class GroupDTO : BaseDTO
+    public class Group : Base
     {
         public string Name { get; set; }
-        public ICollection<BudgetDTO> Budgets { get; set; }
-        public ICollection<UserDTO> Users { get; set; }
+        public ICollection<Budget> Budgets { get; set; }
+        public ICollection<User> Users { get; set; }
     }
 }
