@@ -1,7 +1,54 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using System.Threading.Tasks
+@model CreateCustomRatio
 
-<h1> Add custom conversion ratio here :P </h1>
+@{
+    ViewData["Title"] = "Create custom ratio";
+}
+<div class="widget widget-table action-table" style="margin-bottom: 0px; padding-top: 10px;">
+
+    <div class="widget-header">
+        <i class="icon-tasks"></i>
+        <h3 class="marginHack">Create entry</h3>
+    </div>
+    <div class="widget-content">
+        <br />
+        <form asp-action="AddRatio">
+            <div class="form-horizontal">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="CurrencyFromId" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <select asp-for="CurrencyFromId" asp-items="@Model.CurrenciesFromList" class="form-control"></select>
+                        <span asp-validation-for="CurrencyFromId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Amount" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="Amount" class="form-control" />
+                        <span asp-validation-for="Amount" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="CurrencyToId" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <select asp-for="CurrencyToId" asp-items="@Model.CurrenciesToList" class="form-control"></select>
+                        <span asp-validation-for="CurrencyToId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create ratio" class="btn btn-success" />
+
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+               

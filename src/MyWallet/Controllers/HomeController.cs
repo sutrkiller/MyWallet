@@ -79,7 +79,20 @@ namespace MyWallet.Controllers
 
 
         }
+        private async Task FillSelectListsRatio(CreateCustomRatio ratio)
+        {
 
+         
+            var currencies = await _entryService.GetAllCurrencies();
+            var currenciesList = currencies.Select(g => new { g.Id, Value = g.Code });
+            var currenciesList2 = currencies.Select(g => new { g.Id, Value = g.Code });
+            ratio.CurrenciesFromList = new SelectList(currenciesList, "Id", "Value");
+            ratio.CurrenciesToList = new SelectList(currenciesList2, "Id", "Value");
+            var prefCurrency = (await _userService.EnsureUserExists(User.Identity as ClaimsIdentity)).PreferredCurrency.Id;
+            ratio.CurrencyFromId = prefCurrency;
+
+
+        }
         [Authorize]
         public IActionResult About()
         {
@@ -165,9 +178,39 @@ namespace MyWallet.Controllers
 //            };
 //        }
 
-        public IActionResult AddRatio()
+        public async Task<IActionResult> AddRatio()
         {
-            return View();
+            var ratio = new CreateCustomRatio();
+            await FillSelectListsRatio(ratio);
+            return View(ratio);
+        }
+
+
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddRatio(CreateCustomRatio ratio)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {                
+                    await _entryService.AddConversionRatio(ratio.CurrencyFromId, ratio.Amount.ToString(), ratio.CurrencyToId);
+                    TempData["MessageTitle"] = "Custom ratio";
+                    TempData["Message"] = "created.";
+
+                    return RedirectToAction("Index");
+                   
+                }
+                catch (NullReferenceException ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+
+            }
+            await FillSelectListsRatio(ratio);
+            return View(ratio);
         }
 
         [Authorize]
