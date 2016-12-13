@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MyWallet.Models.Budgets;
-using MyWallet.Models.Entries;
+﻿using MyWallet.Models.Entries;
 using MyWallet.Models.Graphs;
+using MyWallet.Models.Statistics;
 
 namespace MyWallet.Models.Home
 {
@@ -12,6 +8,9 @@ namespace MyWallet.Models.Home
     {
         public CreateEntryViewModel Entry { get; set; }
         public GraphViewModel BudgetGraph { get; set; }
+
+        public IncomeExpenseViewModel Expense { get; set; }
+
         public string Note { get; set; } = "";
     }
 }
