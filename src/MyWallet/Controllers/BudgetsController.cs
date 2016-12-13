@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -90,8 +91,8 @@ namespace MyWallet.Controllers
         {
             var newBudget = new CreateBudgetViewModel();
             await FillSelectionLists(newBudget);
-            newBudget.StartDate = DateTime.Now;
-            newBudget.EndDate = DateTime.Now;
+            newBudget.StartDate = DateTime.Today.ToString("MM/dd/yyyy");
+            newBudget.EndDate = DateTime.Today.ToString("MM/dd/yyyy");
             return View(newBudget);
 
 
@@ -145,7 +146,22 @@ namespace MyWallet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateBudgetViewModel budget)
         {
-            if (budget.EndDate < budget.StartDate)
+            DateTime start;
+            DateTime end;
+            bool correct = true;
+            if (!DateTime.TryParseExact(budget.StartDate, "MM/dd/yyyy", new CultureInfo("en-US"), DateTimeStyles.None,
+                out start))
+            {
+                correct = false;
+                ModelState.AddModelError("StartDate","Wrong format of date.");
+            }
+            if (!DateTime.TryParseExact(budget.EndDate, "MM/dd/yyyy", new CultureInfo("en-US"), DateTimeStyles.None,
+               out end))
+            {
+                correct = false;
+                ModelState.AddModelError("EndDate", "Wrong format of date.");
+            }
+            if (!correct || end < start)
             {
                 ModelState.AddModelError("EndDate", "End Date have to be after Start Date.");
             }
@@ -163,7 +179,22 @@ namespace MyWallet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditBudgetViewModel budget)
         {
-            if (budget.EndDate<budget.StartDate)
+            DateTime start;
+            DateTime end;
+            bool correct = true;
+            if (!DateTime.TryParseExact(budget.StartDate, "MM/dd/yyyy", new CultureInfo("en-US"), DateTimeStyles.None,
+                out start))
+            {
+                correct = false;
+                ModelState.AddModelError("StartDate", "Wrong format of date.");
+            }
+            if (!DateTime.TryParseExact(budget.EndDate, "MM/dd/yyyy", new CultureInfo("en-US"), DateTimeStyles.None,
+               out end))
+            {
+                correct = false;
+                ModelState.AddModelError("EndDate", "Wrong format of date.");
+            }
+            if (!correct || end < start)
             {
                 ModelState.AddModelError("EndDate", "End Date have to be after Start Date.");
             }
