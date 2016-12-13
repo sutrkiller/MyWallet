@@ -16,4 +16,6 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("91d70163-4344-4066-8cff-6d196a080ee1")]
+[assembly: Guid("15ee0e5e-457f-4abe-9834-e157cf67a62e")]
+[assembly:InternalsVisibleTo("MyWallet")]
+[assembly:InternalsVisibleTo("MyWallet.Services.UnitTests")]

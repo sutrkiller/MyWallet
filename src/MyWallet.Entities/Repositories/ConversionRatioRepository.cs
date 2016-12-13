@@ -10,7 +10,7 @@ using MyWallet.Entities.Repositories.Interfaces;
 
 namespace MyWallet.Entities.Repositories
 {
-    public class ConversionRatioRepository : IConversionRatioRepository
+    internal class ConversionRatioRepository : IConversionRatioRepository
     {
         private readonly MyWalletContext _context;
 

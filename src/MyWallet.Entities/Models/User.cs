@@ -3,10 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyWallet.Entities.Models
 {
+
+    /// <summary>
+    /// Users serves for authorization. 
+    /// </summary>
     public class User : ModelBase
     {
         /// <summary>
-        /// Gets or sets the name of the user.
+        /// Gets or sets the name of the user. First and last names together.
         /// </summary>
         [MaxLength(256)]
         public string Name { get; set; }
@@ -26,6 +30,10 @@ namespace MyWallet.Entities.Models
         /// </summary>
         public virtual ICollection<Entry> Entries { get; set; } = new HashSet<Entry>();
 
+
+        /// <summary>
+        /// All data will be converted into this currency so the user has better overview of spent money.
+        /// </summary>
         [Required]
         public virtual Currency PreferredCurrency { get; set; }
 

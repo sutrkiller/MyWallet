@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyWallet.Entities.Models
 {
+    /// <summary>
+    /// Grouping users enables creating shared budgets.
+    /// </summary>
     public class Group : ModelBase
     {
         /// <summary>

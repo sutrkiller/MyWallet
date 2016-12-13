@@ -1,26 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
 
 namespace MyWallet.Entities.Models
 {
+    /// <summary>
+    /// Budget is specified for a group. Users can specify budget for their groups so they can keep an eye on entries added in time period specified by budget.
+    /// </summary>
     public class Budget : ModelBase
     {
         /// <summary>
-        /// Gets or sets the value of budget. Must be positive.
+        /// Gets or sets the value of budget. Must be positive. Just a control amount without any restrictions on further spending.
         /// </summary>
         [Required, DataType(DataType.Currency)]
         public decimal Amount { get; set; }
 
         /// <summary>
-        /// Gets or sets the start date.
+        /// Gets or sets the date when entries will start being included in the budget.
         /// </summary>
         [Required, DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
 
         /// <summary>
-        /// Gets or sets the end date.
+        /// Gets or sets the date when entries will stop being included in the budget.
         /// </summary>
         [Required, DataType(DataType.Date)]
         public DateTime EndDate { get; set; }

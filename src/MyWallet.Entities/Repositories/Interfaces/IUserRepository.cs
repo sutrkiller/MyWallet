@@ -6,6 +6,9 @@ using MyWallet.Entities.Models;
 
 namespace MyWallet.Entities.Repositories.Interfaces
 {
+    /// <summary>
+    /// Repository for accessing entities User in db.
+    /// </summary>
     public interface IUserRepository
     {
         /// <summary>
@@ -42,6 +45,11 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// <returns>Users specified by groupIds</returns>
         IQueryable<User> GetUsersFromIds(ICollection<Guid> userIds);
 
+        /// <summary>
+        /// Edit user in db.
+        /// </summary>
+        /// <param name="user">User with new values. Should contain valid id.</param>
+        /// <returns></returns>
         Task<User> EditUser(User user);
     }
 }

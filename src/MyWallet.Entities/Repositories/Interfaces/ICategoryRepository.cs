@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MyWallet.Entities.Models;
 
 namespace MyWallet.Entities.Repositories.Interfaces
 {
+    /// <summary>
+    /// Repository for accessing entities Category in db.
+    /// </summary>
     public interface ICategoryRepository
     {
         /// <summary>
@@ -40,6 +42,12 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// <param name="category">existing category</param>
         /// <returns>Edit category</returns>
         Task EditCategory(Category category);
+
+        /// <summary>
+        /// Delete category from db
+        /// </summary>
+        /// <param name="category">Existing category that should have valid ID</param>
+        /// <returns></returns>
         Task DeleteCategory(Category category);
     }
 }

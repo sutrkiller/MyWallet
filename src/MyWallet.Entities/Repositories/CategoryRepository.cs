@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -12,7 +11,7 @@ using MyWallet.Entities.Repositories.Interfaces;
 
 namespace MyWallet.Entities.Repositories
 {
-    public class CategoryRepository : ICategoryRepository
+    internal class CategoryRepository : ICategoryRepository
     {
         private readonly MyWalletContext _context;
 

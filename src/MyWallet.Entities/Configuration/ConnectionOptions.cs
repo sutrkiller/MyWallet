@@ -1,5 +1,8 @@
 ﻿namespace MyWallet.Entities.Configuration
 {
+    /// <summary>
+    /// Options are used to hold connectiong string for further use in code.
+    /// </summary>
     public class ConnectionOptions
     {
         /// <summary>
