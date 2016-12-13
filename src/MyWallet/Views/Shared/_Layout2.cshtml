@@ -47,6 +47,7 @@
                     <ul class="mainnav">
                         <li class="dashboard"><a asp-area="" asp-controller="Home" asp-action="Index"><i class="icon-home"></i><span>Dashboard</span> </a></li>
                         <li class="graphs"><a asp-area="" asp-controller="Graphs" asp-action="Index"><i class="icon-bar-chart"></i><span>Graphs</span> </a></li>
+                        <li class="statistics"><a asp-area="" asp-controller="Statistics" asp-action="Index"><i class="icon-table"></i><span>Stats</span> </a></li>
                         <li class="entries"><a asp-area="" asp-controller="Entries" asp-action="List"><i class="icon-money"></i><span>Entries</span></a></li>
                         <li class="categories"><a asp-area="" asp-controller="Categories" asp-action="List"><i class="icon-list"></i><span>Categories</span></a></li>
                         <li class="budgets"><a asp-area="" asp-controller="Budgets" asp-action="List"><i class="icon-list-alt"></i><span>Budgets</span></a></li>
@@ -157,6 +158,10 @@
         }
         if (/Accounts/i.test(url)) {
             $('.profile').addClass('active');
+            return;
+        }
+        if (/Statistics/i.test(url)) {
+            $('.statistics').addClass('active');
             return;
         }
         
