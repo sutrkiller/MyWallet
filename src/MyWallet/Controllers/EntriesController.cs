@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -79,7 +80,7 @@ namespace MyWallet.Controllers
         {
             var newEntry = new CreateEntryViewModel();
             await FillSelectLists(newEntry);
-            newEntry.EntryTime = DateTime.Now;
+            newEntry.EntryTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm");
             return View(newEntry);
         }
 
@@ -134,7 +135,8 @@ namespace MyWallet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateEntryViewModel entry)
         {
-            if (ModelState.IsValid)
+            DateTime time;
+            if (ModelState.IsValid && DateTime.TryParseExact(entry.EntryTime,"MM/dd/yyyy HH:mm",new CultureInfo("en-US"),DateTimeStyles.None, out time))
             {
                 try
                 {
@@ -163,7 +165,8 @@ namespace MyWallet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditEntryViewModel entry)
         {
-            if (ModelState.IsValid)
+            DateTime time;
+            if (ModelState.IsValid && DateTime.TryParseExact(entry.EntryTime, "MM/dd/yyyy HH:mm", new CultureInfo("en-US"), DateTimeStyles.None, out time))
             {
                 var email = User.FindFirst(ClaimTypes.Email)?.Value;
                 entry.Amount = entry.IsIncome == true ? entry.Amount : -1 * entry.Amount;

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Globalization;
+using System.Linq;
 using AutoMapper;
 using MyWallet.Helpers;
 using MyWallet.Models.Budgets;
@@ -17,7 +19,10 @@ namespace MyWallet.Models.Mappings
                 .ForMember(d=>d.Categories,opt=>opt.Ignore())
                 .ForMember(d => d.Group, opt => opt.Ignore())
                 .ForMember(d => d.Entries, opt => opt.Ignore())
-                .ForMember(d => d.ConversionRatio, opt => opt.Ignore());
+                .ForMember(d => d.ConversionRatio, opt => opt.Ignore())
+                .ForMember(d=>d.StartDate,opt=>opt.MapFrom(m=>DateTime.ParseExact(m.StartDate,"MM/dd/yyyy",new CultureInfo("en-US"))))
+                .ForMember(d => d.EndDate, opt => opt.MapFrom(m => DateTime.ParseExact(m.EndDate, "MM/dd/yyyy", new CultureInfo("en-US"))));
+
             CreateMap<BudgetDTO, BudgetDetailsViewModel>()
                 .ForMember(d => d.Categories, opt => opt.MapFrom(m => m.Categories))
                 .ForMember(d => d.NumberOfEntries, opt => opt.MapFrom(m => m.Entries.Count))
@@ -28,14 +33,18 @@ namespace MyWallet.Models.Mappings
                 .ForMember(d => d.Categories, opt => opt.Ignore())
                 .ForMember(d => d.Group, opt => opt.Ignore())
                 .ForMember(d => d.Entries, opt => opt.Ignore())
-                .ForMember(d => d.ConversionRatio, opt => opt.Ignore());
+                .ForMember(d => d.ConversionRatio, opt => opt.Ignore())
+                .ForMember(d => d.StartDate, opt => opt.MapFrom(m => DateTime.ParseExact(m.StartDate, "MM/dd/yyyy", new CultureInfo("en-US"))))
+                .ForMember(d => d.EndDate, opt => opt.MapFrom(m => DateTime.ParseExact(m.EndDate, "MM/dd/yyyy", new CultureInfo("en-US"))));
             CreateMap<BudgetDTO, EditBudgetViewModel>()
                 .ForMember(d => d.CurrencyId, opt => opt.MapFrom(m => m.ConversionRatio.CurrencyFrom.Id))
                 .ForMember(d => d.CurrenciesList, opt => opt.Ignore())
                 .ForMember(d => d.CategoryIds, opt => opt.MapFrom(m => m.Categories.Select(x => x.Id)))
                 .ForMember(d => d.CategoriesList, opt => opt.Ignore())
                 .ForMember(d => d.GroupId, opt => opt.MapFrom(m => m.Group.Id))
-                .ForMember(d => d.GroupsList, opt => opt.Ignore());
+                .ForMember(d => d.GroupsList, opt => opt.Ignore())
+                .ForMember(d => d.StartDate, opt => opt.MapFrom(m => m.StartDate.ToString("MM/dd/yyyy")))
+                .ForMember(d => d.EndDate, opt => opt.MapFrom(m => m.EndDate.ToString("MM/dd/yyyy")));
 
 
         }

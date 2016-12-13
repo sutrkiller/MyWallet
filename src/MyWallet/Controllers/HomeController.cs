@@ -48,7 +48,7 @@ namespace MyWallet.Controllers
             var dashmodel = new DashboardModel();
             var newEntry = new CreateEntryViewModel();
             await FillSelectLists(newEntry);
-            newEntry.EntryTime = DateTime.Now;
+            newEntry.EntryTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm");
             dashmodel.Entry = newEntry;
             dashmodel.BudgetGraph = await new GraphsController(_entryService, _budgetService,_userService).PrepareLastBudgetGraphViewModel(User.Identity);
             dashmodel.Expense = await new StatisticsController(_entryService, _userService).GetExpenses(User.Identity as ClaimsIdentity);
@@ -141,7 +141,7 @@ namespace MyWallet.Controllers
                     var date = conratios.Max(cr => cr.Date);
                     entry.ConversionRatioId = conratios.FirstOrDefault(x => x.Date == date).Id;
 
-                    entry.EntryTime = DateTime.Now;
+                    entry.EntryTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm");
                     entry.CategoryIds = new List<Guid>();
                     await
                         _entryService.AddEntry(_mapper.Map<EntryDTO>(entry), email, entry.ConversionRatioId,

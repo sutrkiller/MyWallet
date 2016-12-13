@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -28,7 +29,8 @@ namespace MyWallet.Models.Mappings
                 .ForMember(d => d.User, opt => opt.Ignore())
                 .ForMember(d => d.Categories, opt => opt.Ignore())
                 .ForMember(d => d.ConversionRatio, opt => opt.Ignore())
-                .ForMember(d => d.Budgets, opt => opt.Ignore());
+                .ForMember(d => d.Budgets, opt => opt.Ignore())
+                .ForMember(d => d.EntryTime, opt => opt.MapFrom(m => DateTime.ParseExact(m.EntryTime, "MM/dd/yyyy HH:mm", new CultureInfo("en-US"))));
 
             CreateMap<EntryDTO, EditEntryViewModel>()
                 .ForMember(d => d.CurrencyId, opt => opt.MapFrom(m => m.ConversionRatio.CurrencyFrom.Id))
@@ -42,14 +44,16 @@ namespace MyWallet.Models.Mappings
                 .ForMember(d => d.CustomRatioAmount, opt => opt.Ignore())
                 .ForMember(d => d.CustomRatioCurrencyId, opt => opt.Ignore())
                 .ForMember(d => d.IsIncome, opt => opt.Ignore())
-                .ForMember(d => d.CustomCurrenciesList, opt => opt.Ignore());
+                .ForMember(d => d.CustomCurrenciesList, opt => opt.Ignore())
+                .ForMember(d=>d.EntryTime,opt=>opt.MapFrom(m=>m.EntryTime.ToString("MM/dd/yyyy HH:mm")));
 
 
             CreateMap<EditEntryViewModel, EntryDTO>()
                 .ForMember(d => d.User, opt => opt.Ignore())
                 .ForMember(d => d.Categories, opt => opt.Ignore())
                 .ForMember(d => d.ConversionRatio, opt => opt.Ignore())
-                .ForMember(d => d.Budgets, opt => opt.Ignore());
+                .ForMember(d => d.Budgets, opt => opt.Ignore())
+                .ForMember(d => d.EntryTime, opt => opt.MapFrom(m => DateTime.ParseExact(m.EntryTime, "MM/dd/yyyy HH:mm", new CultureInfo("en-US")))); ;
 
         }
     }
