@@ -42,8 +42,12 @@
                         data.addRow([moment(item.label).toDate(), item.income, Math.abs(item.expense), item.value]);
                     });
 
+                var title = "";
+                if (chartData != null && chartData.currency != null) {
+                    title = $('#budgetSelectCombo option:selected').text() + ' in ' + chartData.currency;
+                }
                 var options = {
-                    title: $('#budgetSelectCombo option:selected').text() + ' in ' + chartData.currency,
+                    title: title,
                     curveType: 'function',
                     legend: { position: 'bottom' },
                     vAxis: { minValue: 0 },
