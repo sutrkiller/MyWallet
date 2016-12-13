@@ -47,13 +47,17 @@
                         data2.addRow([item.label, Math.abs(item.income)]);
                     });
 
+                var title = "";
+                if (chartData != null && chartData.currency != null) {
+                    title = $('#budgetSelectDonut option:selected').text() + ' in ' + chartData.currency + ' ';
+                }
                 var options = {
-                    title: $('#budgetSelectDonut option:selected').text() + ' in ' + chartData.currency + ' ' + '(expenses)',
+                    title: title + '(expenses)',
                     width: 540,
                     height: 250
                 };
                 var options2 = {
-                    title: $('#budgetSelectDonut option:selected').text() + ' in ' + chartData.currency + ' ' + '(incomes)',
+                    title: title + '(incomes)',
                     width: 540,
                     height: 250
                 };

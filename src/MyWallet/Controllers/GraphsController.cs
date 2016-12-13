@@ -95,7 +95,7 @@ namespace MyWallet.Controllers
             {
                 GraphTitle = budget ==null ? "": $"{budget.Name} in {budget.ConversionRatio.CurrencyFrom.Code}",
                 ColumnTitles = new List<string> { "Categories", "Total balance" },
-                BudgetId = budget.Id,
+                BudgetId = budget?.Id ?? Guid.Empty,
                 Budgets = new SelectList(list, "Id", "Value")
             };
         }
@@ -120,18 +120,17 @@ namespace MyWallet.Controllers
                     budget = await _budgetService.GetLastUsedBudget(userId.Value);
                 }
 
-                if (budget == null) throw new NullReferenceException("Budget not found");
-
-                var validEntries =
+                if (budget != null)
+                {
+                    var validEntries =
                     await _entryService.GetAllEntries(new EntriesFilter { UserId = userId, BudgetId = budget.Id });
 
-                var labels = validEntries.SelectMany(x => x.Categories.Select(c => c.Name)).Distinct().ToList();
+                    var labels = validEntries.SelectMany(x => x.Categories.Select(c => c.Name)).Distinct().ToList();
 
-                groups = labels.ToDictionary(label => label,
-                    label => validEntries.Where(x => x.Categories.Any(c => c.Name == label)).ToList());
-                groups.Add("No category", validEntries.Where(x => !x.Categories.Any()).ToList());
-
-
+                    groups = labels.ToDictionary(label => label,
+                        label => validEntries.Where(x => x.Categories.Any(c => c.Name == label)).ToList());
+                    groups.Add("No category", validEntries.Where(x => !x.Categories.Any()).ToList());
+                }
             }
             catch (Exception ex)
             {
@@ -178,46 +177,55 @@ namespace MyWallet.Controllers
                     budget = await _budgetService.GetLastUsedBudget(userId.Value);
                 }
 
-                if (budget == null) throw new NullReferenceException("Budget not found");
-                
-                var validEntries =
-                    await _entryService.GetAllEntries(new EntriesFilter { UserId = userId, BudgetId = budget.Id, From = budget.StartDate, To = budget.EndDate });
-
-                var incomes =
-                    validEntries.Where(x => x.Amount > 0)
-                        .GroupBy(x => x.EntryTime.Date)
-                        .OrderBy(x => x.Key);
-                var expenses =budget.Entries.Where(x => x.Amount < 0)
-                        .GroupBy(x => x.EntryTime.Date)
-                        .OrderBy(x => x.Key);
-
-                labels = Enumerable.Range(0, budget.EndDate.Subtract(budget.StartDate).Days + 1)
-                    .Select(d => budget.StartDate.AddDays(d).Date.ToString("O")).ToList();
-
-                var tmpIncomes = incomes.Select(
-                    x => new
-                    {
-                        Sum = x.Sum(e => e.ToCurrency(budget.ConversionRatio.Ratio)),
-                        Date = x.Key
-                    }).ToList();
-
-                var tmpExpenses = expenses.Select(
-                    x => new
-                    {
-                        Sum = x.Sum(e => e.ToCurrency(budget.ConversionRatio.Ratio)),
-                        Date = x.Key
-                    }).ToList();
-
-                
-                foreach (var label in labels)
+                if (budget != null)
                 {
 
-                    valuesIn.Add(tmpIncomes.FirstOrDefault(e => e.Date.Date.ToString("O") == label)?.Sum ?? 0m);
-                    valuesEx.Add(tmpExpenses.FirstOrDefault(e => e.Date.Date.ToString("O") == label)?.Sum ?? 0m);
-                    values.Add(budget.Amount + valuesIn.Sum() + valuesEx.Sum());
+
+                    var validEntries =
+                        await
+                            _entryService.GetAllEntries(new EntriesFilter
+                            {
+                                UserId = userId,
+                                BudgetId = budget.Id,
+                                From = budget.StartDate,
+                                To = budget.EndDate
+                            });
+
+                    var incomes =
+                        validEntries.Where(x => x.Amount > 0)
+                            .GroupBy(x => x.EntryTime.Date)
+                            .OrderBy(x => x.Key);
+                    var expenses = budget.Entries.Where(x => x.Amount < 0)
+                        .GroupBy(x => x.EntryTime.Date)
+                        .OrderBy(x => x.Key);
+
+                    labels = Enumerable.Range(0, budget.EndDate.Subtract(budget.StartDate).Days + 1)
+                        .Select(d => budget.StartDate.AddDays(d).Date.ToString("O")).ToList();
+
+                    var tmpIncomes = incomes.Select(
+                        x => new
+                        {
+                            Sum = x.Sum(e => e.ToCurrency(budget.ConversionRatio.Ratio)),
+                            Date = x.Key
+                        }).ToList();
+
+                    var tmpExpenses = expenses.Select(
+                        x => new
+                        {
+                            Sum = x.Sum(e => e.ToCurrency(budget.ConversionRatio.Ratio)),
+                            Date = x.Key
+                        }).ToList();
+
+
+                    foreach (var label in labels)
+                    {
+
+                        valuesIn.Add(tmpIncomes.FirstOrDefault(e => e.Date.Date.ToString("O") == label)?.Sum ?? 0m);
+                        valuesEx.Add(tmpExpenses.FirstOrDefault(e => e.Date.Date.ToString("O") == label)?.Sum ?? 0m);
+                        values.Add(budget.Amount + valuesIn.Sum() + valuesEx.Sum());
+                    }
                 }
 
-                
             }
             catch (Exception ex)
             {
@@ -243,9 +251,10 @@ namespace MyWallet.Controllers
             //if (!entries.Any()) return Json(null);
 
             var first = entries.FirstOrDefault();
-            dateFrom = first.Key;
+            
             if (first != null)
             {
+                dateFrom = first.Key;
                 var labels = Enumerable.Range(0, DateTime.Today.Subtract(dateFrom).Days + 1)
                     .Select(d => first.Key.AddDays(d).Date.ToString("O")).ToList();
 
