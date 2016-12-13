@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using MyWallet.Models.Entries;
 using MyWallet.Models.Groups;
 using MyWallet.Services.DataTransferModels;
+using MyWallet.Services.Filters;
 using MyWallet.Services.Services.Interfaces;
 using Sakura.AspNetCore;
 
@@ -33,9 +35,14 @@ namespace MyWallet.Controllers
         [Authorize]
         public async Task<IActionResult> List(int? page = null)
         {
-            var groupsDto = await _groupService.GetAllGroups();
+            var groups = new GroupDTO[0];
+            var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
+            if (userId != null)
+            {
+                groups = await _groupService.GetAllGroups(new GroupFilter {UserId = userId});
+            }
             int pageNumber = page ?? 1;
-            return View("List", _mapper.Map<IEnumerable<GroupViewModel>>(groupsDto.OrderBy(x => x.Name)).ToPagedList(PageSize, pageNumber));
+            return View("List", _mapper.Map<IEnumerable<GroupViewModel>>(groups.OrderBy(x => x.Name)).ToPagedList(PageSize, pageNumber));
         }
 
         // GET: Groups/Details/[id]

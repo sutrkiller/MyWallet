@@ -37,7 +37,8 @@ namespace MyWallet.Controllers
         [Authorize]
         public async Task<IActionResult> List(DateTime? from = null, DateTime? to =null,int? page=null)
         {
-            var entries = await _entryService.GetAllEntries(new EntriesFilter() {From = from,To = to});
+            var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
+            var entries = await _entryService.GetAllEntries(new EntriesFilter() {From = from,To = to,UserId = userId});
             ViewData["from"] = from?.ToString("MM/dd/yyyy");
             ViewData["to"] = to?.ToString("MM/dd/yyyy");
             int pageNumber = page ?? 1;
@@ -84,10 +85,15 @@ namespace MyWallet.Controllers
 
         private async Task FillSelectLists(CreateEntryViewModel newEntry)
         {
+            var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
+            var budgets = new BudgetDTO[0];
+            if (userId != null)
+            {
+                budgets = await _budgetService.GetAllBudgets(new BudgetFilter { UserId = userId });
+            }
             var categories = await _budgetService.GetAllCategories();
             var categoriesList = categories.Select(d => new {Id = d.Id, Value = d.Name});
             newEntry.CategoriesList = new SelectList(categoriesList, "Id", "Value");
-            var budgets = await _budgetService.GetAllBudgets();
             var budgetsList = budgets.Select(g => new {g.Id, Value = g.Name});
             newEntry.BudgetsList = new SelectList(budgetsList, "Id", "Value");
             var currencies = await _entryService.GetAllCurrencies();
@@ -103,10 +109,15 @@ namespace MyWallet.Controllers
 
         private async Task FillSelectLists(EditEntryViewModel newEntry)
         {
+            var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
+            var budgets = new BudgetDTO[0];
+            if (userId != null)
+            {
+                budgets = await _budgetService.GetAllBudgets(new BudgetFilter { UserId = userId });
+            }
             var categories = await _budgetService.GetAllCategories();
             var categoriesList = categories.Select(d => new { Id = d.Id, Value = d.Name });
             newEntry.CategoriesList = new SelectList(categoriesList, "Id", "Value");
-            var budgets = await _budgetService.GetAllBudgets();
             var budgetsList = budgets.Select(g => new { g.Id, Value = g.Name });
             newEntry.BudgetsList = new SelectList(budgetsList, "Id", "Value");
             var currencies = await _entryService.GetAllCurrencies();

@@ -13,6 +13,7 @@ namespace MyWallet.Models.Budgets
         public string Description { get; set; }
 
         public decimal Amount { get; set; }
+        public string Currency { get; set; }
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
         [Display(Name = "End Date")]

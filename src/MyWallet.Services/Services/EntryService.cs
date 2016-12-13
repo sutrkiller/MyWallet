@@ -105,6 +105,14 @@ namespace MyWallet.Services.Services
                 {
                     entries = entries.Where(x => x.User.Id == filter.UserId.Value);
                 }
+                if (filter.BudgetId.HasValue)
+                {
+                    entries = entries.Where(x => x.Budgets.Any(b=>b.Id == filter.BudgetId.Value));
+                }
+                if (filter.CategoryId.HasValue)
+                {
+                    entries = entries.Where(x => x.Categories.Any(c => c.Id == filter.CategoryId.Value));
+                }
             }
 
             return _mapper.Map<EntryDTO[]>(await entries.ToArrayAsync());

@@ -48,7 +48,7 @@ namespace MyWallet.Controllers
             return new GraphViewModel
             {
                 GraphTitle = "Entries",
-                ColumnTitles = new List<string> { "Dates","Incomes","Expenses","Total"}
+                ColumnTitles = new List<string> { "Dates", "Incomes", "Expenses", "Total" }
             };
         }
 
@@ -82,37 +82,53 @@ namespace MyWallet.Controllers
         [Authorize]
         public async Task<IActionResult> GetDonutChartData(Guid? id)
         {
-            BudgetDTO budget;
-            if (id != null)
+            BudgetDTO budget = null;
+            var groups = new Dictionary<string, List<EntryDTO>>();
+            try
             {
-                budget = await _budgetService.GetBudget(id.Value);
+
+                if (id != null)
+                {
+                    budget = await _budgetService.GetBudget(id.Value);
+                }
+                else
+                {
+                    budget = await _budgetService.GetLastUsedBudget();
+                }
+
+                if (budget == null) throw new NullReferenceException("Budget not found");
+                var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
+                if (userId == null) throw new NullReferenceException("User not found");
+                var validEntries =
+                    await _entryService.GetAllEntries(new EntriesFilter { UserId = userId, BudgetId = budget.Id });
+
+                var labels = validEntries.SelectMany(x => x.Categories.Select(c => c.Name)).Distinct().ToList();
+
+                groups = labels.ToDictionary(label => label,
+                    label => validEntries.Where(x => x.Categories.Any(c => c.Name == label)).ToList());
+                groups.Add("No category", validEntries.Where(x => !x.Categories.Any()).ToList());
+
+
             }
-            else
+            catch (Exception ex)
             {
-                budget = await _budgetService.GetLastUsedBudget();
+                TempData["ErrorMessage"] = ex.Message;
             }
-
-
-            var labels = budget.Entries.SelectMany(x => x.Categories.Select(c => c.Name)).Distinct().ToList();
-
-            var groups = labels.ToDictionary(label => label, label => budget.Entries.Where(x => x.Categories.Any(c => c.Name == label)).ToList());
-            groups.Add("No category", budget.Entries.Where(x => !x.Categories.Any()).ToList());
-
             return Json(new
             {
-                Currency = budget.ConversionRatio.CurrencyFrom.Code,
+                Currency = budget?.ConversionRatio?.CurrencyFrom?.Code,
                 Data = groups.Select(
-                x =>
-                    new
-                    {
-                        Label = x.Key,
-                        Income = x.Value.Where(v => v.Amount >= 0)
-                            .Select(v => Math.Round(v.ToBudgetCurrency(budget.ConversionRatio.Ratio),2))
-                            .Sum(),
-                        Expense = x.Value.Where(v => v.Amount < 0)
-                            .Select(v => Math.Round(v.ToBudgetCurrency(budget.ConversionRatio.Ratio),2))
-                            .Sum()
-                    })
+                    x =>
+                        new
+                        {
+                            Label = x.Key,
+                            Income = x.Value.Where(v => v.Amount >= 0)
+                                .Select(v => Math.Round(v.ToCurrency(budget?.ConversionRatio?.Ratio ?? 1m), 2))
+                                .Sum(),
+                            Expense = x.Value.Where(v => v.Amount < 0)
+                                .Select(v => Math.Round(v.ToCurrency(budget?.ConversionRatio?.Ratio ?? 1m), 2))
+                                .Sum()
+                        })
             });
         }
 
@@ -121,61 +137,75 @@ namespace MyWallet.Controllers
         [Authorize]
         public async Task<IActionResult> GetBudgetChartData(Guid? id)
         {
-            BudgetDTO budget;
-            if (id != null)
-            {
-                budget = await _budgetService.GetBudget(id.Value);
-            }
-            else
-            {
-                budget = await _budgetService.GetLastUsedBudget();
-            }
-
-            var incomes =
-                budget.Entries.Where(
-                        x => x.Amount > 0 && x.EntryTime <= budget.EndDate && x.EntryTime >= budget.StartDate)
-                    .GroupBy(x => x.EntryTime.Date)
-                    .OrderBy(x => x.Key);
-            var expenses =
-                budget.Entries.Where(
-                        x => x.Amount < 0 && x.EntryTime <= budget.EndDate && x.EntryTime >= budget.StartDate)
-                    .GroupBy(x => x.EntryTime.Date)
-                    .OrderBy(x => x.Key);
-
-            var labels = Enumerable.Range(0, budget.EndDate.Subtract(budget.StartDate).Days + 1)
-                .Select(d => budget.StartDate.AddDays(d).Date.ToString("O")).ToList();
-
-            var tmpIncomes = incomes.Select(
-                x => new
-                {
-                    Sum = x.Sum(e => e.ToBudgetCurrency(budget.ConversionRatio.Ratio)),
-                    Date = x.Key
-                }).ToList();
-
-            var tmpExpenses = expenses.Select(
-                x => new
-                {
-                    Sum = x.Sum(e => e.ToBudgetCurrency(budget.ConversionRatio.Ratio)),
-                    Date = x.Key
-                }).ToList();
-
+            BudgetDTO budget = null;
             List<decimal> values = new List<decimal>();
             List<decimal> valuesIn = new List<decimal>();
             List<decimal> valuesEx = new List<decimal>();
-            foreach (var label in labels)
+            List<string> labels = new List<string>();
+            try
             {
+                if (id != null)
+                {
+                    budget = await _budgetService.GetBudget(id.Value);
+                }
+                else
+                {
+                    budget = await _budgetService.GetLastUsedBudget();
+                }
 
-                valuesIn.Add(tmpIncomes.FirstOrDefault(e => e.Date.Date.ToString("O") == label)?.Sum ?? 0m);
-                valuesEx.Add(tmpExpenses.FirstOrDefault(e => e.Date.Date.ToString("O") == label)?.Sum ?? 0m);
-                values.Add(budget.Amount + valuesIn.Sum() + valuesEx.Sum());
+                if (budget == null) throw new NullReferenceException("Budget not found");
+                var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
+                if (userId == null) throw new NullReferenceException("User not found");
+                var validEntries =
+                    await _entryService.GetAllEntries(new EntriesFilter { UserId = userId, BudgetId = budget.Id, From = budget.StartDate, To = budget.EndDate });
+
+                var incomes =
+                    validEntries.Where(x => x.Amount > 0)
+                        .GroupBy(x => x.EntryTime.Date)
+                        .OrderBy(x => x.Key);
+                var expenses =budget.Entries.Where(x => x.Amount < 0)
+                        .GroupBy(x => x.EntryTime.Date)
+                        .OrderBy(x => x.Key);
+
+                labels = Enumerable.Range(0, budget.EndDate.Subtract(budget.StartDate).Days + 1)
+                    .Select(d => budget.StartDate.AddDays(d).Date.ToString("O")).ToList();
+
+                var tmpIncomes = incomes.Select(
+                    x => new
+                    {
+                        Sum = x.Sum(e => e.ToCurrency(budget.ConversionRatio.Ratio)),
+                        Date = x.Key
+                    }).ToList();
+
+                var tmpExpenses = expenses.Select(
+                    x => new
+                    {
+                        Sum = x.Sum(e => e.ToCurrency(budget.ConversionRatio.Ratio)),
+                        Date = x.Key
+                    }).ToList();
+
+                
+                foreach (var label in labels)
+                {
+
+                    valuesIn.Add(tmpIncomes.FirstOrDefault(e => e.Date.Date.ToString("O") == label)?.Sum ?? 0m);
+                    valuesEx.Add(tmpExpenses.FirstOrDefault(e => e.Date.Date.ToString("O") == label)?.Sum ?? 0m);
+                    values.Add(budget.Amount + valuesIn.Sum() + valuesEx.Sum());
+                }
+
+                
             }
-
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
             return Json(new
             {
-                Currency = budget.ConversionRatio.CurrencyFrom.Code,
+                Currency = budget?.ConversionRatio.CurrencyFrom.Code,
                 Data = Enumerable.Range(0, values.Count)
-                    .Select(x => new { Label = labels[x], Income = Math.Round(valuesIn[x],2), Expense = Math.Round(valuesEx[x],2), Value = Math.Round(values[x],2) })
+                        .Select(x => new { Label = labels[x], Income = Math.Round(valuesIn[x], 2), Expense = Math.Round(valuesEx[x], 2), Value = Math.Round(values[x], 2) })
             });
+
         }
 
         public async Task<IActionResult> GetEntriesChartData()
@@ -183,7 +213,7 @@ namespace MyWallet.Controllers
             DateTime dateFrom;
             DateTime dateTo = DateTime.Today;
             var user = await _userService.EnsureUserExists(User.Identity as ClaimsIdentity);
-            var entries = (await _entryService.GetAllEntries(new EntriesFilter() {UserId = user.Id})).GroupBy(x=>x.EntryTime.Date).OrderBy(x=>x.Key);
+            var entries = (await _entryService.GetAllEntries(new EntriesFilter() { UserId = user.Id })).GroupBy(x => x.EntryTime.Date).OrderBy(x => x.Key);
             var crs = await _entryService.GetConversionRatiosForCurrency(user.PreferredCurrency.Id);
             var prefCr = crs.OrderByDescending(x => x.Date).FirstOrDefault();
             //if (!entries.Any()) return Json(null);
@@ -195,11 +225,11 @@ namespace MyWallet.Controllers
                 var labels = Enumerable.Range(0, DateTime.Today.Subtract(dateFrom).Days + 1)
                     .Select(d => first.Key.AddDays(d).Date.ToString("O")).ToList();
 
-               // var datedEntries = new Dictionary<string, List<EntryDTO>>();
+                // var datedEntries = new Dictionary<string, List<EntryDTO>>();
 
 
 
-                var datedEntries = labels.Select(x => new {Label = x, Entries = entries.SingleOrDefault(e => e.Key.Date.ToString("O") == x)?.ToList() ?? new List<EntryDTO>()}).ToList();
+                var datedEntries = labels.Select(x => new { Label = x, Entries = entries.SingleOrDefault(e => e.Key.Date.ToString("O") == x)?.ToList() ?? new List<EntryDTO>() }).ToList();
 
                 return Json(new
                 {
@@ -207,15 +237,15 @@ namespace MyWallet.Controllers
                     DateRange = $"{dateFrom:MM/dd/yyyy} - {dateTo:MM/dd/yyyy}",
                     Data =
                     datedEntries.Select(
-                        (x,i) =>
+                        (x, i) =>
                             new
                             {
                                 x.Label,
                                 Income =
-                                Math.Round(x.Entries.Where(e => e.Amount > 0).Sum(e => e.ToBudgetCurrency(prefCr?.Ratio ?? 1m)),2),
+                                Math.Round(x.Entries.Where(e => e.Amount > 0).Sum(e => e.ToCurrency(prefCr?.Ratio ?? 1m)), 2),
                                 Expense =
-                                Math.Round(x.Entries.Where(e => e.Amount < 0).Sum(e => e.ToBudgetCurrency(prefCr?.Ratio ?? 1m)),2),
-                                Balance = Math.Round(datedEntries.Take(i+1).SelectMany(e=>e.Entries).Sum(e=>e.ToBudgetCurrency(prefCr?.Ratio ?? 1m)),2)
+                                Math.Round(x.Entries.Where(e => e.Amount < 0).Sum(e => e.ToCurrency(prefCr?.Ratio ?? 1m)), 2),
+                                Balance = Math.Round(datedEntries.Take(i + 1).SelectMany(e => e.Entries).Sum(e => e.ToCurrency(prefCr?.Ratio ?? 1m)), 2)
                             })
                 });
             }

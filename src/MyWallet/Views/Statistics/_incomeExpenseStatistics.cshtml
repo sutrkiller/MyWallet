@@ -1,4 +1,5 @@
-﻿@model MyWallet.Models.Statistics.IncomeExpenseViewModel
+﻿@using MyWallet.Helpers
+@model MyWallet.Models.Statistics.IncomeExpenseViewModel
 
 <div class="widget">
     <div class="widget-header">
@@ -17,19 +18,19 @@
             <tbody>
                 <tr>
                     <td>Today:</td>
-                    <td>@Model.Today.Amount @Model.Today.CurrencyCode</td>
+                    <td>@Model.Today.Amount.FormatCurrency(@Model.Today.CurrencyCode)</td>
                 </tr>
                 <tr>
                     <td>Last Week:</td>
-                    <td>@Model.LastWeek.Amount @Model.LastWeek.CurrencyCode</td>
+                    <td>@Model.LastWeek.Amount.FormatCurrency(@Model.LastWeek.CurrencyCode)</td>
                 </tr>
                 <tr>
                     <td>Last Month:</td>
-                    <td>@Model.LastMonth.Amount @Model.LastMonth.CurrencyCode</td>
+                    <td>@Model.LastMonth.Amount.FormatCurrency(@Model.LastMonth.CurrencyCode)</td>
                 </tr>
                 <tr>
                     <td>Last Year:</td>
-                    <td>@Model.LastYear.Amount @Model.LastMonth.CurrencyCode</td>
+                    <td>@Model.LastYear.Amount.FormatCurrency(@Model.LastMonth.CurrencyCode)</td>
                 </tr>
             </tbody>
         </table>

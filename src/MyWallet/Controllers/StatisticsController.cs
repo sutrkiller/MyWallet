@@ -73,7 +73,7 @@ namespace MyWallet.Controllers
             {
                 Amount =
                     entries.Where(x => x.Amount < 0)
-                        .Sum(e => e.ToBudgetCurrency(preferedCurrency?.Ratio ?? 1m)),
+                        .Sum(e => e.ToCurrency(preferedCurrency?.Ratio ?? 1m)),
                 CurrencyCode = user.PreferredCurrency.Code
             };
         }
@@ -89,7 +89,7 @@ namespace MyWallet.Controllers
             {
                 Amount =
                     entries.Where(x => x.Amount > 0)
-                        .Sum(e => e.ToBudgetCurrency(preferedCurrency?.Ratio ?? 1m)),
+                        .Sum(e => e.ToCurrency(preferedCurrency?.Ratio ?? 1m)),
                 CurrencyCode = user.PreferredCurrency.Code
             };
         }

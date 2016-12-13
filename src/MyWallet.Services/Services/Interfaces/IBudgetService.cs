@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MyWallet.Entities.Models;
 using MyWallet.Services.DataTransferModels;
+using MyWallet.Services.Filters;
 
 namespace MyWallet.Services.Services.Interfaces
 {
@@ -11,10 +12,10 @@ namespace MyWallet.Services.Services.Interfaces
     {
         Task<BudgetDTO> AddBudget(BudgetDTO budget, Guid groupId, Guid currencyId, ICollection<Guid> categoryIds);
         Task EditBudget(BudgetDTO budget, Guid groupId, Guid currencyId, ICollection<Guid> categoryIds);
-        Task<BudgetDTO[]> GetAllBudgets();
+        Task<BudgetDTO[]> GetAllBudgets(BudgetFilter filter = null);
         Task<BudgetDTO> GetBudget(Guid id);
         Task<CategoryDTO[]> GetAllCategories();
-        Task<GroupDTO[]> GetAllGroups();
+        
         Task DeleteBudget(Guid id);
         Task<BudgetDTO> GetLastUsedBudget();
     }

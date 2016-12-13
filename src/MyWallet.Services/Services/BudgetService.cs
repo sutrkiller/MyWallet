@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using MyWallet.Entities.Models;
 using MyWallet.Entities.Repositories.Interfaces;
 using MyWallet.Services.DataTransferModels;
+using MyWallet.Services.Filters;
 using MyWallet.Services.Services.Interfaces;
 
 namespace MyWallet.Services.Services
@@ -62,10 +63,20 @@ namespace MyWallet.Services.Services
             
         }
 
-        public async Task<BudgetDTO[]> GetAllBudgets()
+        public async Task<BudgetDTO[]> GetAllBudgets(BudgetFilter filter = null)
         {
             _logger.LogInformation("Starting Budget service method");
-            var dataAccessBudgetsModel = await _budgetRepository.GetAllBudgets().ToArrayAsync();
+            var budgets = _budgetRepository.GetAllBudgets();
+
+            if (filter != null)
+            {
+                if (filter.UserId.HasValue)
+                {
+                    budgets = budgets.Where(x => x.Group.Users.Any(u => u.Id == filter.UserId.Value));
+                }
+            }
+
+            var dataAccessBudgetsModel = await budgets.OrderBy(x=>x.Name).ToArrayAsync();
             return _mapper.Map<BudgetDTO[]>(dataAccessBudgetsModel);
         }
 
@@ -78,16 +89,11 @@ namespace MyWallet.Services.Services
 
         public async Task<CategoryDTO[]> GetAllCategories()
         {
-            //TODO: filter?
-            var categories = await _categoryRepository.GetAllCategories().ToArrayAsync();
+            var categories = await _categoryRepository.GetAllCategories().OrderBy(x=>x.Name).ToArrayAsync();
             return _mapper.Map<CategoryDTO[]>(categories);
         }
 
-        public async Task<GroupDTO[]> GetAllGroups()
-        {
-            var groups = await _groupRepository.GetAllGroups().ToArrayAsync();
-            return _mapper.Map<GroupDTO[]>(groups);
-        }
+        
 
         public async Task DeleteBudget(Guid id)
         {
