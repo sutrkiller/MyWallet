@@ -55,7 +55,7 @@
                 <div class="form-group">
                     <label asp-for="StartDate" class="col-md-2 control-label"></label>
                     <div class="col-md-10">
-                        <input asp-for="StartDate" class="form-control" id="datetimepicker4" value="@Model.StartDate.ToString("MM/dd/yyyy")" />
+                        <input asp-for="StartDate" asp-format="{0:MM/dd/yyyy}" class="form-control" id="datetimepicker4" value="@Model.StartDate" />
                         <span asp-validation-for="StartDate" class="text-danger"></span>
 
                     </div>
@@ -64,7 +64,7 @@
                 <div class="form-group">
                     <label asp-for="EndDate" class="col-md-2 control-label"></label>
                     <div class="col-md-10">
-                        <input asp-for="EndDate" class="form-control" id="datetimepicker5" value="@Model.EndDate.ToString("MM/dd/yyyy")" />
+                        <input asp-for="EndDate" asp-format="{0:MM/dd/yyyy}" class="form-control" id="datetimepicker5" value="@Model.EndDate" />
                         <span asp-validation-for="EndDate" class="text-danger"></span>
 
                     </div>

@@ -112,6 +112,8 @@ namespace MyWallet.Controllers
             if (userId != null)
             {
                 groups = await _groupService.GetAllGroups(new GroupFilter {UserId = userId});
+                var user = await _userService.GetUser(userId.Value);
+                newBudget.CurrencyId = user.PreferredCurrency.Id;
             }
             var groupsList = groups.Select(g => new {g.Id, Value = g.Name});
             newBudget.GroupsList = new SelectList(groupsList, "Id", "Value");

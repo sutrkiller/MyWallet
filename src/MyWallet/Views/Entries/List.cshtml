@@ -18,7 +18,7 @@
     <div class="form-group col-md-3">
         <label class="control-label">From:</label>
         <div class="input-group date" id="datetimepickerFrom">
-            <input type="text" value="@(ViewData["from"])" class="form-control" style="max-width: none;" />
+            <input type="text" asp-format="{0:MM/dd/yyyy}" value="@(ViewData["from"])" class="form-control" style="max-width: none;" />
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
             </span>
@@ -27,7 +27,7 @@
     <div class="form-group col-md-3">
         <label class="control-label">To:</label>
         <div class="input-group date" id="datetimepickerTo">
-            <input type="text" value="@(ViewData["to"])" class="form-control" style="max-width: none" />
+            <input type="text" asp-format="{0:MM/dd/yyyy}" value="@(ViewData["to"])" class="form-control" style="max-width: none" />
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
             </span>
@@ -79,7 +79,7 @@
                             @Html.DisplayFor(modelItem => item.Description)
                         </td>
                         <td>
-                            <span>@item.EntryTime.ToString("MM/dd/yyyy hh:mm:ss tt")</span>
+                            <span>@item.EntryTime.ToString("MM/dd/yyyy HH:mm")</span>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.User.Name)

@@ -74,7 +74,7 @@
                 <div class="form-group">
                     <label asp-for="EntryTime" class="col-md-2 control-label"></label>
                     <div class="col-md-10">
-                        <input asp-for="EntryTime" class="form-control" id="datetimepicker4" value="@Model.EntryTime.ToString("MM/dd/yyyy HH:mm")" />
+                        <input asp-for="EntryTime" asp-format="{0:MM/dd/yyyy HH:mm}" class="form-control" id="datetimepicker4" value="@Model.EntryTime" />
                         <span asp-validation-for="EntryTime" class="text-danger"></span>
 
                     </div>
