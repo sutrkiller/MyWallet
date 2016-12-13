@@ -13,6 +13,7 @@ using MyWallet.Models.Entries;
 using MyWallet.Models.Graphs;
 using MyWallet.Models.Home;
 using MyWallet.Services.DataTransferModels;
+using MyWallet.Services.Filters;
 using MyWallet.Services.Services.Interfaces;
 using Controller = Microsoft.AspNetCore.Mvc.Controller;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
@@ -49,17 +50,23 @@ namespace MyWallet.Controllers
             await FillSelectLists(newEntry);
             newEntry.EntryTime = DateTime.Now;
             dashmodel.Entry = newEntry;
-            dashmodel.BudgetGraph = await new GraphsController(_entryService, _budgetService,_userService).PrepareLastBudgetGraphViewModel();
+            dashmodel.BudgetGraph = await new GraphsController(_entryService, _budgetService,_userService).PrepareLastBudgetGraphViewModel(User.Identity);
             dashmodel.Expense = await new StatisticsController(_entryService, _userService).GetExpenses(User.Identity as ClaimsIdentity);
             return View(dashmodel);
         }
 
         private async Task FillSelectLists(CreateEntryViewModel newEntry)
         {
+
+            var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
+            var budgets = new BudgetDTO[0];
+            if (userId != null)
+            {
+                budgets = await _budgetService.GetAllBudgets(new BudgetFilter { UserId = userId });
+            }
             var categories = await _budgetService.GetAllCategories();
             var categoriesList = categories.Select(d => new { Id = d.Id, Value = d.Name });
             newEntry.CategoriesList = new SelectList(categoriesList, "Id", "Value");
-            var budgets = await _budgetService.GetAllBudgets();
             var budgetsList = budgets.Select(g => new { g.Id, Value = g.Name });
             newEntry.BudgetsList = new SelectList(budgetsList, "Id", "Value");
             var currencies = await _entryService.GetAllCurrencies();

@@ -101,10 +101,11 @@ namespace MyWallet.Services.Services
             await _budgetRepository.DeleteBudget(budget);
         }
 
-        public async Task<BudgetDTO> GetLastUsedBudget()
+        public async Task<BudgetDTO> GetLastUsedBudget(Guid userId)
         {
             var budget = await 
                 _budgetRepository.GetAllBudgets()
+                    .Where(x=>x.Group.Users.Any(u=>u.Id == userId))
                     .OrderByDescending(x => x.Entries.Max(e => e.EntryTime))
                     .FirstOrDefaultAsync();
             return _mapper.Map<BudgetDTO>(budget);
