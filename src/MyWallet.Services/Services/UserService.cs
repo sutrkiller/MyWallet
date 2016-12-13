@@ -73,5 +73,21 @@ namespace MyWallet.Services.Services
             var result = await _userRepository.EditUser(user);
             return _mapper.Map<UserDTO>(result);
         }
+
+        public async Task<Guid?> GetUserId(ClaimsIdentity userClaims)
+        {
+            if (userClaims == null)
+            {
+                throw new ArgumentNullException(nameof(userClaims));
+            }
+
+            return (await _userRepository.GetUserByEmail(userClaims.FindFirst(ClaimTypes.Email)?.Value))?.Id;
+        }
+
+        public async Task<UserDTO> GetUser(Guid userId)
+        {
+            var user = await _userRepository.GetSingleUser(userId);
+            return user == null ? null : _mapper.Map<UserDTO>(user);
+        }
     }
 }

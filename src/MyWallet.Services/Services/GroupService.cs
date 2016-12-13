@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using MyWallet.Entities.Models;
 using MyWallet.Entities.Repositories.Interfaces;
 using MyWallet.Services.DataTransferModels;
+using MyWallet.Services.Filters;
 using MyWallet.Services.Services.Interfaces;
 
 namespace MyWallet.Services.Services
@@ -40,13 +41,18 @@ namespace MyWallet.Services.Services
             return _mapper.Map<GroupDTO>(dataAccessGroupModel);
         }
 
-        public async Task<GroupDTO[]> GetAllGroups()
+        public async Task<GroupDTO[]> GetAllGroups(GroupFilter filter = null)
         {
-            _logger.LogInformation("Starting Group service method");
+            var tmpGroups = _groupRepository.GetAllGroups();
+            if (filter != null)
+            {
+                if (filter.UserId.HasValue)
+                {
+                    tmpGroups = tmpGroups.Where(x => x.Users.Any(u => u.Id == filter.UserId.Value));
+                }
+            }
 
-            //TODO: change this later
-            await Task.Delay(0);
-            var groups = _groupRepository.GetAllGroups().ToArray();
+            var groups = await tmpGroups.OrderBy(x => x.Name).ToArrayAsync();
             return _mapper.Map<GroupDTO[]>(groups);
         }
 

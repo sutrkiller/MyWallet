@@ -20,7 +20,7 @@ namespace MyWallet.Models.Entries
         [Required]
         public string Description { get; set; }
         public bool IsIncome { get; set; } = true;
-        [Display(Name = "Entry time")]
+        [Display(Name = "Entry time"), DisplayFormat(DataFormatString = "{0:MM/dd/yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime EntryTime { get; set; }
         [Display(Name = "User")]
         public Guid UserId { get; set; }
