@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -52,29 +53,50 @@ namespace MyWallet.Controllers
             };
         }
 
-        internal async Task<GraphViewModel> PrepareLastBudgetGraphViewModel()
+        [Authorize]
+        public async Task<GraphViewModel> PrepareLastBudgetGraphViewModel(IIdentity identity = null)
         {
-            var budget = await _budgetService.GetLastUsedBudget();
-            var allBudgets = (await _budgetService.GetAllBudgets()).Select(x => new { Id = x.Id, Value = x.Name });
+            var allBudgets = new BudgetDTO[0];
+            Guid? userId = null;
+            if (User != null || identity != null)
+            {
+                
+                    userId = await _userService.GetUserId((User?.Identity ?? identity) as ClaimsIdentity);
+                
+                if (userId != null)
+                {
+                    allBudgets = await _budgetService.GetAllBudgets(new BudgetFilter {UserId = userId});
+                }
+            }
+            var budget = userId == null ? null : await _budgetService.GetLastUsedBudget(userId.Value);
+
+            var list = allBudgets.Select(x => new { Id = x.Id, Value = x.Name });
             return new GraphViewModel
             {
-                GraphTitle = $"{budget.Name} in {budget.ConversionRatio.CurrencyFrom.Code}",
+                GraphTitle = budget == null ? "" : $"{budget.Name} in {budget.ConversionRatio.CurrencyFrom.Code}",
                 ColumnTitles = new List<string> { "Dates", "Incomes", "Expenses", "Remaining budget" },
-                BudgetId = budget.Id,
-                Budgets = new SelectList(allBudgets, "Id", "Value")
+                BudgetId =  budget?.Id ?? Guid.Empty,
+                Budgets = new SelectList(list, "Id", "Value")
             };
         }
 
         private async Task<GraphViewModel> PrepareLastBudgetByCategoriesGraphViewModel()
         {
-            var budget = await _budgetService.GetLastUsedBudget();
-            var allBudgets = (await _budgetService.GetAllBudgets()).Select(x => new { Id = x.Id, Value = x.Name });
+            var allBudgets = new BudgetDTO[0];
+            var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
+            if (userId != null)
+            {
+                allBudgets = await _budgetService.GetAllBudgets(new BudgetFilter { UserId = userId });
+            }
+            var budget = userId == null ? null : await _budgetService.GetLastUsedBudget(userId.Value);
+
+            var list = allBudgets.Select(x => new { Id = x.Id, Value = x.Name });
             return new GraphViewModel
             {
-                GraphTitle = $"{budget.Name} in {budget.ConversionRatio.CurrencyFrom.Code}",
+                GraphTitle = budget ==null ? "": $"{budget.Name} in {budget.ConversionRatio.CurrencyFrom.Code}",
                 ColumnTitles = new List<string> { "Categories", "Total balance" },
                 BudgetId = budget.Id,
-                Budgets = new SelectList(allBudgets, "Id", "Value")
+                Budgets = new SelectList(list, "Id", "Value")
             };
         }
 
@@ -86,19 +108,20 @@ namespace MyWallet.Controllers
             var groups = new Dictionary<string, List<EntryDTO>>();
             try
             {
-
+                var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
+                if (userId == null) throw new NullReferenceException("User not found");
+                
                 if (id != null)
                 {
                     budget = await _budgetService.GetBudget(id.Value);
                 }
                 else
                 {
-                    budget = await _budgetService.GetLastUsedBudget();
+                    budget = await _budgetService.GetLastUsedBudget(userId.Value);
                 }
 
                 if (budget == null) throw new NullReferenceException("Budget not found");
-                var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
-                if (userId == null) throw new NullReferenceException("User not found");
+
                 var validEntries =
                     await _entryService.GetAllEntries(new EntriesFilter { UserId = userId, BudgetId = budget.Id });
 
@@ -144,18 +167,19 @@ namespace MyWallet.Controllers
             List<string> labels = new List<string>();
             try
             {
+                var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
+                if (userId == null) throw new NullReferenceException("User not found");
                 if (id != null)
                 {
                     budget = await _budgetService.GetBudget(id.Value);
                 }
                 else
                 {
-                    budget = await _budgetService.GetLastUsedBudget();
+                    budget = await _budgetService.GetLastUsedBudget(userId.Value);
                 }
 
                 if (budget == null) throw new NullReferenceException("Budget not found");
-                var userId = await _userService.GetUserId(User.Identity as ClaimsIdentity);
-                if (userId == null) throw new NullReferenceException("User not found");
+                
                 var validEntries =
                     await _entryService.GetAllEntries(new EntriesFilter { UserId = userId, BudgetId = budget.Id, From = budget.StartDate, To = budget.EndDate });
 
