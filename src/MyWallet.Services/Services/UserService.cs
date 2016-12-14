@@ -5,17 +5,14 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using MyWallet.Entities.Models;
 using MyWallet.Entities.Repositories.Interfaces;
-using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Services.Interfaces;
-using Budget = MyWallet.Entities.Models.Budget;
 using Group = MyWallet.Entities.Models.Group;
 using User = MyWallet.Services.DataTransferModels.User;
 
 namespace MyWallet.Services.Services
 {
-    public class UserService : IUserService
+    internal class UserService : IUserService
     {
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;

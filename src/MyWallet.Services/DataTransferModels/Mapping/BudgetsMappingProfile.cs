@@ -7,7 +7,7 @@ using MyWallet.Entities.Models;
 
 namespace MyWallet.Services.DataTransferModels.Mapping
 {
-    public class BudgetsMappingProfile : Profile
+    internal class BudgetsMappingProfile : Profile
     {
         public BudgetsMappingProfile()
         {

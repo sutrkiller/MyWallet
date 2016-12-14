@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using MyWallet.Entities.Models;
 using MyWallet.Entities.Repositories.Interfaces;
-using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Services.Interfaces;
 using System.Data.Entity;
 using MyWallet.Services.Filters;
@@ -15,10 +13,8 @@ using Entry = MyWallet.Services.DataTransferModels.Entry;
 
 namespace MyWallet.Services.Services
 {
-    public class EntryService : IEntryService
+    internal class EntryService : IEntryService
     {
-        private const string MainCurrency = "EUR";
-
         private readonly IEntryRepository _entryRepository;
         private readonly ICurrencyRepository _currencyRepository;
         private readonly IBudgetRepository _budgetRepository;
@@ -43,7 +39,6 @@ namespace MyWallet.Services.Services
         public async Task<Entry> AddEntry(Entry entry, string userEmail, Guid conversionRatioId, ICollection<Guid> categoryIds, ICollection<Guid> budgetIds)
         {
             if (userEmail == null) throw new NullReferenceException("User is not logged in.");
-            //todo: download conversion from net
             var dataAccessEntryModel = _mapper.Map<Entities.Models.Entry>(entry);
 
             var user = dataAccessEntryModel.User = await _userRepository.GetUserByEmail(userEmail);
@@ -59,7 +54,6 @@ namespace MyWallet.Services.Services
         public async Task EditEntry(Entry entry, string userEmail, Guid conversionRatioId, ICollection<Guid> categoryIds, ICollection<Guid> budgetIds)
         {
             if (userEmail == null) throw new NullReferenceException("User is not logged in.");
-            //todo: download conversion from net
             var dataAccessEntryModel = _mapper.Map<Entities.Models.Entry>(entry);
 
             var user = dataAccessEntryModel.User = await _userRepository.GetUserByEmail(userEmail);
@@ -127,14 +121,6 @@ namespace MyWallet.Services.Services
             return _mapper.Map<ConversionRatio[]>(conversionRatios);
         }
 
-        public async Task<Entry[]> GetAllEntriesForBudget(Guid budgetId)
-        {
-            //TODO: change this later
-            await Task.Delay(0);
-            var entryDb = _budgetRepository.GetAllBudgets().SingleOrDefault(x => x.Id.Equals(budgetId))?.Entries;
-            return _mapper.Map<Entry[]>(entryDb);
-        }
-
         public async Task AddConversionRatios(IEnumerable<ConversionRatio> ratios)
         {
             if (ratios == null) return;
@@ -161,15 +147,14 @@ namespace MyWallet.Services.Services
             var customRatio = new Entities.Models.ConversionRatio();
             var currency = await _currencyRepository.GetSingleCurrency(currencyId);
             var currency2 = await _currencyRepository.GetSingleCurrency(customRatioCurrencyId);
-            decimal amount = 0;
+            decimal amount;
             decimal.TryParse(customRatioAmount, out amount);
             customRatio.Ratio = amount;
             customRatio.CurrencyFrom = currency;
             customRatio.CurrencyTo = currency2;
             customRatio.Type = "Custom";
             customRatio.Date = DateTime.Now;
-            var dataAccessRatioModel = _mapper.Map<Entities.Models.ConversionRatio>(customRatio);
-            dataAccessRatioModel = await _conversionRatioRepository.AddConversionRatio(customRatio);
+            var dataAccessRatioModel = await _conversionRatioRepository.AddConversionRatio(customRatio);
             return _mapper.Map<ConversionRatio>(dataAccessRatioModel);
         }
     }
