@@ -6,6 +6,9 @@ using MyWallet.Entities.Models;
 
 namespace MyWallet.Entities.Repositories.Interfaces
 {
+    /// <summary>
+    /// Repository for accessing entities Group in db.
+    /// </summary>
     public interface IGroupRepository
     {
         /// <summary>
@@ -34,7 +37,19 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// <param name="groupIds">Collection of guid of groups</param>
         /// <returns>Groups specified by groupIds</returns>
         IQueryable<Group> GetGroupsFromIds(ICollection<Guid> groupIds);
+        
+        /// <summary>
+        /// Delete group from db
+        /// </summary>
+        /// <param name="group">Existing group with valid id</param>
+        /// <returns></returns>
         Task DeleteGroup(Group group);
+
+        /// <summary>
+        /// Edit groups with new values
+        /// </summary>
+        /// <param name="group">Group with new values. It should containg valid ID</param>
+        /// <returns>Edited group</returns>
         Task<Group> EditGroup(Group group);
     }
 }

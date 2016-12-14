@@ -3,7 +3,7 @@ using MyWallet.Entities.Models;
 
 namespace MyWallet.Services.DataTransferModels.Mapping
 {
-    public class CategoryMapping : Profile
+    internal class CategoryMapping : Profile
     {
         public CategoryMapping()
         {

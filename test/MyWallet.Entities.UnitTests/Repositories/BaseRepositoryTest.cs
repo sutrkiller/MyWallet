@@ -14,13 +14,13 @@ namespace MyWallet.Entities.UnitTests.Repositories
 {
     public abstract class BaseRepositoryTest
     {
-        protected readonly BudgetRepository BudgetRepository;
-        protected readonly CategoryRepository CategoryRepository;
-        protected readonly ConversionRatioRepository ConversionRatioRepository;
-        protected readonly CurrencyRepository CurrencyRepository;
-        protected readonly EntryRepository EntryRepository;
-        protected readonly GroupRepository GroupRepository;
-        protected readonly UserRepository UserRepository;
+        internal readonly BudgetRepository BudgetRepository;
+        internal readonly CategoryRepository CategoryRepository;
+        internal readonly ConversionRatioRepository ConversionRatioRepository;
+        internal readonly CurrencyRepository CurrencyRepository;
+        internal readonly EntryRepository EntryRepository;
+        internal readonly GroupRepository GroupRepository;
+        internal readonly UserRepository UserRepository;
 
 
         /// <summary>

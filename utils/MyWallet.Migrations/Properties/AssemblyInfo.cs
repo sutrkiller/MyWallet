@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MyWallet.Entities.UnitTests")]
+[assembly: AssemblyProduct("MyWallet.Migrations")]
 [assembly: AssemblyTrademark("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -16,4 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("e98539e8-898d-4f1e-9d13-754621f129b1")]
+[assembly: Guid("90515509-70a3-4efc-b3ab-2821af068d80")]

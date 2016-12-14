@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyWallet.Entities.Models
 {
+    /// <summary>
+    /// Currency is used with every entry to resolve neccessary custom ratio for use.
+    /// </summary>
     public class Currency : ModelBase
     {
         /// <summary>

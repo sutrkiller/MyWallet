@@ -11,10 +11,17 @@ namespace MyWallet.Entities.UnitTests.Repositories
         [Fact]
         public async Task SaveConversionRatio()
         {
+            var currency = new Currency()
+            {
+                Code = "CZK",
+            };
             var testRatio = new ConversionRatio
             {
                 Ratio = 26.45m,
-                Date = DateTime.Now
+                Date = DateTime.Now,
+                CurrencyFrom = currency,
+                CurrencyTo = currency,
+                Type = "Test"
             };
 
             var addedRatio = await ConversionRatioRepository.AddConversionRatio(testRatio);

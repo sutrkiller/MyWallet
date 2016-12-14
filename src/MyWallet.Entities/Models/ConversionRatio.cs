@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyWallet.Entities.Models
 {
+    /// <summary>
+    /// Conversion ratio is used to convert entries and budgets to user's desired currency.
+    /// </summary>
     public class ConversionRatio : ModelBase
     {
         /// <summary>

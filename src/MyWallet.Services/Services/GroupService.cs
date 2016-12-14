@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using MyWallet.Entities.Models;
 using MyWallet.Entities.Repositories.Interfaces;
-using MyWallet.Services.DataTransferModels;
 using MyWallet.Services.Filters;
 using MyWallet.Services.Services.Interfaces;
 using Group = MyWallet.Services.DataTransferModels.Group;
 
 namespace MyWallet.Services.Services
 {
-    public class GroupService : IGroupService
+    internal class GroupService : IGroupService
     {
         private readonly ILogger<IBudgetService> _logger;
         private readonly IGroupRepository _groupRepository;

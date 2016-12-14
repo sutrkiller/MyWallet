@@ -3,7 +3,7 @@ using MyWallet.Services.DataTransferModels.Mapping;
 
 namespace MyWallet.Services.Configuration
 {
-    public static class ServicesMapperConfiguration
+    internal static class ServicesMapperConfiguration
     {
         public static void InitializeMappings(IMapperConfigurationExpression configuration)
         {

@@ -33,7 +33,7 @@ namespace MyWallet
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddJsonFile("googleauth.json", optional: false)
+                .AddJsonFile("googleauth.json", false)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -53,14 +53,15 @@ namespace MyWallet
                 AddScoped<IEntryService, EntryService>().
                 AddScoped<IUserService, UserService>();
 
-            
+
             services.AddBootstrapPagerGenerator(options =>
             {
                 options.ConfigureDefault();
             });
             // Add framework services.
             services.AddMvc()
-                .AddJsonOptions(options => {
+                .AddJsonOptions(options =>
+                {
                     // handle loops correctly
                     options.SerializerSettings.ReferenceLoopHandling =
                         Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -99,7 +100,6 @@ namespace MyWallet
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-           
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -109,7 +109,7 @@ namespace MyWallet
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            //This should call CNB as soon as possible
+
             app.UseCurrencyUpdaterMiddleware();
 
             app.UseStaticFiles();
@@ -144,14 +144,16 @@ namespace MyWallet
                 }
             });
             app.UseSession();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute("GetConversionRatiosByCurrencyId",
                                 "entries/GetConversionRatiosByCurrencyId/",
                                 new { controller = "Entries", action = "GetConversionRatiosByCurrencyId" });
+
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");                
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

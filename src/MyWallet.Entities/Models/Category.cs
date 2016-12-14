@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyWallet.Entities.Models
 {
+    /// <summary>
+    /// Category is just for purposes of statistics, graphs and similar grouping actions.
+    /// </summary>
     public class Category : ModelBase
     {
         /// <summary>

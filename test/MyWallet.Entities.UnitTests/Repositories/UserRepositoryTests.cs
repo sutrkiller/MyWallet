@@ -16,7 +16,8 @@ namespace MyWallet.Entities.UnitTests.Repositories
             var testUser = new User
             {
                 Name = "Test",
-                Email = "test@test.com"
+                Email = "test@test.com",
+                PreferredCurrency = new Currency { Code = "CZK"}
             };
 
             var addedUser = await UserRepository.AddUser(testUser);

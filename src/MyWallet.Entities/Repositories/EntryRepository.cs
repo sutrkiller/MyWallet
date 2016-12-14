@@ -11,7 +11,7 @@ using MyWallet.Entities.Repositories.Interfaces;
 
 namespace MyWallet.Entities.Repositories
 {
-    public class EntryRepository : IEntryRepository
+    internal class EntryRepository : IEntryRepository
     {
         private readonly MyWalletContext _context;
 

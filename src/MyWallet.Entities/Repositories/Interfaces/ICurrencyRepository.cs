@@ -5,6 +5,9 @@ using MyWallet.Entities.Models;
 
 namespace MyWallet.Entities.Repositories.Interfaces
 {
+    /// <summary>
+    /// Repository for accessing entities Currency in db.
+    /// </summary>
     public interface ICurrencyRepository
     {
         /// <summary>
@@ -27,6 +30,11 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// <returns>All currencies</returns>
         IQueryable<Currency> GetAllCurrencies();
 
+        /// <summary>
+        /// Retrieve currency only by currency code.
+        /// </summary>
+        /// <param name="code">Code of currency</param>
+        /// <returns></returns>
         Task<Currency> GetCurrencyByCode(string code);
 
         /// <summary>

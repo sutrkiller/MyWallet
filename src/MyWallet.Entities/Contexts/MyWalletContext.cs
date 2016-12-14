@@ -5,6 +5,10 @@ using MyWallet.Entities.Models;
 
 namespace MyWallet.Entities.Contexts
 {
+
+    /// <summary>
+    /// Database context for every model in this project.
+    /// </summary>
     public class MyWalletContext : DbContext
     {
         /// <summary>
@@ -23,15 +27,36 @@ namespace MyWallet.Entities.Contexts
         public MyWalletContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-            this.Database.Log = log => this.Log?.Invoke(log);
+            Database.Log = log => Log?.Invoke(log);
         }
 
+        /// <summary>
+        /// Budgets entity
+        /// </summary>
         public virtual DbSet<Budget> Budgets { get; set; }
+        /// <summary>
+        /// Entries entity
+        /// </summary>
         public virtual DbSet<Entry> Entries { get; set; }
+        /// <summary>
+        /// Groups entity
+        /// </summary>
         public virtual DbSet<Group> Groups { get; set; }
+        /// <summary>
+        /// Users entity
+        /// </summary>
         public virtual DbSet<User> Users { get; set; }
+        /// <summary>
+        /// Categories entity
+        /// </summary>
         public virtual DbSet<Category> Categories { get; set; }
+        /// <summary>
+        /// Ratios entity
+        /// </summary>
         public virtual DbSet<ConversionRatio> ConversionRatios { get; set; }
+        /// <summary>
+        /// Currencies entity
+        /// </summary>
         public virtual DbSet<Currency> Currencies { get; set; }
 
         /// <summary>

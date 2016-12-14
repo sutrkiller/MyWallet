@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MyWallet.Entities.Models;
 
 namespace MyWallet.Entities.Repositories.Interfaces
 {
+    /// <summary>
+    /// Repository for accessing entities ConversionRatio in db.
+    /// </summary>
     public interface IConversionRatioRepository
     {
         /// <summary>

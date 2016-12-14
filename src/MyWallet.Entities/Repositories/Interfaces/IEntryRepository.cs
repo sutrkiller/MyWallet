@@ -5,6 +5,9 @@ using MyWallet.Entities.Models;
 
 namespace MyWallet.Entities.Repositories.Interfaces
 {
+    /// <summary>
+    /// Repository for accessing entities Entry in db.
+    /// </summary>
     public interface IEntryRepository
     {
         /// <summary>
@@ -32,15 +35,28 @@ namespace MyWallet.Entities.Repositories.Interfaces
         /// </summary>
         /// <param name="userId">User </param>
         /// <returns>All entries by user</returns>
-        IQueryable<Entry> GetEntriesByUser(Guid userId); //TODO: this should be implemented on service using GetAllEntries
+        IQueryable<Entry> GetEntriesByUser(Guid userId);
 
         /// <summary>
         /// Returns all entries in selected budget
         /// </summary>
         /// <param name="budgetId">Budget </param>
         /// <returns>All entries by budget</returns>
-        IQueryable<Entry> GetEntriesByBudget(Guid budgetId); //TODO: this should be implemented on service using 
+        IQueryable<Entry> GetEntriesByBudget(Guid budgetId);
+        
+        /// <summary>
+        /// Delete entry from db
+        /// </summary>
+        /// <param name="entry">Existing entry</param>
+        /// <returns></returns>
         Task DeleteEntry(Entry entry);
+
+
+        /// <summary>
+        /// Edit entry in db
+        /// </summary>
+        /// <param name="entry">Existing entry with valid ID</param>
+        /// <returns></returns>
         Task EditEntry(Entry entry);
     }
 }

@@ -10,8 +10,6 @@
   },
 
   "frameworks": {
-    "net462": {
-      "dependencies": {}
-    }
+    "net462": {}
   }
 }

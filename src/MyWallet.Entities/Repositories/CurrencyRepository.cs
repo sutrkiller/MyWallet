@@ -10,7 +10,7 @@ using MyWallet.Entities.Repositories.Interfaces;
 
 namespace MyWallet.Entities.Repositories
 {
-    public class CurrencyRepository : ICurrencyRepository
+    internal class CurrencyRepository : ICurrencyRepository
     {
         private readonly MyWalletContext _context;
 

@@ -7,7 +7,7 @@ using MyWallet.Entities.Models;
 
 namespace MyWallet.Services.DataTransferModels.Mapping
 {
-    public class ConversionRatioMappingProfile : Profile
+    internal class ConversionRatioMappingProfile : Profile
     {
         public ConversionRatioMappingProfile()
        {

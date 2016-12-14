@@ -7,7 +7,7 @@ using MyWallet.Entities.Models;
 
 namespace MyWallet.Services.DataTransferModels.Mapping
 {
-    public class GroupMapping : Profile
+    internal class GroupMapping : Profile
     {
         public GroupMapping()
         {

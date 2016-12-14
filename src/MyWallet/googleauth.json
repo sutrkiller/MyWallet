@@ -1,12 +1,12 @@
 {
   "web": {
-    "client_id": "812033040925-6p5cvr5v3c8v5o9bcvfnffl5ed5823vf.apps.googleusercontent.com",
-    "project_id": "mywallet-150021",
+    "client_id": "560865514010-o96n0qemuqgd4s1qflhks2shejjj44k8.apps.googleusercontent.com",
+    "project_id": "mywallet-152409",
     "auth_uri": "https://accounts.google.com/o/oauth2/auth",
     "token_uri": "https://accounts.google.com/o/oauth2/token",
     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-    "client_secret": "Xxqlo3hwy8Z92_IGD0lQJ2YQ",
-    "redirect_uris": [ "http://localhost:51717/Home/Index" ],
-    "javascript_origins": [ "http://localhost:51717" ]
+    "client_secret": "eKzC9IhJ8xUkMl_AaaelZKSn",
+    "redirect_uris": [ "https://mywalletapp.azurewebsites.net/.auth/login/google/callback", "http://mywalletapp.azurewebsites.net/Home/Index", "http://localhost:51717/.auth/login/google/callback", "http://localhost:51717/Home/Index" ],
+    "javascript_origins": [ "https://mywalletapp.azurewebsites.net", "https://localhost:51717" ]
   }
 }

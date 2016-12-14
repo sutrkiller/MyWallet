@@ -4,6 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyWallet.Entities.Models
 {
+
+    /// <summary>
+    /// Common parent class for all models adding Id for db access.
+    /// </summary>
     public class ModelBase
     {
         /// <summary>

@@ -6,6 +6,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyWallet.Entities.Models
 {
+    /// <summary>
+    /// Timed incomes and expenses of user.
+    /// </summary>
     public class Entry : ModelBase
     {
         /// <summary>
